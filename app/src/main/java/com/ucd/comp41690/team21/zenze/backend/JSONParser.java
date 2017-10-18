@@ -1,9 +1,9 @@
 package com.ucd.comp41690.team21.zenze.backend;
 
-import org.json.JSONObject;
+import android.webkit.HttpAuthHandler;
 
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by timothee on 18/10/17.
@@ -11,19 +11,29 @@ import java.io.UnsupportedEncodingException;
 
 public class JSONParser {
 
-    private static InputStream is = null;
     private static JSONObject jObj = null;
-    private static String json = "";
 
     // constructor
     public JSONParser() {
 
     }
 
+    /**
+     * This method returns a JSON object from an URL.
+     * @param url the URL of where the JSON is located
+     * @return a JSON object
+     */
     public JSONObject getJSONFromUrl(String url) {
-
-
-
+        String jsonStr = null;
+        HttpHandler httpHandler = new HttpHandler();
+        jsonStr = httpHandler.makeServiceCall(url);
+        if(jsonStr!=null) {
+            try {
+                jObj = new JSONObject(jsonStr);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         // return JSON String
         return jObj;
 
