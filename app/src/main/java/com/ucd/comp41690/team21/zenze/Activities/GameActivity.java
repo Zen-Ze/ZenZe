@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
+import com.ucd.comp41690.team21.zenze.Game.Game;
 import com.ucd.comp41690.team21.zenze.R;
 
 /**
@@ -11,11 +12,26 @@ import com.ucd.comp41690.team21.zenze.R;
  */
 public class GameActivity extends Activity {
 
+    private Game game;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        game = new Game(this);
+        setContentView(game.getView());
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        game.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        game.resume();
     }
 }
