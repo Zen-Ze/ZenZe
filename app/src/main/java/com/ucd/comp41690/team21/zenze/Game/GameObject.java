@@ -8,17 +8,23 @@ import com.ucd.comp41690.team21.zenze.Game.Components.PhysicsComponent;
  */
 
 public class GameObject {
+    public static final String PLAYER_TAG = "Player";
+    public static final String PLATTFORM_TAG = "Plattform";
+
     private InputComponent input;
     private PhysicsComponent physics;
 
     private int x_Pos;
     private int y_Pos;
 
-    public GameObject(InputComponent input, PhysicsComponent physics, int x, int y){
+    private String tag;
+
+    public GameObject(InputComponent input, PhysicsComponent physics, int x, int y, String tag){
         this.physics = physics;
         this.input = input;
         x_Pos = x;
         y_Pos = y;
+        this.tag = tag;
     }
 
 
@@ -28,5 +34,9 @@ public class GameObject {
 
     public int getY_Pos() {
         return y_Pos;
+    }
+
+    public String getTag() {
+        return tag;
     }
 }

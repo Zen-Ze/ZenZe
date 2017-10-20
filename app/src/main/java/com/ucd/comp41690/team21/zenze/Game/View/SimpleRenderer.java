@@ -23,8 +23,6 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
-    public static final int tileSize = 100;
-
     /**
      * Initialise the canvas for the renderer
      * @param context Android Activity the game is displayed in
@@ -37,39 +35,40 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
 
     @Override
     public void render(GameWorld world) {
-        int tileDimensionX = getWidth()/world.getMap().getWidth()+1;
-        int tileDimensionY = getHeight()/world.getMap().getHeight()+1;
+        int tileSize = getHeight()/15+1;
 
         //check if surface is valid
         if(surfaceHolder.getSurface().isValid()){
             //lock the canvas to draw
             canvas = surfaceHolder.lockCanvas();
-
+            //Background color
             canvas.drawColor(Color.BLUE);
+            //Draw each entity in the game world
             for(GameObject o : world.getEntities()) {
-                paint.setStyle(Paint.Style.FILL);
-                paint.setColor(Color.WHITE);
-                int x = o.getX_Pos()*tileDimensionX+tileDimensionX/2;
-                int y = o.getY_Pos()*tileDimensionY+tileDimensionY/2;
-                canvas.drawCircle(x, y, tileDimensionY/2, paint);
-            }
-
-            paint.setColor(Color.BLACK);
-            Map map = world.getMap();
-            for(int x = 0; x < map.getWidth(); x++){
-                for (int y = 0; y < map.getHeight(); y++){
-                    if(map.getTile(x,y)){
+                switch(o.getTag()){
+                    //represent Player as white circle
+                    case GameObject.PLAYER_TAG:
+                        int x = o.getX_Pos()*tileSize+tileSize/2;
+                        int y = o.getY_Pos()*tileSize+tileSize/2;
+                        paint.setStyle(Paint.Style.FILL);
+                        paint.setColor(Color.WHITE);
+                        canvas.drawCircle(x, y, tileSize/2, paint);
+                        break;
+                    //represent Plattforms as black boxes
+                    case GameObject.PLATTFORM_TAG:
+                        paint.setStyle(Paint.Style.FILL);
+                        paint.setColor(Color.BLACK);
                         canvas.drawRect(
-                                x*tileDimensionX,
-                                y*tileDimensionY,
-                                x*tileDimensionX+tileDimensionX,
-                                y*tileDimensionY+tileDimensionY,
+                                o.getX_Pos()*tileSize,
+                                o.getY_Pos()*tileSize,
+                                o.getX_Pos()*tileSize+tileSize,
+                                o.getY_Pos()*tileSize+tileSize,
                                 paint
                         );
-                    }
+                        break;
                 }
-            }
 
+            }
 
             //unlock canvas after drawing
             surfaceHolder.unlockCanvasAndPost(canvas);

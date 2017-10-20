@@ -3,6 +3,7 @@ package com.ucd.comp41690.team21.zenze.Game;
 import android.content.Context;
 import android.util.Log;
 
+import com.ucd.comp41690.team21.zenze.Game.Components.PlattformPhysics;
 import com.ucd.comp41690.team21.zenze.Game.Components.PlayerInputHandler;
 import com.ucd.comp41690.team21.zenze.Game.Components.PlayerPhysics;
 import com.ucd.comp41690.team21.zenze.R;
@@ -18,15 +19,13 @@ import java.util.Arrays;
  * loads the level from file and creates objects
  */
 public class FileParser {
-    public static Map loadMap(Context context, GameWorld world){
+    public static void loadMap(Context context, GameWorld world){
         InputStream in = context.getResources().openRawResource(R.raw.test_level);
         BufferedReader d = new BufferedReader(new InputStreamReader(in));
 
-        boolean[][] map = new boolean[1][1];
         try {
             int width = Integer.parseInt(d.readLine());
             int height = Integer.parseInt(d.readLine());
-            map = new boolean[width][height];
 
             int x = 0;
             int y = 0;
@@ -40,11 +39,15 @@ public class FileParser {
                     case '1':
                         PlayerInputHandler playerInputHandler = new PlayerInputHandler();
                         PlayerPhysics playerPhysics = new PlayerPhysics();
-                        GameObject player = new GameObject(playerInputHandler, playerPhysics, x, y);
+                        GameObject player = new GameObject(
+                                playerInputHandler, playerPhysics, x, y, GameObject.PLAYER_TAG);
                         world.addObject(player);
                         break;
                     case '#':
-                        map[x][y]=true;
+                        PlattformPhysics plattformPhysics = new PlattformPhysics();
+                        GameObject platform = new GameObject(
+                                null, plattformPhysics, x, y, GameObject.PLATTFORM_TAG);
+                        world.addObject(platform);
                         x++;
                         break;
                     default:
@@ -54,6 +57,5 @@ public class FileParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new Map(map);
     }
 }

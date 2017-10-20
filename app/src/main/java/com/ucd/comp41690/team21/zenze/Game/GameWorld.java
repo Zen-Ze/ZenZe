@@ -10,11 +10,10 @@ import java.util.List;
  */
 public class GameWorld {
     private List<GameObject> entities;
-    private Map map;
 
     public GameWorld(Context context){
         entities = new LinkedList<>();
-        map = FileParser.loadMap(context, this);
+        FileParser.loadMap(context, this);
     }
 
     public void update(){
@@ -29,7 +28,4 @@ public class GameWorld {
         return entities;
     }
 
-    public Map getMap(){
-        return map;
-    }
 }
