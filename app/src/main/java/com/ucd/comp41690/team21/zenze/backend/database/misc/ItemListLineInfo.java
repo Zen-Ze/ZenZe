@@ -1,20 +1,22 @@
-package com.ucd.comp41690.team21.zenze.backend.database.models;
+package com.ucd.comp41690.team21.zenze.backend.database.misc;
 
 import android.provider.BaseColumns;
 
 /**
  * Created by timothee on 18/10/17.
+ *
+ * This class' purpose is to store all SQL related information for Item List Line.
  */
 
-public final class ItemListLineModel {
+public final class ItemListLineInfo {
 
     /**
      * Private constructor to prevent someone from accidentally trying to instanciate an
-     * ItemListLineModel object.
+     * ItemListLineInfo object.
      */
-    private ItemListLineModel() {}
+    private ItemListLineInfo() {}
 
-    public static final class ItemListLineModelEntry implements BaseColumns {
+    public static final class ItemListLineEntry implements BaseColumns {
         public static final String TABLE_NAME = "ItemListLine";
         public static final String COLUMN_NAME_AMOUNT = "Amount";
         public static final String COLUMN_NAME_ITEM_ID = "ItemId";

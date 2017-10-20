@@ -24,7 +24,7 @@ public class JSONParser {
      * @return a JSON object
      */
     public JSONObject getJSONFromUrl(String url) {
-        String jsonStr = null;
+        String jsonStr;
         HttpHandler httpHandler = new HttpHandler();
         jsonStr = httpHandler.makeServiceCall(url);
         if(jsonStr!=null) {
@@ -34,7 +34,6 @@ public class JSONParser {
                 e.printStackTrace();
             }
         }
-        // return JSON String
         return jObj;
 
     }
