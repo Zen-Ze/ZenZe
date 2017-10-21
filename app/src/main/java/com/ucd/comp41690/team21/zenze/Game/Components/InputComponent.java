@@ -1,5 +1,7 @@
 package com.ucd.comp41690.team21.zenze.Game.Components;
 
+import android.view.InputEvent;
+
 import com.ucd.comp41690.team21.zenze.Game.Command;
 
 /**
@@ -7,5 +9,5 @@ import com.ucd.comp41690.team21.zenze.Game.Command;
  */
 
 public interface InputComponent {
-    Command receiveInput();
+    Command handleInput(InputEvent event);
 }

@@ -1,6 +1,8 @@
 package com.ucd.comp41690.team21.zenze.Game;
 
 import android.content.Context;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 
 import com.ucd.comp41690.team21.zenze.Game.View.Renderer;
@@ -15,7 +17,13 @@ public class Game implements Runnable{
     volatile boolean running;
     private Thread gameThread = null;
 
-    public Game(Context context){
+    private static int gameWidth;
+    private static int gameHeight;
+
+    public Game(Context context, int width, int height){
+        Game.gameWidth = width;
+        Game.gameHeight = height;
+
         gameWorld = new GameWorld(context);
         gameView = new SimpleRenderer(context);
     }
@@ -54,5 +62,16 @@ public class Game implements Runnable{
 
     public SurfaceView getView() {
         return gameView.getView();
+    }
+
+    public void onTouchEvent(MotionEvent event) {
+        gameWorld.player.inputHandler.handleInput(event);
+    }
+
+    public static int getWidth(){
+        return Game.gameWidth;
+    }
+    public static int getHeight(){
+        return Game.gameHeight;
     }
 }

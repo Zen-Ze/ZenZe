@@ -4,13 +4,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.ucd.comp41690.team21.zenze.Game.Game;
 import com.ucd.comp41690.team21.zenze.Game.GameObject;
 import com.ucd.comp41690.team21.zenze.Game.GameWorld;
-import com.ucd.comp41690.team21.zenze.Game.Map;
-import com.ucd.comp41690.team21.zenze.Game.View.Renderer;
 
 
 /**
@@ -23,6 +23,10 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
+    private final int width;
+    private final int height;
+    private final int tileSize;
+
     /**
      * Initialise the canvas for the renderer
      * @param context Android Activity the game is displayed in
@@ -31,11 +35,14 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
         super(context);
         surfaceHolder = getHolder();
         paint = new Paint();
+
+        width = Game.getWidth();
+        height = Game.getHeight();
+        tileSize = height/15;
     }
 
     @Override
     public void render(GameWorld world) {
-        int tileSize = getHeight()/15+1;
 
         //check if surface is valid
         if(surfaceHolder.getSurface().isValid()){

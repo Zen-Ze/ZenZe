@@ -11,6 +11,8 @@ import java.util.List;
 public class GameWorld {
     private List<GameObject> entities;
 
+    public GameObject player;
+
     public GameWorld(Context context){
         entities = new LinkedList<>();
         FileParser.loadMap(context, this);
