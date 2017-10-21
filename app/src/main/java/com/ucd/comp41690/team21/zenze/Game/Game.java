@@ -1,6 +1,7 @@
 package com.ucd.comp41690.team21.zenze.Game;
 
 import android.content.Context;
+import android.provider.Settings;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
@@ -8,7 +9,9 @@ import com.ucd.comp41690.team21.zenze.Game.View.Renderer;
 import com.ucd.comp41690.team21.zenze.Game.View.SimpleRenderer;
 
 public class Game extends Subject implements Runnable {
-    private static final double MS_PER_UPDATE = 50;
+    //controlls for frame rate
+    private static final int MS_PER_UPDATE = 30;//30FPS
+    private static final int MAX_FRAME_SKIPS = 5;
 
     private Renderer gameView;
     private GameWorld gameWorld;
@@ -31,17 +34,33 @@ public class Game extends Subject implements Runnable {
 
     @Override
     public void run() {
+        long sleepTime = 0;
+        double beginTime = 0;
+        double elapsedTime = 0;
+        double framesSkipped = 0;
+
         while (running) {
-            double start = System.currentTimeMillis();
+            beginTime = System.currentTimeMillis();
+            framesSkipped = 0;
+
             gameWorld.update();
             gameView.render(gameWorld);
-            try {
-                long sleepTime = (long) (start + MS_PER_UPDATE - System.currentTimeMillis());
-                if (sleepTime > 0) {
-                    gameThread.sleep(sleepTime);
+
+            elapsedTime = System.currentTimeMillis() - beginTime;
+            sleepTime = (long)(MS_PER_UPDATE-elapsedTime);
+
+            if(sleepTime>0){ //time left so sleep
+                try{
+                    Thread.sleep(sleepTime);
+                }catch (InterruptedException e){
+                    e.printStackTrace();
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            }
+            while(sleepTime<0&&framesSkipped<MAX_FRAME_SKIPS){
+                //catch up on updates, leave out rendering step
+                gameWorld.update();
+                sleepTime+=MS_PER_UPDATE;
+                framesSkipped++;
             }
         }
     }
