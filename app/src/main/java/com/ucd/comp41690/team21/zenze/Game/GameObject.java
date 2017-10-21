@@ -1,5 +1,6 @@
 package com.ucd.comp41690.team21.zenze.Game;
 
+import com.ucd.comp41690.team21.zenze.Game.Commands.Command;
 import com.ucd.comp41690.team21.zenze.Game.Components.InputComponent;
 import com.ucd.comp41690.team21.zenze.Game.Components.PhysicsComponent;
 
@@ -14,8 +15,8 @@ public class GameObject {
     public InputComponent inputHandler;
     public PhysicsComponent physics;
 
-    private int x_Pos;
-    private int y_Pos;
+    public float x_Pos;
+    public float y_Pos;
 
     private String tag;
 
@@ -27,13 +28,16 @@ public class GameObject {
         this.tag = tag;
     }
 
-
-    public int getX_Pos() {
-        return x_Pos;
-    }
-
-    public int getY_Pos() {
-        return y_Pos;
+    public void update(){
+        if(inputHandler!=null) {
+            Command cmd = inputHandler.handleInput();
+            if (cmd != null) {
+                cmd.execute(this);
+            }
+        }
+        if(physics!=null) {
+            physics.handlePhysics();
+        }
     }
 
     public String getTag() {

@@ -36,9 +36,9 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
         surfaceHolder = getHolder();
         paint = new Paint();
 
-        width = Game.getWidth();
-        height = Game.getHeight();
-        tileSize = height/15;
+        width = Game.getInstance().getWidth();
+        height = Game.getInstance().getHeight();
+        tileSize = height/15+1;
     }
 
     @Override
@@ -55,8 +55,8 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
                 switch(o.getTag()){
                     //represent Player as white circle
                     case GameObject.PLAYER_TAG:
-                        int x = o.getX_Pos()*tileSize+tileSize/2;
-                        int y = o.getY_Pos()*tileSize+tileSize/2;
+                        float x = o.x_Pos*tileSize+tileSize/2;
+                        float y = o.y_Pos*tileSize+tileSize/2;
                         paint.setStyle(Paint.Style.FILL);
                         paint.setColor(Color.WHITE);
                         canvas.drawCircle(x, y, tileSize/2, paint);
@@ -66,10 +66,10 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
                         paint.setStyle(Paint.Style.FILL);
                         paint.setColor(Color.BLACK);
                         canvas.drawRect(
-                                o.getX_Pos()*tileSize,
-                                o.getY_Pos()*tileSize,
-                                o.getX_Pos()*tileSize+tileSize,
-                                o.getY_Pos()*tileSize+tileSize,
+                                o.x_Pos*tileSize,
+                                o.y_Pos*tileSize,
+                                o.x_Pos*tileSize+tileSize,
+                                o.y_Pos*tileSize+tileSize,
                                 paint
                         );
                         break;

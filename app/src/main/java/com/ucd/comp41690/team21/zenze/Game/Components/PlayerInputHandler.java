@@ -4,35 +4,54 @@ import android.util.Log;
 import android.view.InputEvent;
 import android.view.MotionEvent;
 
-import com.ucd.comp41690.team21.zenze.Game.Command;
+import com.ucd.comp41690.team21.zenze.Game.Commands.Command;
+import com.ucd.comp41690.team21.zenze.Game.Commands.RunCommand;
 import com.ucd.comp41690.team21.zenze.Game.Game;
+import com.ucd.comp41690.team21.zenze.Game.InputObserver;
 
 /**
  * receives input from the user
  * defines characters reaction
  */
-public class PlayerInputHandler implements InputComponent{
+public class PlayerInputHandler extends InputObserver implements InputComponent{
+
+    private float playerSpeed;
+    private MotionEvent inputEvent;
+    private Command returnCommand;
+
+    public PlayerInputHandler(float playerSpeed) {
+        Game.getInstance().addInputObserver(this);
+        this.playerSpeed = playerSpeed;
+        returnCommand = null;
+    }
+
     @Override
-    public Command handleInput(InputEvent event) {
-        try {
-            MotionEvent motionEvent = (MotionEvent) event;
-            switch (motionEvent.getAction() & MotionEvent.ACTION_MASK){
+    public Command handleInput() {
+        if(inputEvent!=null) {
+            switch (inputEvent.getAction() & MotionEvent.ACTION_MASK) {
                 case MotionEvent.ACTION_DOWN:
-                    Log.d("down", motionEvent.getX() + ", " + motionEvent.getY());
-                    if(motionEvent.getX() < Game.getWidth()/2){
+                    if (inputEvent.getX() < Game.getInstance().getWidth() / 2) {
                         Log.d("down", "left");
-                    }
-                    else{
+                        returnCommand = new RunCommand(playerSpeed * -1);
+                    } else {
                         Log.d("down", "right");
+                        returnCommand = new RunCommand(playerSpeed);
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    Log.d("up", motionEvent.getX() + ", " + motionEvent.getY());
+                    returnCommand = null;
+                    break;
             }
-            return null;
+        }
+        return returnCommand;
+    }
+
+    @Override
+    public void onNotify(InputEvent event) {
+        try {
+            this.inputEvent = (MotionEvent) event;
         }catch (ClassCastException e){
             e.printStackTrace();
-            return null;
         }
     }
 }

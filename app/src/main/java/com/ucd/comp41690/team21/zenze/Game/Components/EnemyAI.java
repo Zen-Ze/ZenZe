@@ -1,8 +1,6 @@
 package com.ucd.comp41690.team21.zenze.Game.Components;
 
-import android.view.InputEvent;
-
-import com.ucd.comp41690.team21.zenze.Game.Command;
+import com.ucd.comp41690.team21.zenze.Game.Commands.Command;
 
 /**
  * Created by annalena on 19.10.17.
@@ -11,7 +9,7 @@ import com.ucd.comp41690.team21.zenze.Game.Command;
 public class EnemyAI implements InputComponent {
 
     @Override
-    public Command handleInput(InputEvent event) {
+    public Command handleInput() {
         return null;
     }
 }

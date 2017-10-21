@@ -15,11 +15,14 @@ public class GameWorld {
 
     public GameWorld(Context context){
         entities = new LinkedList<>();
-        FileParser.loadMap(context, this);
+        FileParser.init(context);
+        FileParser.loadWorld(context, this);
     }
 
     public void update(){
-
+        for(GameObject o : entities){
+            o.update();
+        }
     }
 
     public void addObject(GameObject obj){
