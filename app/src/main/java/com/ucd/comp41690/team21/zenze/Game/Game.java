@@ -99,4 +99,12 @@ public class Game extends Subject implements Runnable {
     public static Game getInstance() {
         return instance;
     }
+
+    public GameWorld getGameWorld(){
+        return gameWorld;
+    }
+
+    public Renderer getGameView(){
+        return gameView;
+    }
 }

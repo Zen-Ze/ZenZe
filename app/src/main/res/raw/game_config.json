@@ -1,0 +1,5 @@
+{
+  "Player_Speed" : "0.5",
+  "Camera_MovementWindow" : "2",
+  "Camera_MinSpeed" : "0.0"
+}

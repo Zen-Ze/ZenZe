@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -26,10 +25,10 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
     //dimensions
     private final int numTilesH;
     private final int numTilesV;
+    private final int numTilesAcross;
     private final int width;
     private final int height;
     private final int tileSize;
-    private float camera_PosX;
 
     /**
      * Initialise the canvas for the renderer
@@ -43,9 +42,9 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
         width = Game.getInstance().getWidth();
         height = Game.getInstance().getHeight();
         numTilesH = world.getNumTilesH();
+        numTilesV = world.getNumTilesV();
         tileSize = height/numTilesH+1;
-        numTilesV = width/tileSize+2;
-        camera_PosX = 0;
+        numTilesAcross = width/tileSize+2;
     }
 
     @Override
@@ -57,14 +56,16 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
             canvas = surfaceHolder.lockCanvas();
             //Background color
             canvas.drawColor(Color.BLUE);
+
+            //set camera position
+            float offset = world.getCamera().x_Pos - (numTilesAcross/2);
+
             //Draw each entity in the game world
-            float leftBorder = camera_PosX - (numTilesV/2);
             for(GameObject o : world.getEntities()) {
                 switch(o.getTag()){
                     //represent Player as white circle
                     case GameObject.PLAYER_TAG:
-                        camera_PosX = o.x_Pos;
-                        float x = (o.x_Pos-leftBorder)*tileSize+tileSize/2;
+                        float x = (o.x_Pos-offset)*tileSize+tileSize/2;
                         float y = o.y_Pos*tileSize+tileSize/2;
                         paint.setStyle(Paint.Style.FILL);
                         paint.setColor(Color.WHITE);
@@ -75,9 +76,9 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
                         paint.setStyle(Paint.Style.FILL);
                         paint.setColor(Color.BLACK);
                         canvas.drawRect(
-                                (o.x_Pos-leftBorder)*tileSize,
+                                (o.x_Pos-offset)*tileSize,
                                 o.y_Pos*tileSize,
-                                (o.x_Pos-leftBorder)*tileSize+tileSize,
+                                (o.x_Pos-offset)*tileSize+tileSize,
                                 o.y_Pos*tileSize+tileSize,
                                 paint
                         );
@@ -94,5 +95,10 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
     @Override
     public SurfaceView getView() {
         return this;
+    }
+
+    @Override
+    public float getViewFrustum() {
+        return numTilesAcross/2;
     }
 }

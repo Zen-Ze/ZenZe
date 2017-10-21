@@ -10,4 +10,5 @@ import com.ucd.comp41690.team21.zenze.Game.*;
 public interface Renderer {
     public void render(GameWorld world);
     public SurfaceView getView();
+    public float getViewFrustum();
 }

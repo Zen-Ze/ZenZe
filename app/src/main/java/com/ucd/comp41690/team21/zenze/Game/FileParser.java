@@ -1,6 +1,8 @@
 package com.ucd.comp41690.team21.zenze.Game;
 
 import android.content.Context;
+
+import com.ucd.comp41690.team21.zenze.Game.Components.CameraAI;
 import com.ucd.comp41690.team21.zenze.Game.Components.PlattformPhysics;
 import com.ucd.comp41690.team21.zenze.Game.Components.PlayerInputHandler;
 import com.ucd.comp41690.team21.zenze.Game.Components.PlayerPhysics;
@@ -18,19 +20,25 @@ import java.io.InputStreamReader;
  * loads the level from a file and creates objects
  */
 public class FileParser {
-    private static float player_Speed = 0;
+    private static float playerSpeed = 0;
+    private static int cameraMovementWindow = 0;
+    private static float cameraMinSpeed = 0;
     private static int numTilesV = 0;
     private static int numTilesH = 0;
 
-    public static void init(Context context){
-        InputStream in = context.getResources().openRawResource(R.raw.player_stats);
+    /**
+     * Initialises the game from the game config file
+     *
+     * @param context the android context to get access to the resource files
+     */
+    public static void init(Context context) {
+        InputStream in = context.getResources().openRawResource(R.raw.game_config);
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         StringBuilder sb = new StringBuilder();
 
         String line = null;
         try {
-            while ((line = reader.readLine()) != null)
-            {
+            while ((line = reader.readLine()) != null) {
                 sb.append(line + "\n");
             }
         } catch (IOException e) {
@@ -38,13 +46,22 @@ public class FileParser {
         }
         try {
             JSONObject playerStats = new JSONObject(sb.toString());
-            player_Speed = Float.parseFloat(playerStats.getString("speed"));
+            playerSpeed = Float.parseFloat(playerStats.getString("Player_Speed"));
+            cameraMovementWindow = playerStats.getInt("Camera_MovementWindow");
+            cameraMinSpeed = playerStats.getInt("Camera_MinSpeed");
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public static void loadWorld(Context context, GameWorld world){
+    /**
+     * Loads the game world specified in test level
+     *
+     * @param context the android context to get access to the resource files
+     * @param world   the world to fill with objects
+     */
+    public static void loadWorld(Context context, GameWorld world) {
+        //read in all the objects
         InputStream in = context.getResources().openRawResource(R.raw.test_level);
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
@@ -54,20 +71,29 @@ public class FileParser {
 
             int x = 0;
             int y = 0;
-            while(reader.ready()) {
+            while (reader.ready()) {
                 char c = (char) reader.read();
-                switch(c){
+                switch (c) {
                     case '\n':
-                        x=0;
+                        x = 0;
                         y++;
                         break;
                     case '1':
-                        PlayerInputHandler playerInputHandler = new PlayerInputHandler(player_Speed);
+                        PlayerInputHandler playerInputHandler = new PlayerInputHandler(playerSpeed);
                         PlayerPhysics playerPhysics = new PlayerPhysics();
                         GameObject player = new GameObject(
                                 playerInputHandler, playerPhysics, x, y, GameObject.PLAYER_TAG);
                         world.addObject(player);
-                        world.player = player;
+                        world.setPlayer(player);
+                        //initialise the camera
+                        float viewFrustum = (Game.getInstance().getWidth() /
+                                (Game.getInstance().getHeight() / numTilesH + 1) + 2) / 2;
+                        GameObject simpleCamera = new GameObject(
+                                new CameraAI(cameraMovementWindow, player, viewFrustum,
+                                        cameraMinSpeed, playerSpeed),
+                                null, 0, 0, GameObject.CAMERA_TAG);
+                        world.addObject(simpleCamera);
+                        world.setCamera(simpleCamera);
                         break;
                     case '#':
                         PlattformPhysics plattformPhysics = new PlattformPhysics();
@@ -85,7 +111,11 @@ public class FileParser {
         }
     }
 
-    public static int getNumTilesH(){
+    public static int getNumTilesH() {
         return numTilesH;
+    }
+
+    public static int getNumTilesV() {
+        return numTilesV;
     }
 }

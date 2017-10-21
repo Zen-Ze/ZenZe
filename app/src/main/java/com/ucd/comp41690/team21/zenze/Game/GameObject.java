@@ -5,12 +5,13 @@ import com.ucd.comp41690.team21.zenze.Game.Components.InputComponent;
 import com.ucd.comp41690.team21.zenze.Game.Components.PhysicsComponent;
 
 /**
- * Created by annalena on 19.10.17.
+ * The Base class for every object in the world
+ * the behaviour of the different objects is defined by the components
  */
-
 public class GameObject {
     public static final String PLAYER_TAG = "Player";
     public static final String PLATTFORM_TAG = "Plattform";
+    public static final String CAMERA_TAG = "Camera";
 
     public InputComponent inputHandler;
     public PhysicsComponent physics;
@@ -30,13 +31,13 @@ public class GameObject {
 
     public void update(){
         if(inputHandler!=null) {
-            Command cmd = inputHandler.handleInput();
-            if (cmd != null) {
+            Command cmd = inputHandler.handleInput(this);
+            if(cmd!=null){
                 cmd.execute(this);
             }
         }
         if(physics!=null) {
-            physics.handlePhysics();
+            physics.handlePhysics(this);
         }
     }
 

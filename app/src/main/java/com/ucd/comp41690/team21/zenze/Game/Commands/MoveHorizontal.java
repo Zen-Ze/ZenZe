@@ -6,9 +6,9 @@ import com.ucd.comp41690.team21.zenze.Game.GameObject;
  * Created by annalena on 21.10.17.
  */
 
-public class RunCommand implements Command {
+public class MoveHorizontal implements Command {
     private float speed;
-    public RunCommand(float speed){
+    public MoveHorizontal(float speed){
         this.speed = speed;
     }
     @Override

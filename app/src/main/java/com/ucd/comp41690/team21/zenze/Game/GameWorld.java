@@ -10,14 +10,18 @@ import java.util.List;
  */
 public class GameWorld {
     private List<GameObject> entities;
-    public GameObject player;
+    private GameObject player;
+    private GameObject camera;
+
     private int numTilesH;
+    private int numTilesV;
 
     public GameWorld(Context context){
         entities = new LinkedList<>();
         FileParser.init(context);
         FileParser.loadWorld(context, this);
         numTilesH = FileParser.getNumTilesH();
+        numTilesV = FileParser.getNumTilesV();
     }
 
     public void update(){
@@ -36,5 +40,25 @@ public class GameWorld {
 
     public int getNumTilesH() {
         return numTilesH;
+    }
+
+    public int getNumTilesV() {
+        return numTilesV;
+    }
+
+    public GameObject getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(GameObject player) {
+        this.player = player;
+    }
+
+    public GameObject getCamera() {
+        return camera;
+    }
+
+    public void setCamera(GameObject camera) {
+        this.camera = camera;
     }
 }
