@@ -19,6 +19,8 @@ import java.io.InputStreamReader;
  */
 public class FileParser {
     private static float player_Speed = 0;
+    private static int numTilesV = 0;
+    private static int numTilesH = 0;
 
     public static void init(Context context){
         InputStream in = context.getResources().openRawResource(R.raw.player_stats);
@@ -47,8 +49,8 @@ public class FileParser {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
         try {
-            int width = Integer.parseInt(reader.readLine());
-            int height = Integer.parseInt(reader.readLine());
+            numTilesV = Integer.parseInt(reader.readLine());
+            numTilesH = Integer.parseInt(reader.readLine());
 
             int x = 0;
             int y = 0;
@@ -81,5 +83,9 @@ public class FileParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static int getNumTilesH(){
+        return numTilesH;
     }
 }

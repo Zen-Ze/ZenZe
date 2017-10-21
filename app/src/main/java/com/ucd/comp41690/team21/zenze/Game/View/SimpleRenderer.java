@@ -23,22 +23,29 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
+    //dimensions
+    private final int numTilesH;
+    private final int numTilesV;
     private final int width;
     private final int height;
     private final int tileSize;
+    private float camera_PosX;
 
     /**
      * Initialise the canvas for the renderer
      * @param context Android Activity the game is displayed in
      */
-    public SimpleRenderer(Context context) {
+    public SimpleRenderer(Context context, GameWorld world) {
         super(context);
         surfaceHolder = getHolder();
         paint = new Paint();
 
         width = Game.getInstance().getWidth();
         height = Game.getInstance().getHeight();
-        tileSize = height/15+1;
+        numTilesH = world.getNumTilesH();
+        tileSize = height/numTilesH+1;
+        numTilesV = width/tileSize+2;
+        camera_PosX = 0;
     }
 
     @Override
@@ -51,11 +58,13 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
             //Background color
             canvas.drawColor(Color.BLUE);
             //Draw each entity in the game world
+            float leftBorder = camera_PosX - (numTilesV/2);
             for(GameObject o : world.getEntities()) {
                 switch(o.getTag()){
                     //represent Player as white circle
                     case GameObject.PLAYER_TAG:
-                        float x = o.x_Pos*tileSize+tileSize/2;
+                        camera_PosX = o.x_Pos;
+                        float x = (o.x_Pos-leftBorder)*tileSize+tileSize/2;
                         float y = o.y_Pos*tileSize+tileSize/2;
                         paint.setStyle(Paint.Style.FILL);
                         paint.setColor(Color.WHITE);
@@ -66,9 +75,9 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
                         paint.setStyle(Paint.Style.FILL);
                         paint.setColor(Color.BLACK);
                         canvas.drawRect(
-                                o.x_Pos*tileSize,
+                                (o.x_Pos-leftBorder)*tileSize,
                                 o.y_Pos*tileSize,
-                                o.x_Pos*tileSize+tileSize,
+                                (o.x_Pos-leftBorder)*tileSize+tileSize,
                                 o.y_Pos*tileSize+tileSize,
                                 paint
                         );

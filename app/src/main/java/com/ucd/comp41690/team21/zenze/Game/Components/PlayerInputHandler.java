@@ -5,6 +5,7 @@ import android.view.InputEvent;
 import android.view.MotionEvent;
 
 import com.ucd.comp41690.team21.zenze.Game.Commands.Command;
+import com.ucd.comp41690.team21.zenze.Game.Commands.JumpCommand;
 import com.ucd.comp41690.team21.zenze.Game.Commands.RunCommand;
 import com.ucd.comp41690.team21.zenze.Game.Game;
 import com.ucd.comp41690.team21.zenze.Game.InputObserver;
@@ -30,12 +31,12 @@ public class PlayerInputHandler extends InputObserver implements InputComponent{
         if(inputEvent!=null) {
             switch (inputEvent.getAction() & MotionEvent.ACTION_MASK) {
                 case MotionEvent.ACTION_DOWN:
-                    if (inputEvent.getX() < Game.getInstance().getWidth() / 2) {
-                        Log.d("down", "left");
+                    if (inputEvent.getX() < Game.getInstance().getWidth() / 4) {
                         returnCommand = new RunCommand(playerSpeed * -1);
-                    } else {
-                        Log.d("down", "right");
+                    } else if  (inputEvent.getX() > Game.getInstance().getWidth()*3/4){
                         returnCommand = new RunCommand(playerSpeed);
+                    } else {
+                        returnCommand = new JumpCommand();
                     }
                     break;
                 case MotionEvent.ACTION_UP:

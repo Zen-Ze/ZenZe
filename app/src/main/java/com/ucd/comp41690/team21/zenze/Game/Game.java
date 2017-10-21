@@ -29,7 +29,7 @@ public class Game extends Subject implements Runnable {
         this.gameHeight = height;
 
         gameWorld = new GameWorld(context);
-        gameView = new SimpleRenderer(context);
+        gameView = new SimpleRenderer(context, gameWorld);
     }
 
     @Override

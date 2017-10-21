@@ -10,13 +10,14 @@ import java.util.List;
  */
 public class GameWorld {
     private List<GameObject> entities;
-
     public GameObject player;
+    private int numTilesH;
 
     public GameWorld(Context context){
         entities = new LinkedList<>();
         FileParser.init(context);
         FileParser.loadWorld(context, this);
+        numTilesH = FileParser.getNumTilesH();
     }
 
     public void update(){
@@ -33,4 +34,7 @@ public class GameWorld {
         return entities;
     }
 
+    public int getNumTilesH() {
+        return numTilesH;
+    }
 }
