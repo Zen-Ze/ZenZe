@@ -1,11 +1,11 @@
-package com.ucd.comp41690.team21.zenze.Game;
+package com.ucd.comp41690.team21.zenze.game;
 
 import android.content.Context;
 
-import com.ucd.comp41690.team21.zenze.Game.Components.CameraAI;
-import com.ucd.comp41690.team21.zenze.Game.Components.PlattformPhysics;
-import com.ucd.comp41690.team21.zenze.Game.Components.PlayerInputHandler;
-import com.ucd.comp41690.team21.zenze.Game.Components.PlayerPhysics;
+import com.ucd.comp41690.team21.zenze.game.components.CameraAI;
+import com.ucd.comp41690.team21.zenze.game.components.PlattformPhysics;
+import com.ucd.comp41690.team21.zenze.game.components.PlayerInputHandler;
+import com.ucd.comp41690.team21.zenze.game.components.PlayerPhysics;
 import com.ucd.comp41690.team21.zenze.R;
 
 import org.json.JSONException;

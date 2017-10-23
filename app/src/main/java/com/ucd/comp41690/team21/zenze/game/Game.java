@@ -1,12 +1,11 @@
-package com.ucd.comp41690.team21.zenze.Game;
+package com.ucd.comp41690.team21.zenze.game;
 
 import android.content.Context;
-import android.provider.Settings;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
-import com.ucd.comp41690.team21.zenze.Game.View.Renderer;
-import com.ucd.comp41690.team21.zenze.Game.View.SimpleRenderer;
+import com.ucd.comp41690.team21.zenze.game.view.Renderer;
+import com.ucd.comp41690.team21.zenze.game.view.SimpleRenderer;
 
 public class Game extends Subject implements Runnable {
     //controlls for frame rate

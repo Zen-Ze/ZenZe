@@ -1,14 +1,14 @@
-package com.ucd.comp41690.team21.zenze.Game.Components;
+package com.ucd.comp41690.team21.zenze.game.components;
 
 import android.view.InputEvent;
 import android.view.MotionEvent;
 
-import com.ucd.comp41690.team21.zenze.Game.Commands.Command;
-import com.ucd.comp41690.team21.zenze.Game.Commands.Jump;
-import com.ucd.comp41690.team21.zenze.Game.Commands.MoveHorizontal;
-import com.ucd.comp41690.team21.zenze.Game.Game;
-import com.ucd.comp41690.team21.zenze.Game.GameObject;
-import com.ucd.comp41690.team21.zenze.Game.InputObserver;
+import com.ucd.comp41690.team21.zenze.game.commands.Command;
+import com.ucd.comp41690.team21.zenze.game.commands.Jump;
+import com.ucd.comp41690.team21.zenze.game.commands.MoveHorizontal;
+import com.ucd.comp41690.team21.zenze.game.Game;
+import com.ucd.comp41690.team21.zenze.game.GameObject;
+import com.ucd.comp41690.team21.zenze.game.InputObserver;
 
 /**
  * receives input from the user

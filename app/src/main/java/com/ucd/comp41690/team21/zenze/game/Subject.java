@@ -1,7 +1,6 @@
-package com.ucd.comp41690.team21.zenze.Game;
+package com.ucd.comp41690.team21.zenze.game;
 
 import android.view.InputEvent;
-import android.view.SurfaceView;
 
 import java.util.LinkedList;
 import java.util.List;

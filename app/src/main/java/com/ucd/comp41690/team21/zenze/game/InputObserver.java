@@ -1,4 +1,4 @@
-package com.ucd.comp41690.team21.zenze.Game;
+package com.ucd.comp41690.team21.zenze.game;
 
 import android.view.InputEvent;
 

@@ -1,11 +1,9 @@
-package com.ucd.comp41690.team21.zenze.Game.Components;
+package com.ucd.comp41690.team21.zenze.game.components;
 
-import android.util.Log;
-
-import com.ucd.comp41690.team21.zenze.Game.Commands.Command;
-import com.ucd.comp41690.team21.zenze.Game.Commands.MoveHorizontal;
-import com.ucd.comp41690.team21.zenze.Game.Game;
-import com.ucd.comp41690.team21.zenze.Game.GameObject;
+import com.ucd.comp41690.team21.zenze.game.commands.Command;
+import com.ucd.comp41690.team21.zenze.game.commands.MoveHorizontal;
+import com.ucd.comp41690.team21.zenze.game.Game;
+import com.ucd.comp41690.team21.zenze.game.GameObject;
 
 /**
  * moves the camera horizontally according to players position and level borders

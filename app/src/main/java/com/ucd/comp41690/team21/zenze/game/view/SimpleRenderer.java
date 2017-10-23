@@ -1,4 +1,4 @@
-package com.ucd.comp41690.team21.zenze.Game.View;
+package com.ucd.comp41690.team21.zenze.game.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,13 +7,13 @@ import android.graphics.Paint;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.ucd.comp41690.team21.zenze.Game.Game;
-import com.ucd.comp41690.team21.zenze.Game.GameObject;
-import com.ucd.comp41690.team21.zenze.Game.GameWorld;
+import com.ucd.comp41690.team21.zenze.game.Game;
+import com.ucd.comp41690.team21.zenze.game.GameObject;
+import com.ucd.comp41690.team21.zenze.game.GameWorld;
 
 
 /**
- * Draws the Game using simple shapes like circles
+ * Draws the game using simple shapes like circles
  */
 public class SimpleRenderer extends SurfaceView implements Renderer {
 

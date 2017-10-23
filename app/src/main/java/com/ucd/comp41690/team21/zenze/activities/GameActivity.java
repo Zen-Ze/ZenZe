@@ -1,4 +1,4 @@
-package com.ucd.comp41690.team21.zenze.Activities;
+package com.ucd.comp41690.team21.zenze.activities;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.ucd.comp41690.team21.zenze.Game.Game;
+import com.ucd.comp41690.team21.zenze.game.Game;
 
 /**
  * the main game screen
