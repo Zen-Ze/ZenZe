@@ -1,6 +1,7 @@
 package com.ucd.comp41690.team21.zenze.game;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.InputEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -45,18 +46,20 @@ public class Game implements Runnable, Subject<InputEvent>{
         double beginTime = 0;
         double elapsedTime = 0;
         double framesSkipped = 0;
+        long prevUpdate = System.currentTimeMillis();
 
         while (running) {
             beginTime = System.currentTimeMillis();
             framesSkipped = 0;
 
-            gameWorld.update();
+            gameWorld.update((System.currentTimeMillis()-prevUpdate)/1000);
+            prevUpdate = System.currentTimeMillis();
             gameView.render(gameWorld);
 
             elapsedTime = System.currentTimeMillis() - beginTime;
             sleepTime = (long)(MS_PER_UPDATE-elapsedTime);
 
-            if(sleepTime>0){ //time left so sleep
+            if(sleepTime>0){ //time left, so sleep
                 try{
                     Thread.sleep(sleepTime);
                 }catch (InterruptedException e){
@@ -65,7 +68,8 @@ public class Game implements Runnable, Subject<InputEvent>{
             }
             while(sleepTime<0&&framesSkipped<MAX_FRAME_SKIPS){
                 //catch up on updates, leave out rendering step
-                gameWorld.update();
+                gameWorld.update((System.currentTimeMillis()-prevUpdate)/1000);
+                prevUpdate = System.currentTimeMillis();
                 sleepTime+=MS_PER_UPDATE;
                 framesSkipped++;
             }

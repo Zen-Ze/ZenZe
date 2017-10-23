@@ -1,6 +1,7 @@
 package com.ucd.comp41690.team21.zenze.game;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.ucd.comp41690.team21.zenze.game.util.FileParser;
 
@@ -26,9 +27,9 @@ public class GameWorld {
         numTilesV = FileParser.getNumTilesV();
     }
 
-    public void update(){
+    public void update(double elapsedTime){
         for(GameObject o : entities){
-            o.update();
+            o.update(elapsedTime);
         }
     }
 

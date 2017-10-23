@@ -31,7 +31,7 @@ public class GameObject {
         this.tag = tag;
     }
 
-    public void update(){
+    public void update(double elapsedTime){
         if(inputHandler!=null) {
             Command cmd = inputHandler.handleInput(this);
             if(cmd!=null){
