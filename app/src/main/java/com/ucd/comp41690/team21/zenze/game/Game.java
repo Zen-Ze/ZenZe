@@ -1,7 +1,7 @@
 package com.ucd.comp41690.team21.zenze.game;
 
 import android.content.Context;
-import android.util.Log;
+import android.opengl.GLSurfaceView;
 import android.view.InputEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -14,7 +14,7 @@ import com.ucd.comp41690.team21.zenze.game.view.SimpleRenderer;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Game implements Runnable, Subject<InputEvent>{
+public class Game implements Runnable, Subject<InputEvent> {
     //controlls for frame rate
     private static final int MS_PER_UPDATE = 30;//30FPS
     private static final int MAX_FRAME_SKIPS = 5;
@@ -34,10 +34,11 @@ public class Game implements Runnable, Subject<InputEvent>{
         Game.instance = this;
         this.gameWidth = width;
         this.gameHeight = height;
-        inputObserverList = new LinkedList<>();
+        this.inputObserverList = new LinkedList<>();
+        this.running = true;
 
-        gameWorld = new GameWorld(context);
-        gameView = new SimpleRenderer(context, gameWorld);
+        this.gameWorld = new GameWorld(context);
+        this.gameView = new SimpleRenderer(context, gameWorld);
     }
 
     @Override
@@ -52,25 +53,25 @@ public class Game implements Runnable, Subject<InputEvent>{
             beginTime = System.currentTimeMillis();
             framesSkipped = 0;
 
-            gameWorld.update((System.currentTimeMillis()-prevUpdate)/1000);
+            gameWorld.update((System.currentTimeMillis() - prevUpdate) / 1000);
             prevUpdate = System.currentTimeMillis();
             gameView.render(gameWorld);
 
             elapsedTime = System.currentTimeMillis() - beginTime;
-            sleepTime = (long)(MS_PER_UPDATE-elapsedTime);
+            sleepTime = (long) (MS_PER_UPDATE - elapsedTime);
 
-            if(sleepTime>0){ //time left, so sleep
-                try{
+            if (sleepTime > 0) { //time left, so sleep
+                try {
                     Thread.sleep(sleepTime);
-                }catch (InterruptedException e){
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            while(sleepTime<0&&framesSkipped<MAX_FRAME_SKIPS){
+            while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS) {
                 //catch up on updates, leave out rendering step
-                gameWorld.update((System.currentTimeMillis()-prevUpdate)/1000);
+                gameWorld.update((System.currentTimeMillis() - prevUpdate) / 1000);
                 prevUpdate = System.currentTimeMillis();
-                sleepTime+=MS_PER_UPDATE;
+                sleepTime += MS_PER_UPDATE;
                 framesSkipped++;
             }
         }
@@ -78,11 +79,15 @@ public class Game implements Runnable, Subject<InputEvent>{
 
     public void pause() {
         running = false;
-        try {
-            gameThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        while (true) {
+            try {
+                gameThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            break;
         }
+        gameThread = null;
     }
 
     public void resume() {
@@ -111,24 +116,24 @@ public class Game implements Runnable, Subject<InputEvent>{
         return instance;
     }
 
-    public GameWorld getGameWorld(){
+    public GameWorld getGameWorld() {
         return gameWorld;
     }
 
-    public Renderer getGameView(){
+    public Renderer getGameView() {
         return gameView;
     }
 
-    public void addObserver(Observer<InputEvent> observer){
+    public void addObserver(Observer<InputEvent> observer) {
         inputObserverList.add(observer);
     }
 
-    public void removeObserver(Observer<InputEvent> observer){
+    public void removeObserver(Observer<InputEvent> observer) {
         inputObserverList.remove(observer);
     }
 
-    public void notify(InputEvent event){
-        for (Observer observer: inputObserverList) {
+    public void notify(InputEvent event) {
+        for (Observer observer : inputObserverList) {
             observer.onNotify(event);
         }
     }
