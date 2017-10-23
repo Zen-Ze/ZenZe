@@ -8,13 +8,13 @@ import com.ucd.comp41690.team21.zenze.game.commands.Jump;
 import com.ucd.comp41690.team21.zenze.game.commands.MoveHorizontal;
 import com.ucd.comp41690.team21.zenze.game.Game;
 import com.ucd.comp41690.team21.zenze.game.GameObject;
-import com.ucd.comp41690.team21.zenze.game.InputObserver;
+import com.ucd.comp41690.team21.zenze.game.util.Observer;
 
 /**
  * receives input from the user
  * defines characters reaction
  */
-public class PlayerInputHandler extends InputObserver implements InputComponent{
+public class PlayerInputHandler implements InputComponent, Observer<InputEvent>{
 
     private MotionEvent inputEvent;
 
@@ -25,7 +25,7 @@ public class PlayerInputHandler extends InputObserver implements InputComponent{
     private Command returnCommand;
 
     public PlayerInputHandler(float playerSpeed) {
-        Game.getInstance().addInputObserver(this);
+        Game.getInstance().addObserver(this);
         moveLeft = new MoveHorizontal(-playerSpeed);
         moveRight = new MoveHorizontal(playerSpeed);
         jumpUp = new Jump();

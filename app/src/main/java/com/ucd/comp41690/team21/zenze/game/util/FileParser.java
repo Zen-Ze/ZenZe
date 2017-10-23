@@ -1,7 +1,10 @@
-package com.ucd.comp41690.team21.zenze.game;
+package com.ucd.comp41690.team21.zenze.game.util;
 
 import android.content.Context;
 
+import com.ucd.comp41690.team21.zenze.game.Game;
+import com.ucd.comp41690.team21.zenze.game.GameObject;
+import com.ucd.comp41690.team21.zenze.game.GameWorld;
 import com.ucd.comp41690.team21.zenze.game.components.CameraAI;
 import com.ucd.comp41690.team21.zenze.game.components.PlattformPhysics;
 import com.ucd.comp41690.team21.zenze.game.components.PlayerInputHandler;

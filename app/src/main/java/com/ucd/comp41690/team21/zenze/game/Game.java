@@ -1,19 +1,26 @@
 package com.ucd.comp41690.team21.zenze.game;
 
 import android.content.Context;
+import android.view.InputEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
+import com.ucd.comp41690.team21.zenze.game.util.Observer;
+import com.ucd.comp41690.team21.zenze.game.util.Subject;
 import com.ucd.comp41690.team21.zenze.game.view.Renderer;
 import com.ucd.comp41690.team21.zenze.game.view.SimpleRenderer;
 
-public class Game extends Subject implements Runnable {
+import java.util.LinkedList;
+import java.util.List;
+
+public class Game implements Runnable, Subject<InputEvent>{
     //controlls for frame rate
     private static final int MS_PER_UPDATE = 30;//30FPS
     private static final int MAX_FRAME_SKIPS = 5;
 
     private Renderer gameView;
     private GameWorld gameWorld;
+    private List<Observer<InputEvent>> inputObserverList;
 
     volatile boolean running;
     private Thread gameThread = null;
@@ -26,6 +33,7 @@ public class Game extends Subject implements Runnable {
         Game.instance = this;
         this.gameWidth = width;
         this.gameHeight = height;
+        inputObserverList = new LinkedList<>();
 
         gameWorld = new GameWorld(context);
         gameView = new SimpleRenderer(context, gameWorld);
@@ -105,5 +113,19 @@ public class Game extends Subject implements Runnable {
 
     public Renderer getGameView(){
         return gameView;
+    }
+
+    public void addObserver(Observer<InputEvent> observer){
+        inputObserverList.add(observer);
+    }
+
+    public void removeObserver(Observer<InputEvent> observer){
+        inputObserverList.remove(observer);
+    }
+
+    public void notify(InputEvent event){
+        for (Observer observer: inputObserverList) {
+            observer.onNotify(event);
+        }
     }
 }
