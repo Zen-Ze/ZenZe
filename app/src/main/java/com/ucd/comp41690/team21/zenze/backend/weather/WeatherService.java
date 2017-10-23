@@ -2,10 +2,15 @@ package com.ucd.comp41690.team21.zenze.backend.weather;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.ucd.comp41690.team21.zenze.backend.JSONParser;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by timothee on 16/10/17.
@@ -32,20 +37,49 @@ public class WeatherService {
      */
     public static WeatherStatus getWeatherStatus() {
 
-        double[] location = {};
+        final WeatherStatus[] ret = {WeatherStatus.SUNNY};
+
+        double[] location = getLocation();
         String url = getUrlFromLocation(location);
 
         // TODO: retrieve weather from openweathermap, get a status accordingly
-        JSONParse jsonParse = (JSONParse) new JSONParse() {
-            @Override
-            protected void onPostExecute(JSONObject jsonObject) {
-                Log.d("WeatherService", "onPostExec");
-                // do someshit with the jsonObject here, like getting a weather status
-            }
-        }.execute(url);
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONParse().execute(url).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
-        // As of now, before I start coding anything else...
-        return WeatherStatus.SUNNY;
+        if(jsonObject != null) {
+            try {
+                JSONArray weatherArray = jsonObject.getJSONArray("weather");
+                JSONObject firstArrayObject = weatherArray.getJSONObject(0);
+
+                int weatherId = firstArrayObject.getInt("id");
+
+                // Taken from http://openweathermap.org/weather-conditions ROUGHLY, might need ajustement
+                if((300<=weatherId && weatherId<600)
+                        ||(weatherId==802)
+                        ||(weatherId==803)
+                        ||(weatherId==804)
+                        ||(weatherId==960)
+                        ||(weatherId==961)
+                        ||(weatherId==962)
+                        ||(weatherId==901))
+                { ret[0] = WeatherStatus.RAINY; }
+                else if((600<=weatherId && weatherId<700)
+                        ||(weatherId == 903)
+                        ||(weatherId == 906))
+                { ret[0] = WeatherStatus.SNOWY; }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return ret[0];
     }
 
     /**
@@ -66,7 +100,7 @@ public class WeatherService {
      * player's location.
      * @return The location of the user as a String, by default Dublin, Format: {lat, lon}
      */
-    private double[] getLocation() {
+    private static double[] getLocation() {
         double[] ret = DEFAULT_LOCATION;
 
         return ret;
