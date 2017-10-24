@@ -52,10 +52,10 @@ public class FileParser {
             e.printStackTrace();
         }
         try {
-            JSONObject playerStats = new JSONObject(sb.toString());
-            playerSpeed = Float.parseFloat(playerStats.getString("Player_Speed"));
-            cameraMovementWindow = playerStats.getInt("Camera_MovementWindow");
-            cameraMinSpeed = playerStats.getInt("Camera_MinSpeed");
+            JSONObject gameConfig = new JSONObject(sb.toString());
+            playerSpeed = (float)gameConfig.getJSONObject("Player").getDouble("Speed");
+            cameraMovementWindow = gameConfig.getInt("Camera_MovementWindow");
+            cameraMinSpeed = gameConfig.getInt("Camera_MinSpeed");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -73,19 +73,18 @@ public class FileParser {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
         try {
-            numTilesV = Integer.parseInt(reader.readLine());
             numTilesH = Integer.parseInt(reader.readLine());
-
             int x = 0;
             int y = 0;
             while (reader.ready()) {
                 char c = (char) reader.read();
                 switch (c) {
                     case '\n':
+                        numTilesV = x;
                         x = 0;
                         y++;
                         break;
-                    case '1':
+                    case '1'://Player
                         PlayerInputHandler playerInputHandler = new PlayerInputHandler(playerSpeed);
                         PlayerPhysics playerPhysics = new PlayerPhysics();
                         GameObject player = new GameObject(
@@ -102,7 +101,7 @@ public class FileParser {
                         world.addObject(simpleCamera);
                         world.setCamera(simpleCamera);
                         break;
-                    case '#':
+                    case '#': //Platform
                         PlattformPhysics plattformPhysics = new PlattformPhysics();
                         GameObject platform = new GameObject(
                                 null, plattformPhysics, null, x, y, 1, GameObject.PLATTFORM_TAG);
