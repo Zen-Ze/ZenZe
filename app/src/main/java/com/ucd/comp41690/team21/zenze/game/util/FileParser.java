@@ -1,9 +1,13 @@
 package com.ucd.comp41690.team21.zenze.game.util;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
 
+import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 import com.ucd.comp41690.team21.zenze.game.Game;
 import com.ucd.comp41690.team21.zenze.game.GameObject;
+import com.ucd.comp41690.team21.zenze.game.GameState;
 import com.ucd.comp41690.team21.zenze.game.GameWorld;
 import com.ucd.comp41690.team21.zenze.game.components.CameraAI;
 import com.ucd.comp41690.team21.zenze.game.components.PlattformPhysics;
@@ -85,7 +89,7 @@ public class FileParser {
                         PlayerInputHandler playerInputHandler = new PlayerInputHandler(playerSpeed);
                         PlayerPhysics playerPhysics = new PlayerPhysics();
                         GameObject player = new GameObject(
-                                playerInputHandler, playerPhysics, x, y, GameObject.PLAYER_TAG);
+                                playerInputHandler, playerPhysics, null, x, y, 1, GameObject.PLAYER_TAG);
                         world.addObject(player);
                         world.setPlayer(player);
                         //initialise the camera
@@ -94,14 +98,14 @@ public class FileParser {
                         GameObject simpleCamera = new GameObject(
                                 new CameraAI(cameraMovementWindow, player, viewFrustum,
                                         cameraMinSpeed, playerSpeed),
-                                null, 0, 0, GameObject.CAMERA_TAG);
+                                null, null, 0, 0, 1, GameObject.CAMERA_TAG);
                         world.addObject(simpleCamera);
                         world.setCamera(simpleCamera);
                         break;
                     case '#':
                         PlattformPhysics plattformPhysics = new PlattformPhysics();
                         GameObject platform = new GameObject(
-                                null, plattformPhysics, x, y, GameObject.PLATTFORM_TAG);
+                                null, plattformPhysics, null, x, y, 1, GameObject.PLATTFORM_TAG);
                         world.addObject(platform);
                         x++;
                         break;
@@ -111,6 +115,19 @@ public class FileParser {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static GameState loadState(WeatherStatus status){
+        switch (status){
+            case SUNNY:
+                return new GameState(Color.RED);
+            case RAINY:
+                return new GameState(Color.BLUE);
+            case SNOWY:
+                return new GameState(Color.WHITE);
+            default:
+                return new GameState(Color.GRAY);
         }
     }
 

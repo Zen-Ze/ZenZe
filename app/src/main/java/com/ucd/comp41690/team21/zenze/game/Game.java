@@ -6,6 +6,7 @@ import android.view.InputEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
+import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 import com.ucd.comp41690.team21.zenze.game.util.Observer;
 import com.ucd.comp41690.team21.zenze.game.util.Subject;
 import com.ucd.comp41690.team21.zenze.game.view.Renderer;
@@ -30,14 +31,14 @@ public class Game implements Runnable, Subject<InputEvent> {
     private int gameWidth;
     private int gameHeight;
 
-    public Game(Context context, int width, int height) {
+    public Game(Context context, int width, int height, WeatherStatus status) {
         Game.instance = this;
         this.gameWidth = width;
         this.gameHeight = height;
         this.inputObserverList = new LinkedList<>();
         this.running = true;
 
-        this.gameWorld = new GameWorld(context);
+        this.gameWorld = new GameWorld(context, status);
         this.gameView = new SimpleRenderer(context, gameWorld);
     }
 

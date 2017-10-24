@@ -60,7 +60,8 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
                     //lock the canvas to draw
                     if ((canvas = surfaceHolder.getSurface().lockHardwareCanvas()) != null) {
                         //Background color
-                        canvas.drawColor(Color.BLUE);
+                        canvas.drawColor(world.getState().getBackground()
+                        );
 
                         //set camera position
                         float offset = world.getCamera().x_Pos - (numTilesAcross / 2);
@@ -74,7 +75,7 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
                                     float y = o.y_Pos * tileSize + tileSize / 2;
                                     paint.setStyle(Paint.Style.FILL);
                                     paint.setColor(Color.WHITE);
-                                    canvas.drawCircle(x, y, tileSize / 2, paint);
+                                    canvas.drawCircle(x, y, tileSize / 2 * o.scale, paint);
                                     break;
                                 //represent Plattforms as black boxes
                                 case GameObject.PLATTFORM_TAG:

@@ -26,7 +26,8 @@ public class MainMenuActivity extends Activity {
      * @param v
      */
     public void startGame(View v){
-//        WeatherService.getWeatherStatus();
-        startActivity(new Intent(MainMenuActivity.this, GameActivity.class));
+        Intent gameIntent = new Intent(MainMenuActivity.this, GameActivity.class);
+        gameIntent.putExtra("Game State", WeatherService.getWeatherStatus());
+        startActivity(gameIntent);
     }
 }

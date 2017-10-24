@@ -1,6 +1,7 @@
 package com.ucd.comp41690.team21.zenze.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 import com.ucd.comp41690.team21.zenze.game.Game;
 
 /**
@@ -34,7 +36,8 @@ public class GameActivity extends Activity {
         int width = Math.max(size.x, size.y);
         int height = Math.min(size.x, size.y);
         //create a new game
-        game = new Game(this, width, height);
+        WeatherStatus gameState = (WeatherStatus)(getIntent().getExtras().get("Game State"));
+        game = new Game(this, width, height, gameState);
         setContentView(game.getView());
     }
 
