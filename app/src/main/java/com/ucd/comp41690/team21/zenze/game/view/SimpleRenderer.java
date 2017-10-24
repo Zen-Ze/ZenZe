@@ -58,7 +58,7 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
                 //check if surface is valid
                 if (surfaceHolder.getSurface().isValid()) {
                     //lock the canvas to draw
-                    if ((canvas = surfaceHolder.lockCanvas()) != null) {
+                    if ((canvas = surfaceHolder.getSurface().lockHardwareCanvas()) != null) {
                         //Background color
                         canvas.drawColor(Color.BLUE);
 
@@ -95,7 +95,7 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
             } finally {
                 if (canvas != null) {
                     //unlock canvas after drawing
-                    surfaceHolder.unlockCanvasAndPost(canvas);
+                    surfaceHolder.getSurface().unlockCanvasAndPost(canvas);
                 }
             }
         }
