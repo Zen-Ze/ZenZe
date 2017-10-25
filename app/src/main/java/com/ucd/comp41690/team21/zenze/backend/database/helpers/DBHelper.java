@@ -151,13 +151,23 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public int updatePlayer(Player player) {
+        SQLiteDatabase db = this.getWritableDatabase();
 
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PlayerInfo.PlayerEntry.COLUMN_NAME_USERNAME, player.getUsername());
+        contentValues.put(PlayerInfo.PlayerEntry.COLUMN_NAME_LAST_COORD_X, player.getLastCoordX());
+        contentValues.put(PlayerInfo.PlayerEntry.COLUMN_NAME_LAST_COORD_Y, player.getLastCoordY());
+        contentValues.put(PlayerInfo.PlayerEntry.COLUMN_NAME_SAVED_HEALTH, player.getSavedHealth());
+        contentValues.put(PlayerInfo.PlayerEntry.COLUMN_NAME_ITEM_LIST_ID, player.getItemListId());
+        contentValues.put(PlayerInfo.PlayerEntry.COLUMN_NAME_CURRENT_LEVEL, player.getCurrentLevel());
 
-
-        return 0;
+        return db.update(PlayerInfo.PlayerEntry.TABLE_NAME, contentValues, PlayerInfo.PlayerEntry._ID + " = ?",
+                new String[] { String.valueOf(player.getId()) });
     }
 
-    public void deletePlayer(Player player) {}
+    public void deletePlayer(Player player) {
+
+    }
 
     /**
      * Items
