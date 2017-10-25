@@ -2,6 +2,7 @@ package com.ucd.comp41690.team21.zenze.backend.database.helpers;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -12,6 +13,7 @@ import com.ucd.comp41690.team21.zenze.backend.database.generators.ItemListLineGe
 import com.ucd.comp41690.team21.zenze.backend.database.generators.PlayerGenerator;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemListInfo;
+import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemListLineInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.PlayerInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.models.Item;
 import com.ucd.comp41690.team21.zenze.backend.database.models.ItemList;
@@ -326,14 +328,121 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * Item List Lines
      */
-    public void addItemListLine(ItemListLine itemListLine) { }
 
-    public ItemListLine getItemListLine(int itemListLineId) { return null; }
+    /**
+     * Insert an item list line in the database.
+     * @param itemListLine
+     */
+    public void addItemListLine(ItemListLine itemListLine) {
+        SQLiteDatabase db = this.getWritableDatabase();
 
-    public List<ItemListLine> getItemListLines(int pageNumber, int pageSize, int itemListId) { return null; }
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ItemListLineInfo.ItemListLineEntry.COLUMN_NAME_AMOUNT, itemListLine.getAmount());
+        contentValues.put(ItemListLineInfo.ItemListLineEntry.COLUMN_NAME_ITEM_ID, itemListLine.getItemId());
+        contentValues.put(ItemListLineInfo.ItemListLineEntry.COLUMN_NAME_ITEM_LIST_ID, itemListLine.getItemListId());
 
-    public int updateItemListLine(ItemListLine itemListLine) { return 0; }
+        db.insert(ItemListLineInfo.ItemListLineEntry.TABLE_NAME, null, contentValues);
+        db.close();
+    }
 
-    public void deleteItemListLine(ItemListLine itemListLine) {}
+    /**
+     * Retrieve an item list line from the database.
+     * @param itemListLineId
+     * @return
+     */
+    public ItemListLine getItemListLine(int itemListLineId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // int id, int amount, int itemId, int itemListId
+
+        Cursor cursor = db.query(ItemInfo.ItemEntry.TABLE_NAME,
+                new String[] {
+                        ItemListLineInfo.ItemListLineEntry._ID,
+                        ItemListLineInfo.ItemListLineEntry.COLUMN_NAME_AMOUNT,
+                        ItemListLineInfo.ItemListLineEntry.COLUMN_NAME_ITEM_ID,
+                        ItemListLineInfo.ItemListLineEntry.COLUMN_NAME_ITEM_LIST_ID
+                }, ItemListLineInfo.ItemListLineEntry._ID + "=?", new String[] { String.valueOf(itemListLineId) }, null, null, null, null);
+
+        if (cursor!=null) cursor.moveToFirst();
+
+        ItemListLine itemListLine = new ItemListLine(
+                Integer.parseInt(cursor.getString(0)),
+                Integer.valueOf(cursor.getString(1)),
+                Integer.valueOf(cursor.getString(2)),
+                Integer.valueOf(cursor.getString(3))
+        );
+
+        return itemListLine;
+    }
+
+    /**
+     * Retrieve item list lines from item list id.
+     * You should use this and then retrieve items 1 by 1 for displaying.
+     * Also, if you change page, PLEASE do not re-create an instance, we're working with mobile devices
+     * so there are limitations.
+     * @param pageNumber
+     * @param pageSize
+     * @param itemListId
+     * @return
+     */
+    public List<ItemListLine> getItemListLines(int pageNumber, int pageSize, int itemListId) {
+        String query =
+                "SELECT * FROM " + ItemListLineInfo.ItemListLineEntry._ID
+                        + "WHERE " + ItemListLineInfo.ItemListLineEntry.COLUMN_NAME_ITEM_LIST_ID + " = " + String.valueOf(itemListId)
+                        + " LIMIT " + String.valueOf(pageSize)
+                        + " OFFSET " + String.valueOf(pageSize*pageNumber);
+
+        List<ItemListLine> itemListLines = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+
+                ItemListLine itemListLine = new ItemListLine(
+                        Integer.parseInt(cursor.getString(0)),
+                        Integer.valueOf(cursor.getString(1)),
+                        Integer.valueOf(cursor.getString(2)),
+                        Integer.valueOf(cursor.getString(3))
+                );
+
+                itemListLines.add(itemListLine);
+
+                cursor.moveToNext();
+            }
+        }
+
+        return itemListLines;
+
+    }
+
+    /**
+     * Update an item list line.
+     * @param itemListLine
+     * @return
+     */
+    public int updateItemListLine(ItemListLine itemListLine) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ItemListLineInfo.ItemListLineEntry.COLUMN_NAME_AMOUNT, itemListLine.getAmount());
+        contentValues.put(ItemListLineInfo.ItemListLineEntry.COLUMN_NAME_ITEM_LIST_ID, itemListLine.getItemListId());
+        contentValues.put(ItemListLineInfo.ItemListLineEntry.COLUMN_NAME_ITEM_ID, itemListLine.getItemId());
+
+        return db.update(ItemListLineInfo.ItemListLineEntry.TABLE_NAME, contentValues, ItemListLineInfo.ItemListLineEntry._ID + " = ?",
+                new String[] { String.valueOf(itemListLine.getId()) });
+    }
+
+    /**
+     * Delete an item list line from the database.
+     * @param itemListLine
+     */
+    public void deleteItemListLine(ItemListLine itemListLine) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(ItemListLineInfo.ItemListLineEntry.TABLE_NAME, ItemListLineInfo.ItemListLineEntry._ID + " = ?"
+                , new String[] { String.valueOf(itemListLine.getId()) });
+        db.close();
+    }
 
 }
