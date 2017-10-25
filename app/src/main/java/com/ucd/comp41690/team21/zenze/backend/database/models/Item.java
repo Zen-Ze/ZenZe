@@ -6,6 +6,18 @@ package com.ucd.comp41690.team21.zenze.backend.database.models;
 
 public class Item extends BaseModel {
 
+    /**
+     * Item
+     * +-----------------------------------------+------------------+-----------------+
+     * |                   Field                 |       type       |       Key       |
+     * +-----------------------------------------+------------------+-----------------+
+     * | _ID                                     |  INTEGER         |  PRI            |
+     * | Name                                    |  VARCHAR(64)     |                 |
+     * | Description                             |  TEXT            |                 |
+     * | SpritePath                              |  TEXT            |                 |
+     * +-----------------------------------------+------------------+-----------------+
+     */
+
     private String name;
     private String desc;
     private String imgPath;
