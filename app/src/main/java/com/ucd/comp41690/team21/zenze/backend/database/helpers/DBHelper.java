@@ -10,6 +10,7 @@ import com.ucd.comp41690.team21.zenze.backend.database.generators.ItemGenerator;
 import com.ucd.comp41690.team21.zenze.backend.database.generators.ItemListGenerator;
 import com.ucd.comp41690.team21.zenze.backend.database.generators.ItemListLineGenerator;
 import com.ucd.comp41690.team21.zenze.backend.database.generators.PlayerGenerator;
+import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.PlayerInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.models.Item;
 import com.ucd.comp41690.team21.zenze.backend.database.models.ItemList;
@@ -63,6 +64,11 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * Players
      */
+
+    /**
+     * Add a player to the database.
+     * @param player
+     */
     public void addPlayer(Player player) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -78,6 +84,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Retrieve a player from the database
+     * @param playerId
+     * @return
+     */
     public Player getPlayer(int playerId) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -113,8 +124,8 @@ public class DBHelper extends SQLiteOpenHelper {
      * Retrieve players from the database in a paginated manner.
      * If you implement a paginated system, you should overwrite the list everytime, instead of
      * creating a new one.
-     * @param pageNumber
-     * @param pageSize
+     * @param pageNumber the page number, should start at 0
+     * @param pageSize the amount of items per page
      * @return
      */
     public List<Player> getPlayers(int pageNumber, int pageSize) {
@@ -166,17 +177,80 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void deletePlayer(Player player) {
-
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(PlayerInfo.PlayerEntry.TABLE_NAME, PlayerInfo.PlayerEntry._ID + " = ?", new String[] { String.valueOf(player.getId()) });
+        db.close();
     }
 
     /**
      * Items
      */
-    public Item getItem(int itemId) {return null;}
 
-    public List<Item> getItems(int pageNumber, int pageSize) { return null; }
+    /**
+     * Retrieve an item from the database.
+     * @param itemId
+     * @return
+     */
+    public Item getItem(int itemId) {
+        SQLiteDatabase db = this.getReadableDatabase();
 
-    // No update, add or delete, shouldn't be useful, as we'll use dumps
+        //int id, int lastCoordX, int lastCoordY, int savedHealth, String username, int currentLevel, int itemListId
+
+        Cursor cursor = db.query(ItemInfo.ItemEntry.TABLE_NAME,
+                new String[] {
+                        ItemInfo.ItemEntry._ID,
+                        ItemInfo.ItemEntry.COLUMN_NAME_NAME,
+                        ItemInfo.ItemEntry.COLUMN_NAME_DESCRIPTION,
+                        ItemInfo.ItemEntry.COLUMN_NAME_SPRITE_PATH
+                }, PlayerInfo.PlayerEntry._ID + "=?", new String[] { String.valueOf(itemId) }, null, null, null, null);
+
+        if (cursor!=null) cursor.moveToFirst();
+
+        Item item = new Item(
+                Integer.parseInt(cursor.getString(0)),
+                cursor.getString(1),
+                cursor.getString(2),
+                cursor.getString(3)
+        );
+
+        return item;
+    }
+
+    /**
+     * Retrieve items from the database
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    public List<Item> getItems(int pageNumber, int pageSize) {
+        String query =
+                "SELECT * FROM " + ItemInfo.ItemEntry.TABLE_NAME
+                        + " LIMIT " + String.valueOf(pageSize)
+                        + " OFFSET " + String.valueOf(pageSize*pageNumber);
+
+        List<Item> items = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+
+                Item item = new Item(
+                        Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        cursor.getString(3)
+                );
+
+                items.add(item);
+
+                cursor.moveToNext();
+            }
+        }
+
+        return items;
+
+    }
 
     /**
      * Item Lists

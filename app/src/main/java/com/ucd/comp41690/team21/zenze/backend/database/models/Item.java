@@ -29,6 +29,10 @@ public class Item extends BaseModel {
         this.imgPath = imgPath;
     }
 
+    public Item(int id, String name, String imgPath) {
+        this(id, name, null, imgPath);
+    }
+
     public void setDesc(String desc) {
         this.desc = desc;
     }
