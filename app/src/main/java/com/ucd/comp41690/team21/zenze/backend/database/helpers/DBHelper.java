@@ -11,6 +11,7 @@ import com.ucd.comp41690.team21.zenze.backend.database.generators.ItemListGenera
 import com.ucd.comp41690.team21.zenze.backend.database.generators.ItemListLineGenerator;
 import com.ucd.comp41690.team21.zenze.backend.database.generators.PlayerGenerator;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemInfo;
+import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemListInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.PlayerInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.models.Item;
 import com.ucd.comp41690.team21.zenze.backend.database.models.ItemList;
@@ -161,6 +162,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return players;
     }
 
+    /**
+     * Update a player in the database.
+     * @param player
+     * @return
+     */
     public int updatePlayer(Player player) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -176,6 +182,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 new String[] { String.valueOf(player.getId()) });
     }
 
+    /**
+     * Delete a player from the database.
+     * @param player
+     */
     public void deletePlayer(Player player) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(PlayerInfo.PlayerEntry.TABLE_NAME, PlayerInfo.PlayerEntry._ID + " = ?", new String[] { String.valueOf(player.getId()) });
@@ -202,7 +212,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         ItemInfo.ItemEntry.COLUMN_NAME_NAME,
                         ItemInfo.ItemEntry.COLUMN_NAME_DESCRIPTION,
                         ItemInfo.ItemEntry.COLUMN_NAME_SPRITE_PATH
-                }, PlayerInfo.PlayerEntry._ID + "=?", new String[] { String.valueOf(itemId) }, null, null, null, null);
+                }, ItemInfo.ItemEntry._ID + "=?", new String[] { String.valueOf(itemId) }, null, null, null, null);
 
         if (cursor!=null) cursor.moveToFirst();
 
@@ -255,11 +265,63 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * Item Lists
      */
-    public void addItemList(Player player) { }
 
-    public ItemList getItemList(int itemListId) { return null; }
+    /**
+     * Add an item list and link it to a player.
+     * This is done by creating the item list, retrieving the id of the created item list, and
+     * proceed to update the player.
+     * @param player
+     */
+    public void addItemList(Player player) {
+        SQLiteDatabase db = this.getWritableDatabase();
 
-    public void deleteItemList(ItemList itemList) { }
+        ContentValues contentValues = new ContentValues();
+
+
+        db.insert(ItemListInfo.ItemListEntry.TABLE_NAME, null, contentValues);
+
+        String queryToGetLastItem = "SELECT * FROM " + ItemListInfo.ItemListEntry.TABLE_NAME
+                + " ORDER BY " + ItemListInfo.ItemListEntry._ID + " DESC LIMIT 1";
+
+        Cursor cursor = db.rawQuery(queryToGetLastItem, null);
+        cursor.moveToLast();
+
+        int itemListId = Integer.valueOf(cursor.getString(0));
+
+        player.setItemListId(itemListId);
+
+        this.updatePlayer(player);
+
+        db.close();
+    }
+
+    /**
+     * Retrieve an item list
+     * @param itemListId
+     * @return
+     */
+    public ItemList getItemList(int itemListId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(ItemListInfo.ItemListEntry.TABLE_NAME,
+                new String[] {
+                        ItemListInfo.ItemListEntry._ID
+                }, ItemListInfo.ItemListEntry._ID + "=?", new String[] { String.valueOf(itemListId) }, null, null, null, null);
+
+        if (cursor!=null) cursor.moveToFirst();
+
+        ItemList itemList = new ItemList(
+                Integer.parseInt(cursor.getString(0))
+        );
+
+        return itemList;
+    }
+
+    public void deleteItemList(ItemList itemList) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(ItemListInfo.ItemListEntry.TABLE_NAME, ItemListInfo.ItemListEntry._ID + " = ?", new String[] { String.valueOf(itemList.getId()) });
+        db.close();
+    }
 
     /**
      * Item List Lines
