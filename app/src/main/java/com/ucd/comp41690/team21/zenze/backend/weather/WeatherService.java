@@ -1,10 +1,12 @@
 package com.ucd.comp41690.team21.zenze.backend.weather;
 
+import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.ucd.comp41690.team21.zenze.R;
 import com.ucd.comp41690.team21.zenze.backend.JSONParser;
 
 import org.json.JSONArray;
@@ -22,7 +24,7 @@ public class WeatherService {
     /**
      * URL to the openweather app, will need to hide the appid at some point somehow...
      */
-    private static String OPENWEATHERMAP_DEFAULT_URL = "http://api.openweathermap.org/data/2.5/weather?appid=d9ae475ffdf0ffe9da6c449cb86acb8b";
+    private static String OPENWEATHERMAP_DEFAULT_URL = "http://api.openweathermap.org/data/2.5/weather?appid=";
 
     /**
      * Default Location, in our case Dublin.
@@ -37,18 +39,27 @@ public class WeatherService {
      * @param location a location retrieved from the GPS
      * @return The weather status
      */
-    public static WeatherStatus getWeatherStatus(Location location) {
+    public static WeatherStatus getWeatherStatus(Location location, Context context) {
+
+        double[] loc;
+
+        if(location==null) {
+            loc = DEFAULT_LOCATION;
+        }
+        else {
+            loc = new double[]{location.getLatitude(), location.getLongitude()};
+        }
 
         final WeatherStatus[] ret = {WeatherStatus.SUNNY};
 
-        double[] loc = {location.getLatitude(),location.getLongitude()};
-
-        String url = getUrlFromLocation(loc);
+        String url = getUrlFromLocation(loc, context);
 
         // TODO: retrieve weather from openweathermap, get a status accordingly
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONParse().execute(url).get();
+//            Log.d("WEATHER SERVICE", "ARE WE HERE?? ?? ?");
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -62,6 +73,7 @@ public class WeatherService {
 
                 int weatherId = firstArrayObject.getInt("id");
 
+//                Log.d("WEATHER SERVICE", "ARE WE THERE?? ?? " + weatherId);
                 // Taken from http://openweathermap.org/weather-conditions ROUGHLY, might need ajustement
                 if((300<=weatherId && weatherId<600)
                         ||(weatherId==802)
@@ -90,9 +102,13 @@ public class WeatherService {
      * @param location
      * @return
      */
-    public static String getUrlFromLocation(double[] location) {
+    public static String getUrlFromLocation(double[] location, Context context) {
+        String apiKey = context.getString(R.string.openweathermap_api_key);
+
+        Log.d("WEATHER SERVICE", "getUrlFromLocation: apikey= " + apiKey);
+
         if(location.length==2) {
-            String urlFromLocation = OPENWEATHERMAP_DEFAULT_URL + "&lat=" + location[0] + "&lon=" + location[1];
+            String urlFromLocation = OPENWEATHERMAP_DEFAULT_URL + apiKey + "&lat=" + location[0] + "&lon=" + location[1];
             return urlFromLocation;
         }
         return OPENWEATHERMAP_DEFAULT_URL + "&lat=" + DEFAULT_LOCATION[0] + "&lon=" + DEFAULT_LOCATION[1];
