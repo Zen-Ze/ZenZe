@@ -1,0 +1,34 @@
+{
+  "Player" : {
+    "Health" : 100,
+    "Speed" : 0.5,
+    "Damage" : 10,
+    "Scale" : 1,
+    "Image" : "name_of_file_in_drawable",
+    "Tag" : "Player"
+  },
+  "Minion" : {
+    "Health" : 100,
+    "Speed" : 0.5,
+    "Damage" : 10,
+    "Scale" : 1,
+    "Image" : "name_of_file_in_drawable",
+    "Tag" : "Normal"
+  },
+  "EndBoss" : {
+    "Health" : 200,
+    "Speed" : 0.1,
+    "Damage" : 20,
+    "Scale" : 2,
+    "Image" : "name_of_file_in_drawable",
+    "Tag" : "Normal"
+  },
+  "Anger" : {
+    "Parent" : "Minion",
+    "Damage" : 12,
+    "Image" : "name_of_file_in_drawable",
+    "Tag" : "Sunny"
+  },
+  "Camera_MovementWindow" : "2",
+  "Camera_MinSpeed" : "0.0"
+}
