@@ -1,5 +1,6 @@
 package com.ucd.comp41690.team21.zenze.backend.weather;
 
+import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -33,14 +34,16 @@ public class WeatherService {
      *     - Uses the GPS to figure out where the person is
      *     - Gets the weather from the location
      *     - Retrieves a weather status from this
+     * @param location a location retrieved from the GPS
      * @return The weather status
      */
-    public static WeatherStatus getWeatherStatus() {
+    public static WeatherStatus getWeatherStatus(Location location) {
 
         final WeatherStatus[] ret = {WeatherStatus.SUNNY};
 
-        double[] location = getLocation();
-        String url = getUrlFromLocation(location);
+        double[] loc = {location.getLatitude(),location.getLongitude()};
+
+        String url = getUrlFromLocation(loc);
 
         // TODO: retrieve weather from openweathermap, get a status accordingly
         JSONObject jsonObject = null;
@@ -95,22 +98,10 @@ public class WeatherService {
         return OPENWEATHERMAP_DEFAULT_URL + "&lat=" + DEFAULT_LOCATION[0] + "&lon=" + DEFAULT_LOCATION[1];
     }
 
-    /**
-     * Method to get the location of the user. This uses the GPS sensor in order to find out the
-     * player's location.
-     * @return The location of the user as a String, by default Dublin, Format: {lat, lon}
-     */
-    private static double[] getLocation() {
-        double[] ret = DEFAULT_LOCATION;
-
-        return ret;
-    }
-
     private static class JSONParse extends AsyncTask<String, String, JSONObject> {
 
         @Override
         protected JSONObject doInBackground(String... strings) {
-//            Log.d("WeatherService", "IS this my url ?? ?? ?? ? ?? " + strings[0]);
             JSONParser jParser = new JSONParser();
             JSONObject jsonObject = jParser.getJSONFromUrl(strings[0]);
             return jsonObject;
