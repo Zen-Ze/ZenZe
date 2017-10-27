@@ -6,6 +6,18 @@ package com.ucd.comp41690.team21.zenze.backend.database.models;
 
 public class ItemListLine extends BaseModel {
 
+    /**
+     * ItemListLine
+     * +-----------------------------------------+------------------+-----------------+
+     * |                   Field                 |       type       |       Key       |
+     * +-----------------------------------------+------------------+-----------------+
+     * | _ID                                     |  INTEGER         |  PRI            |
+     * | Amount                                  |  INTEGER         |                 |
+     * | ItemId                                  |  INTEGER         |  FRN            |
+     * | ItemListId                              |  INTEGER         |  FRN            |
+     * +-----------------------------------------+------------------+-----------------+
+     */
+
     private int amount;
     private int itemId;
     private int itemListId;
