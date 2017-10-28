@@ -23,10 +23,14 @@ public class GameObject {
     //2D Position
     public float x_Pos;
     public float y_Pos;
-    public int scale;
+    public float scale;
 
     //Tag to identify objects
     private String tag;
+
+    //Live related stuff
+    public int health;
+    public boolean isAlive;
 
     /**
      * Creates a new Game Object
@@ -35,17 +39,23 @@ public class GameObject {
      * @param type Defines the type of the object
      * @param x The position along the x axis
      * @param y The position along the y axis
-     * @param scale The scale of this object. As the game is dealing with tiles, this can only be an int
      * @param tag An optional tag to easly identify the object
      */
-    public GameObject(InputComponent inputHandler, PhysicsComponent physics, Type type, float x, float y, int scale, String tag){
+    public GameObject(InputComponent inputHandler, PhysicsComponent physics, Type type, float x, float y, String tag){
         this.physics = physics;
         this.inputHandler = inputHandler;
         this.type = type;
-        x_Pos = x;
-        y_Pos = y;
-        this.scale = scale;
+        this.x_Pos = x;
+        this.y_Pos = y;
+        if (type == null){
+            scale = 1;
+            health = 100;
+        }else {
+            this.scale = type.scale;
+            this.health = type.health;
+        }
         this.tag = tag;
+        this.isAlive = true;
     }
 
     /**
@@ -54,13 +64,10 @@ public class GameObject {
      */
     public void update(double elapsedTime){
         if(inputHandler!=null) {
-            Command cmd = inputHandler.handleInput(this);
-            if(cmd!=null){
-                cmd.execute(this);
-            }
+            inputHandler.handleInput(this);
         }
         if(physics!=null) {
-            physics.handlePhysics(this);
+            physics.handlePhysics(this, elapsedTime);
         }
     }
 

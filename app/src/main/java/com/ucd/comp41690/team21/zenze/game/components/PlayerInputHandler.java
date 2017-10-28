@@ -22,35 +22,37 @@ public class PlayerInputHandler implements InputComponent, Observer<InputEvent>{
     private MoveHorizontal moveRight;
     private Jump jumpUp;
 
-    private Command returnCommand;
-
-    public PlayerInputHandler(float playerSpeed) {
+    public PlayerInputHandler() {
         Game.getInstance().addObserver(this);
-        moveLeft = new MoveHorizontal(-playerSpeed);
-        moveRight = new MoveHorizontal(playerSpeed);
+        moveLeft = new MoveHorizontal(MoveHorizontal.DIRECTION_LEFT);
+        moveRight = new MoveHorizontal(MoveHorizontal.DIRECTION_RIGHT);
         jumpUp = new Jump();
-        returnCommand = null;
     }
 
     @Override
-    public Command handleInput(GameObject object) {
+    public void handleInput(GameObject object) {
         if(inputEvent!=null) {
             switch (inputEvent.getAction() & MotionEvent.ACTION_MASK) {
                 case MotionEvent.ACTION_DOWN:
                     if (inputEvent.getX() < Game.getInstance().getWidth() / 4) {
-                        returnCommand = moveLeft;
+                        moveLeft.execute(object);
                     } else if  (inputEvent.getX() > Game.getInstance().getWidth()*3/4){
-                        returnCommand = moveRight;
+                        moveRight.execute(object);
                     } else {
-                        returnCommand = jumpUp;
+                        jumpUp.execute(object);
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    returnCommand = null;
+                    if (inputEvent.getX() < Game.getInstance().getWidth() / 4) {
+                        moveLeft.exit(object);
+                    } else if  (inputEvent.getX() > Game.getInstance().getWidth()*3/4){
+                        moveRight.exit(object);
+                    } else {
+                        jumpUp.exit(object);
+                    }
                     break;
             }
         }
-        return returnCommand;
     }
 
     @Override

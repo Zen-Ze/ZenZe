@@ -6,6 +6,7 @@ import android.util.Log;
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 import com.ucd.comp41690.team21.zenze.game.util.FileParser;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,8 +32,12 @@ public class GameWorld {
     }
 
     public void update(double elapsedTime){
-        for(GameObject o : entities){
-            o.update(elapsedTime);
+        for(Iterator<GameObject> it = entities.iterator(); it.hasNext();){
+            GameObject obj = it.next();
+            obj.update(elapsedTime);
+            if(!obj.isAlive){
+                it.remove();
+            }
         }
     }
 

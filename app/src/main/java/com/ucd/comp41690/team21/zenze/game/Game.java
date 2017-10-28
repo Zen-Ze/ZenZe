@@ -2,6 +2,7 @@ package com.ucd.comp41690.team21.zenze.game;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 import android.view.InputEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -54,7 +55,8 @@ public class Game implements Runnable, Subject<InputEvent> {
             beginTime = System.currentTimeMillis();
             framesSkipped = 0;
 
-            gameWorld.update((System.currentTimeMillis() - prevUpdate) / 1000);
+            double updateTime = System.currentTimeMillis();
+            gameWorld.update((updateTime - prevUpdate) / 1000);
             prevUpdate = System.currentTimeMillis();
             gameView.render(gameWorld);
 

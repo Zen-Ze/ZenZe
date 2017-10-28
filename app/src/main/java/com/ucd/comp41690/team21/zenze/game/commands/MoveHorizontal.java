@@ -7,12 +7,29 @@ import com.ucd.comp41690.team21.zenze.game.GameObject;
  */
 
 public class MoveHorizontal implements Command {
-    private float speed;
-    public MoveHorizontal(float speed){
-        this.speed = speed;
+
+    public static int DIRECTION_LEFT = -1;
+    public static int DIRECTION_RIGHT = 1;
+    private int direction;
+
+    public MoveHorizontal(int direction){
+        this.direction = direction;
     }
+
     @Override
     public void execute(GameObject actor) {
-        actor.x_Pos += speed;
+        actor.physics.setVelocityX(actor.type.speed*direction);
     }
+
+    @Override
+    public void exit(GameObject actor) {
+        actor.physics.setVelocityX(0);
+    }
+
+    @Override
+    public void enter(GameObject actor) {
+
+    }
+
+
 }

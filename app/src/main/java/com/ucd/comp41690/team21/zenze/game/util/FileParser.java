@@ -14,6 +14,7 @@ import com.ucd.comp41690.team21.zenze.game.components.PlattformPhysics;
 import com.ucd.comp41690.team21.zenze.game.components.PlayerInputHandler;
 import com.ucd.comp41690.team21.zenze.game.components.PlayerPhysics;
 import com.ucd.comp41690.team21.zenze.R;
+import com.ucd.comp41690.team21.zenze.game.components.Type;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,10 +86,11 @@ public class FileParser {
                         y++;
                         break;
                     case '1'://Player
-                        PlayerInputHandler playerInputHandler = new PlayerInputHandler(playerSpeed);
-                        PlayerPhysics playerPhysics = new PlayerPhysics();
+                        PlayerInputHandler playerInputHandler = new PlayerInputHandler();
+                        PlayerPhysics playerPhysics = new PlayerPhysics(14.22222222f);
+                        Type type = new Type(100,playerSpeed,1);
                         GameObject player = new GameObject(
-                                playerInputHandler, playerPhysics, null, x, y, 1, GameObject.PLAYER_TAG);
+                                playerInputHandler, playerPhysics, type, x, y, GameObject.PLAYER_TAG);
                         world.addObject(player);
                         world.setPlayer(player);
                         //initialise the camera
@@ -96,15 +98,15 @@ public class FileParser {
                                 (Game.getInstance().getHeight() / numTilesH + 1) + 2) / 2;
                         GameObject simpleCamera = new GameObject(
                                 new CameraAI(cameraMovementWindow, player, viewFrustum,
-                                        cameraMinSpeed, playerSpeed),
-                                null, null, 0, 0, 1, GameObject.CAMERA_TAG);
+                                        cameraMinSpeed, 0.5f),
+                                null, null, 0, 0, GameObject.CAMERA_TAG);
                         world.addObject(simpleCamera);
                         world.setCamera(simpleCamera);
                         break;
                     case '#': //Platform
                         PlattformPhysics plattformPhysics = new PlattformPhysics();
                         GameObject platform = new GameObject(
-                                null, plattformPhysics, null, x, y, 1, GameObject.PLATTFORM_TAG);
+                                null, plattformPhysics, null, x, y, GameObject.PLATTFORM_TAG);
                         world.addObject(platform);
                         x++;
                         break;

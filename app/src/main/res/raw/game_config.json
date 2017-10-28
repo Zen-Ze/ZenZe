@@ -1,7 +1,7 @@
 {
   "Player" : {
     "Health" : 100,
-    "Speed" : 0.5,
+    "Speed" : 8,
     "Damage" : 10,
     "Scale" : 1,
     "Image" : "name_of_file_in_drawable",

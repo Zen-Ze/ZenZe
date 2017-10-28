@@ -5,7 +5,6 @@ import com.ucd.comp41690.team21.zenze.game.GameObject;
 
 public class EnemyAI implements InputComponent {
     @Override
-    public Command handleInput(GameObject object) {
-        return null;
+    public void handleInput(GameObject object) {
     }
 }

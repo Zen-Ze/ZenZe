@@ -24,7 +24,7 @@ public class CameraAI implements InputComponent {
     }
 
     @Override
-    public Command handleInput(GameObject object) {
+    public void handleInput(GameObject object) {
         int numTilesV = Game.getInstance().getGameWorld().getNumTilesV();
         //lock borders of level
         if (focus.x_Pos <= viewFrustum && object.x_Pos <= viewFrustum) {
@@ -38,11 +38,12 @@ public class CameraAI implements InputComponent {
             float currentSpeed = (minSpeed*(movementWindow-diff)+maxSpeed*diff)/movementWindow;
 
             if (distance <= 0 && Math.abs(distance) >= movementWindow) {
-                return new MoveHorizontal(currentSpeed);
+                //return new MoveHorizontal(currentSpeed);
+                object.x_Pos += currentSpeed;
             } else if (distance >= 0 && Math.abs(distance) >= movementWindow) {
-                return new MoveHorizontal(-currentSpeed);
+                //return new MoveHorizontal(-currentSpeed);
+                object.x_Pos -= currentSpeed;
             }
         }
-        return null;
     }
 }
