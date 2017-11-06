@@ -28,9 +28,19 @@ import java.io.InputStreamReader;
  * loads the level from a file and creates objects
  */
 public class FileParser {
-    private static float playerSpeed = 0;
+    //Player stats
+    private static int playerSpeed = 0;
+    private static int playerMinJumpHeight = 0;
+    private static int playerMaxJumpHeight = 0;
+    private static float playerJumpTime = 0;
+    private static float playerScale = 0;
+    private static int playerHealth = 0;
+
+    //Camera stats
     private static int cameraMovementWindow = 0;
     private static float cameraMinSpeed = 0;
+
+    //Tile Map stats
     private static int numTilesV = 0;
     private static int numTilesH = 0;
 
@@ -54,7 +64,11 @@ public class FileParser {
         }
         try {
             JSONObject gameConfig = new JSONObject(sb.toString());
-            playerSpeed = (float)gameConfig.getJSONObject("Player").getDouble("Speed");
+            playerSpeed = gameConfig.getInt("Player_Speed");
+            playerMaxJumpHeight = gameConfig.getInt("Player_MaxJumpHeight");
+            playerMinJumpHeight = gameConfig.getInt("Player_MinJumpHeight");
+            playerJumpTime = (float) gameConfig.getDouble("Player_JumpTime");
+            playerScale = (float) gameConfig.getDouble("Player_Scale");
             cameraMovementWindow = gameConfig.getInt("Camera_MovementWindow");
             cameraMinSpeed = gameConfig.getInt("Camera_MinSpeed");
         } catch (JSONException e) {
@@ -75,20 +89,21 @@ public class FileParser {
 
         try {
             numTilesH = Integer.parseInt(reader.readLine());
+            numTilesV = Integer.parseInt(reader.readLine());
             int x = 0;
             int y = 0;
             while (reader.ready()) {
                 char c = (char) reader.read();
                 switch (c) {
                     case '\n':
-                        numTilesV = x;
                         x = 0;
                         y++;
                         break;
                     case '1'://Player
                         PlayerInputHandler playerInputHandler = new PlayerInputHandler();
-                        PlayerPhysics playerPhysics = new PlayerPhysics(14.22222222f);
-                        Type type = new Type(100,playerSpeed,1);
+                        PlayerPhysics playerPhysics = new PlayerPhysics(playerMinJumpHeight,
+                                playerMaxJumpHeight, playerJumpTime, numTilesV, numTilesH, playerScale);
+                        Type type = new Type(playerHealth, playerSpeed, playerScale);
                         GameObject player = new GameObject(
                                 playerInputHandler, playerPhysics, type, x, y, GameObject.PLAYER_TAG);
                         world.addObject(player);
@@ -98,7 +113,7 @@ public class FileParser {
                                 (Game.getInstance().getHeight() / numTilesH + 1) + 2) / 2;
                         GameObject simpleCamera = new GameObject(
                                 new CameraAI(cameraMovementWindow, player, viewFrustum,
-                                        cameraMinSpeed, 0.5f),
+                                        cameraMinSpeed, 0.5f, numTilesV),
                                 null, null, 0, 0, GameObject.CAMERA_TAG);
                         world.addObject(simpleCamera);
                         world.setCamera(simpleCamera);
@@ -107,7 +122,7 @@ public class FileParser {
                         PlattformPhysics plattformPhysics = new PlattformPhysics();
                         GameObject platform = new GameObject(
                                 null, plattformPhysics, null, x, y, GameObject.PLATTFORM_TAG);
-                        world.addObject(platform);
+                        world.insertObject(platform, 0);
                         x++;
                         break;
                     default:
@@ -119,8 +134,8 @@ public class FileParser {
         }
     }
 
-    public static GameState loadState(WeatherStatus status){
-        switch (status){
+    public static GameState loadState(WeatherStatus status) {
+        switch (status) {
             case SUNNY:
                 return new GameState(Color.RED);
             case RAINY:

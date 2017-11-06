@@ -23,16 +23,13 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
-    //UI
-    private TextView text;
-
     //dimensions
     private final int numTilesH;
     private final int numTilesV;
     private final int numTilesAcross;
     private final int width;
     private final int height;
-    private final int tileSize;
+    private final float tileSize;
 
     /**
      * Initialise the canvas for the renderer
@@ -43,15 +40,13 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
         super(context);
         surfaceHolder = getHolder();
         paint = new Paint();
-        text = new TextView(context);
-        text.setText("Hello World!");
 
         width = Game.getInstance().getWidth();
         height = Game.getInstance().getHeight();
         numTilesH = world.getNumTilesH();
         numTilesV = world.getNumTilesV();
-        tileSize = height / numTilesH + 1;
-        numTilesAcross = width / tileSize + 2;
+        tileSize = height / (float)numTilesH;
+        numTilesAcross = (int)(width / tileSize) + 2;
     }
 
     @Override

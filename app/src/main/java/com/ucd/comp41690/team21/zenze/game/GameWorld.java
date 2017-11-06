@@ -44,6 +44,9 @@ public class GameWorld {
     public void addObject(GameObject obj){
         entities.add(obj);
     }
+    public void insertObject(GameObject obj, int position){
+        entities.add(position, obj);
+    }
 
     public List<GameObject> getEntities(){
         return entities;

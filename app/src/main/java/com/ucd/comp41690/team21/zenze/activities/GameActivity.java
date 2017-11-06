@@ -9,7 +9,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.Window;
@@ -19,19 +18,17 @@ import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 import com.ucd.comp41690.team21.zenze.game.Game;
 import com.ucd.comp41690.team21.zenze.game.util.InputEvent;
 
-import java.util.Arrays;
-
 /**
  * the main game screen
  */
 public class GameActivity extends Activity implements SensorEventListener {
-    private final static float ROTATION_ANGLE = 0.2f;
+    private final static float ROTATION_ANGLE = 0.15f;
 
     private Game game;
 
     private SensorManager mSensorManager;
-    private Sensor acc;
-    private Sensor mag;
+    private Sensor accelerometer;
+    private Sensor magnetometer;
     private final float[] mAccelerometerReading = new float[3];
     private final float[] mMagnetometerReading = new float[3];
     private final float[] mRotationMatrix = new float[9];
@@ -55,8 +52,8 @@ public class GameActivity extends Activity implements SensorEventListener {
         int height = Math.min(size.x, size.y);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        acc = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mag = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
         //create a new game
         WeatherStatus gameState = (WeatherStatus) (getIntent().getExtras().get("Game State"));
@@ -74,8 +71,8 @@ public class GameActivity extends Activity implements SensorEventListener {
     @Override
     protected void onResume() {
         super.onResume();
-        mSensorManager.registerListener(this, acc, SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
-        mSensorManager.registerListener(this, mag, SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
         game.resume();
     }
 

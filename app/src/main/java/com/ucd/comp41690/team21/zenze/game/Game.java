@@ -23,7 +23,7 @@ public class Game implements Runnable, Subject<InputEvent> {
     private List<Observer<InputEvent>> inputObserverList;
 
     volatile boolean running;
-    private Thread gameThread = null;
+    private Thread gameThread;
 
     private static Game instance;
     private int gameWidth;
@@ -35,10 +35,11 @@ public class Game implements Runnable, Subject<InputEvent> {
         this.gameWidth = width;
         this.gameHeight = height;
         this.inputObserverList = new LinkedList<>();
-        this.running = true;
 
         this.gameWorld = new GameWorld(context, status);
         this.gameView = new SimpleRenderer(context, gameWorld);
+        this.gameThread  = null;
+        this.log = "";
     }
 
     @Override

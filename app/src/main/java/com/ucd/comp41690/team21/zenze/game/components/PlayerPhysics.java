@@ -4,52 +4,61 @@ import android.util.Log;
 
 import com.ucd.comp41690.team21.zenze.game.GameObject;
 
-public class PlayerPhysics implements PhysicsComponent {
-    boolean isOnGround;
+public class PlayerPhysics extends PhysicsComponent {
+    private final float ground;
+    private final float rightBorder;
 
-    float velX;
-    float velY;
-    float gravity;
-    float acceleration;
+    private final float boundingVolume;
 
-    public PlayerPhysics(float gravity){
-        isOnGround = true;
-        velX = 0;
-        velY = 0;
-        this.gravity = gravity;
+    private final float jumpVelocity;
+    private final float earlyJumpVelocity;
+    public boolean isJumping;
+
+    public PlayerPhysics(int minJumpHeight, int maxJumpHeight, float jumpTime,
+                         float rightBorder, float ground, float scale) {
+        x_Vel = 0;
+        y_Vel = 0;
         acceleration = 0;
+        gravity = 2 * maxJumpHeight / (jumpTime * jumpTime);
+
+        this.jumpVelocity = (float) -Math.sqrt(2 * gravity * maxJumpHeight);
+        this.earlyJumpVelocity = (float) -Math.sqrt(jumpVelocity * jumpVelocity
+                - 2 * gravity * (maxJumpHeight - minJumpHeight));
+
+        this.boundingVolume = scale / 2;
+        this.ground = ground - 2 * boundingVolume;
+        this.rightBorder = rightBorder - 4 * boundingVolume;
+        isJumping = false;
     }
 
     @Override
     public void handlePhysics(GameObject object, double elapsedTime) {
-        velX += acceleration*elapsedTime;
-        velY += gravity*elapsedTime;
+        if(isJumping) {
+            leapFrogIntegration(object, elapsedTime, 0.4f);
+        }else{
+            leapFrogIntegration(object, elapsedTime, 1);
+        }
 
-        object.x_Pos += velX*elapsedTime;
-        object.y_Pos += velY*elapsedTime;
-
-        if(object.y_Pos>8){
-            object.y_Pos=8;
+        if (object.y_Pos > ground) {
+            object.y_Pos = ground;
+            isJumping = false;
+        }
+        if (object.y_Pos < 0) {
+            object.y_Pos = 0;
+        }
+        if (object.x_Pos < 0) {
+            object.x_Pos = 0;
+        }
+        if (object.x_Pos > rightBorder) {
+            object.x_Pos = rightBorder;
         }
     }
 
-    @Override
-    public void setVelocityY(float v) {
-        this.velY = v;
+    public float getJumpVelocity() {
+        return jumpVelocity;
     }
 
-    @Override
-    public float getVelocityY(){
-        return velY;
-    }
-
-    @Override
-    public void setVelocityX(float v) {
-        this.velX = v;
-    }
-
-    @Override
-    public float getVelocityX() {
-        return velX;
+    public float getEarlyJumpVelocity() {
+        return earlyJumpVelocity;
     }
 }
