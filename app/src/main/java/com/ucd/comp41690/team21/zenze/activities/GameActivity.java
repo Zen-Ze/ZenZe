@@ -25,6 +25,7 @@ import java.util.Arrays;
  * the main game screen
  */
 public class GameActivity extends Activity implements SensorEventListener {
+    private final static float ROTATION_ANGLE = 0.2f;
 
     private Game game;
 
@@ -105,12 +106,10 @@ public class GameActivity extends Activity implements SensorEventListener {
 
         mSensorManager.getRotationMatrix(mRotationMatrix, null, mAccelerometerReading, mMagnetometerReading);
         mSensorManager.getOrientation(mRotationMatrix, mOrientationAngles);
-        Log.d("orientation", Arrays.toString(mOrientationAngles));
-        game.log = Arrays.toString(mOrientationAngles);
 
-        if(mOrientationAngles[1]>0.2){
+        if(mOrientationAngles[1]>ROTATION_ANGLE){
             game.onInputEvent(InputEvent.TILT_LEFT);
-        } else if (mOrientationAngles[1]<-0.2){
+        } else if (mOrientationAngles[1]<-ROTATION_ANGLE){
             game.onInputEvent(InputEvent.TILT_RIGHT);
         } else {
             game.onInputEvent(InputEvent.TILT_NONE);
