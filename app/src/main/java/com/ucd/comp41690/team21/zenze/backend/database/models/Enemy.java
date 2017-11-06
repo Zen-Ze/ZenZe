@@ -7,7 +7,7 @@ package com.ucd.comp41690.team21.zenze.backend.database.models;
 public class Enemy extends BaseModel {
 
     /**
-     * Attack
+     * Enemy
      * +-----------------------------------------+------------------+-----------------+
      * |                   Field                 |       type       |       Key       |
      * +-----------------------------------------+------------------+-----------------+
