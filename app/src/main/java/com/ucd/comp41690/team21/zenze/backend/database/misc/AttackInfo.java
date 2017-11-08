@@ -15,7 +15,7 @@ public class AttackInfo {
         public static final String COLUMN_NAME_NAME = "Name";
         public static final String COLUMN_NAME_DAMAGE = "Damage";
         public static final String COLUMN_NAME_SCALE = "Scale";
-        public static final String COLUMN_NAME_SPEED = "AttackState";
+        public static final String COLUMN_NAME_ATTACK_STATE = "AttackState";
         public static final String COLUMN_NAME_DESCRIPTION = "Description";
         public static final String COLUMN_NAME_GRAPHICS_PATH = "GraphicsPath";
     }
