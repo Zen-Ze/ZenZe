@@ -2,6 +2,7 @@ package com.ucd.comp41690.team21.zenze.game.components;
 
 import android.util.Log;
 
+import com.ucd.comp41690.team21.zenze.game.Game;
 import com.ucd.comp41690.team21.zenze.game.GameObject;
 
 public class PlayerPhysics extends PhysicsComponent {
@@ -33,12 +34,17 @@ public class PlayerPhysics extends PhysicsComponent {
 
     @Override
     public void handlePhysics(GameObject object, double elapsedTime) {
+        //update position
         if(isJumping) {
             leapFrogIntegration(object, elapsedTime, 0.4f);
         }else{
             leapFrogIntegration(object, elapsedTime, 1);
         }
+        //check for collisions with map
+        for (GameObject o: Game.getInstance().getGameWorld().getMap()) {
 
+        }
+        //keep player inside the visible space
         if (object.y_Pos > ground) {
             object.y_Pos = ground;
             isJumping = false;

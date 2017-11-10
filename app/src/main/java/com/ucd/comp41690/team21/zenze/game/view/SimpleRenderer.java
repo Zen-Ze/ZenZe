@@ -66,6 +66,19 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
                         //set camera position
                         float offset = world.getCamera().x_Pos - (numTilesAcross / 2);
 
+                        //Draw the tile map
+                        for (GameObject o : world.getMap()){
+                            //represent as black rectangles
+                            paint.setStyle(Paint.Style.FILL);
+                            paint.setColor(Color.BLACK);
+                            canvas.drawRect(
+                                    (o.x_Pos - offset) * tileSize,
+                                    o.y_Pos * tileSize,
+                                    (o.x_Pos - offset) * tileSize + tileSize,
+                                    o.y_Pos * tileSize + tileSize,
+                                    paint
+                            );
+                        }
                         //Draw each entity in the game world
                         for (GameObject o : world.getEntities()) {
                             switch (o.getTag()) {
@@ -76,18 +89,6 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
                                     paint.setStyle(Paint.Style.FILL);
                                     paint.setColor(Color.WHITE);
                                     canvas.drawCircle(x, y, tileSize / 2 * o.scale, paint);
-                                    break;
-                                //represent Plattforms as black boxes
-                                case GameObject.PLATTFORM_TAG:
-                                    paint.setStyle(Paint.Style.FILL);
-                                    paint.setColor(Color.BLACK);
-                                    canvas.drawRect(
-                                            (o.x_Pos - offset) * tileSize,
-                                            o.y_Pos * tileSize,
-                                            (o.x_Pos - offset) * tileSize + tileSize,
-                                            o.y_Pos * tileSize + tileSize,
-                                            paint
-                                    );
                                     break;
                             }
                         }

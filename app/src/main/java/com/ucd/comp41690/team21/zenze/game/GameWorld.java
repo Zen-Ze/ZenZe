@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class GameWorld {
     private List<GameObject> entities;
+    private List<GameObject> tileMap;
     private GameObject player;
     private GameObject camera;
     private GameState state;
@@ -24,6 +25,7 @@ public class GameWorld {
 
     public GameWorld(Context context, WeatherStatus status){
         entities = new LinkedList<>();
+        tileMap = new LinkedList<>();
         FileParser.init(context);
         FileParser.loadWorld(context, this);
         numTilesH = FileParser.getNumTilesH();
@@ -44,13 +46,14 @@ public class GameWorld {
     public void addObject(GameObject obj){
         entities.add(obj);
     }
-    public void insertObject(GameObject obj, int position){
-        entities.add(position, obj);
+    public void addPlatform(GameObject obj){
+        tileMap.add(obj);
     }
 
     public List<GameObject> getEntities(){
         return entities;
     }
+    public List<GameObject> getMap(){return tileMap;}
 
     public int getNumTilesH() {
         return numTilesH;

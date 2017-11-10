@@ -122,7 +122,7 @@ public class FileParser {
                         PlattformPhysics plattformPhysics = new PlattformPhysics();
                         GameObject platform = new GameObject(
                                 null, plattformPhysics, null, x, y, GameObject.PLATTFORM_TAG);
-                        world.insertObject(platform, 0);
+                        world.addPlatform(platform);
                         x++;
                         break;
                     default:
