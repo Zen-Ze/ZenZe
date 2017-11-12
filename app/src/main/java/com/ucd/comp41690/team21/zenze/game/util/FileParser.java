@@ -102,7 +102,7 @@ public class FileParser {
                     case '1'://Player
                         PlayerInputHandler playerInputHandler = new PlayerInputHandler();
                         PlayerPhysics playerPhysics = new PlayerPhysics(playerMinJumpHeight,
-                                playerMaxJumpHeight, playerJumpTime, numTilesV, numTilesH, playerScale);
+                                playerMaxJumpHeight, playerJumpTime, numTilesV, numTilesH, x, y, playerScale);
                         Type type = new Type(playerHealth, playerSpeed, playerScale);
                         GameObject player = new GameObject(
                                 playerInputHandler, playerPhysics, type, x, y, GameObject.PLAYER_TAG);
@@ -119,7 +119,7 @@ public class FileParser {
                         world.setCamera(simpleCamera);
                         break;
                     case '#': //Platform
-                        PlattformPhysics plattformPhysics = new PlattformPhysics();
+                        PlattformPhysics plattformPhysics = new PlattformPhysics(x,y,1);
                         GameObject platform = new GameObject(
                                 null, plattformPhysics, null, x, y, GameObject.PLATTFORM_TAG);
                         world.addPlatform(platform);

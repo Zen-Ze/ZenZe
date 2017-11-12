@@ -9,14 +9,12 @@ public class PlayerPhysics extends PhysicsComponent {
     private final float ground;
     private final float rightBorder;
 
-    private final float boundingVolume;
-
     private final float jumpVelocity;
     private final float earlyJumpVelocity;
     public boolean isJumping;
 
     public PlayerPhysics(int minJumpHeight, int maxJumpHeight, float jumpTime,
-                         float rightBorder, float ground, float scale) {
+                         float rightBorder, float ground, float x_Pos, float y_Pos, float scale) {
         x_Vel = 0;
         y_Vel = 0;
         acceleration = 0;
@@ -26,9 +24,9 @@ public class PlayerPhysics extends PhysicsComponent {
         this.earlyJumpVelocity = (float) -Math.sqrt(jumpVelocity * jumpVelocity
                 - 2 * gravity * (maxJumpHeight - minJumpHeight));
 
-        this.boundingVolume = scale / 2;
-        this.ground = ground - 2 * boundingVolume;
-        this.rightBorder = rightBorder - 4 * boundingVolume;
+        this.boundingVolume = new Sphere(x_Pos, y_Pos, scale/2);
+        this.ground = ground - 2 * ((Sphere)boundingVolume).radius;
+        this.rightBorder = rightBorder - 4 * ((Sphere)boundingVolume).radius;
         isJumping = false;
     }
 
@@ -42,7 +40,11 @@ public class PlayerPhysics extends PhysicsComponent {
         }
         //check for collisions with map
         for (GameObject o: Game.getInstance().getGameWorld().getMap()) {
-
+            if(intersects(this.boundingVolume, o.physics.boundingVolume)){
+                Game.getInstance().log = "Collision";
+            } else{
+                Game.getInstance().log = "In the Air!";
+            }
         }
         //keep player inside the visible space
         if (object.y_Pos > ground) {
