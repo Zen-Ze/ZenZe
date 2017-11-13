@@ -22,6 +22,7 @@ import com.ucd.comp41690.team21.zenze.backend.database.misc.AttackListInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.AttackListLineInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.EnemyInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.EnemyListInfo;
+import com.ucd.comp41690.team21.zenze.backend.database.misc.EnemyListLineInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemListInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemListLineInfo;
@@ -31,6 +32,7 @@ import com.ucd.comp41690.team21.zenze.backend.database.models.AttackList;
 import com.ucd.comp41690.team21.zenze.backend.database.models.AttackListLine;
 import com.ucd.comp41690.team21.zenze.backend.database.models.Enemy;
 import com.ucd.comp41690.team21.zenze.backend.database.models.EnemyList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.EnemyListLine;
 import com.ucd.comp41690.team21.zenze.backend.database.models.Item;
 import com.ucd.comp41690.team21.zenze.backend.database.models.ItemList;
 import com.ucd.comp41690.team21.zenze.backend.database.models.ItemListLine;
@@ -886,5 +888,121 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * EnemyListLine
      */
+
+    /**
+     * Insert an item list line in the database.
+     * @param enemyListLine
+     */
+    public void addEnemyListLine(EnemyListLine enemyListLine) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(EnemyListLineInfo.EnemyListLineEntry.COLUMN_NAME_AMOUNT, enemyListLine.getAmount());
+        contentValues.put(EnemyListLineInfo.EnemyListLineEntry.COLUMN_NAME_ENEMY_ID, enemyListLine.getEnemyId());
+        contentValues.put(EnemyListLineInfo.EnemyListLineEntry.COLUMN_NAME_ENEMY_LIST_ID, enemyListLine.getEnemyListId());
+
+        db.insert(EnemyListLineInfo.EnemyListLineEntry.TABLE_NAME, null, contentValues);
+        db.close();
+    }
+
+    /**
+     * Retrieve an item list line from the database.
+     * @param enemyListLineId
+     * @return
+     */
+    public EnemyListLine getEnemyListLine(int enemyListLineId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // int id, int amount, int itemId, int itemListId
+
+        Cursor cursor = db.query(EnemyListLineInfo.EnemyListLineEntry.TABLE_NAME,
+                new String[] {
+                        EnemyListLineInfo.EnemyListLineEntry._ID,
+                        EnemyListLineInfo.EnemyListLineEntry.COLUMN_NAME_AMOUNT,
+                        EnemyListLineInfo.EnemyListLineEntry.COLUMN_NAME_ENEMY_ID,
+                        EnemyListLineInfo.EnemyListLineEntry.COLUMN_NAME_ENEMY_LIST_ID
+                }, EnemyListLineInfo.EnemyListLineEntry._ID + "=?", new String[] { String.valueOf(enemyListLineId) }, null, null, null, null);
+
+        if (cursor!=null) cursor.moveToFirst();
+
+        EnemyListLine enemyListLine = new EnemyListLine(
+                Integer.parseInt(cursor.getString(0)),
+                Integer.valueOf(cursor.getString(1)),
+                Integer.valueOf(cursor.getString(2)),
+                Integer.valueOf(cursor.getString(3))
+        );
+
+        return enemyListLine;
+    }
+
+    /**
+     * Retrieve item list lines from item list id.
+     * You should use this and then retrieve items 1 by 1 for displaying.
+     * Also, if you change page, PLEASE do not re-create an instance, we're working with mobile devices
+     * so there are limitations.
+     * @param pageNumber
+     * @param pageSize
+     * @param enemyListId
+     * @return
+     */
+    public List<EnemyListLine> getEnemyListLines(int pageNumber, int pageSize, int enemyListId) {
+        String query =
+                "SELECT * FROM " + EnemyListLineInfo.EnemyListLineEntry._ID
+                        + "WHERE " + EnemyListLineInfo.EnemyListLineEntry.COLUMN_NAME_ENEMY_LIST_ID + " = " + String.valueOf(enemyListId)
+                        + " LIMIT " + String.valueOf(pageSize)
+                        + " OFFSET " + String.valueOf(pageSize*pageNumber);
+
+        List<EnemyListLine> enemyListLines = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+
+                EnemyListLine enemyListLine = new EnemyListLine(
+                        Integer.parseInt(cursor.getString(0)),
+                        Integer.valueOf(cursor.getString(1)),
+                        Integer.valueOf(cursor.getString(2)),
+                        Integer.valueOf(cursor.getString(3))
+                );
+
+                enemyListLines.add(enemyListLine);
+
+                cursor.moveToNext();
+            }
+        }
+
+        return enemyListLines;
+
+    }
+
+    /**
+     * Update an item list line.
+     * @param enemyListLine
+     * @return
+     */
+    public int updateEnemyListLine(EnemyListLine enemyListLine) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(EnemyListLineInfo.EnemyListLineEntry.COLUMN_NAME_AMOUNT, enemyListLine.getAmount());
+        contentValues.put(EnemyListLineInfo.EnemyListLineEntry.COLUMN_NAME_ENEMY_LIST_ID, enemyListLine.getEnemyListId());
+        contentValues.put(EnemyListLineInfo.EnemyListLineEntry.COLUMN_NAME_ENEMY_ID, enemyListLine.getEnemyId());
+
+        return db.update(EnemyListLineInfo.EnemyListLineEntry.TABLE_NAME, contentValues, EnemyListLineInfo.EnemyListLineEntry._ID + " = ?",
+                new String[] { String.valueOf(enemyListLine.getId()) });
+    }
+
+    /**
+     * Delete an item list line from the database.
+     * @param enemyListLine
+     */
+    public void deleteEnemyListLine(EnemyListLine enemyListLine) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(EnemyListLineInfo.EnemyListLineEntry.TABLE_NAME, EnemyListLineInfo.EnemyListLineEntry._ID + " = ?"
+                , new String[] { String.valueOf(enemyListLine.getId()) });
+        db.close();
+    }
 
 }
