@@ -1,5 +1,6 @@
 package com.ucd.comp41690.team21.zenze.game.components;
 
+import com.ucd.comp41690.team21.zenze.game.Game;
 import com.ucd.comp41690.team21.zenze.game.GameObject;
 
 public abstract class PhysicsComponent {
@@ -40,19 +41,28 @@ public abstract class PhysicsComponent {
             return Collision.NONE;
         }
         //Sphere inside rectangle
-        if(x_distance < rect.width){
-            return Collision.SIDE;
+        if(x_distance <= (sphere.radius + rect.width) && y_distance<=rect.height){
+            if(sphere.x_Pos < rect.x_Pos){
+                return Collision.LEFT;
+            } else {
+                return Collision.RIGHT;
+            }
         }
-        if(y_distance < rect.height){
-            if(sphere.y_Pos >= rect.y_Pos){
+        if(y_distance <= (sphere.radius + rect.height) && x_distance <= rect.width){
+            if(sphere.y_Pos < rect.y_Pos){
+                return Collision.TOP;
+            } else {
                 return Collision.BOTTOM;
             }
-            return Collision.TOP;
         }
         //corner case
         double cornerDist_sq = Math.pow(x_distance-rect.width,2)+Math.pow(y_distance-rect.height,2);
         if(cornerDist_sq <= Math.pow(sphere.radius,2)){
-            return Collision.CORNER;
+            if(sphere.x_Pos < rect.x_Pos){
+                return Collision.CORNER_LEFT;
+            } else {
+                return Collision.CORNER_RIGHT;
+            }
         }
         return Collision.NONE;
     }
@@ -108,8 +118,10 @@ public abstract class PhysicsComponent {
     public enum Collision{
         TOP,
         BOTTOM,
-        SIDE,
-        CORNER,
+        RIGHT,
+        LEFT,
+        CORNER_RIGHT,
+        CORNER_LEFT,
         NONE;
     }
 }

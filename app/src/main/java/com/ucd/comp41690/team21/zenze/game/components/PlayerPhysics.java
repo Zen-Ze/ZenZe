@@ -1,7 +1,5 @@
 package com.ucd.comp41690.team21.zenze.game.components;
 
-import android.util.Log;
-
 import com.ucd.comp41690.team21.zenze.game.Game;
 import com.ucd.comp41690.team21.zenze.game.GameObject;
 
@@ -27,9 +25,9 @@ public class PlayerPhysics extends PhysicsComponent {
         this.earlyJumpVelocity = (float) -Math.sqrt(jumpVelocity * jumpVelocity
                 - 2 * gravity * (maxJumpHeight - minJumpHeight));
 
-        this.boundingVolume = new Sphere(x_Pos, y_Pos, scale/2);
-        this.ground = ground - 2 * ((Sphere)boundingVolume).radius;
-        this.rightBorder = rightBorder - 4 * ((Sphere)boundingVolume).radius;
+        this.boundingVolume = new Sphere(x_Pos, y_Pos, scale / 2);
+        this.ground = ground - 2 * ((Sphere) boundingVolume).radius;
+        this.rightBorder = rightBorder - 4 * ((Sphere) boundingVolume).radius;
         isJumping = false;
 
         oldPosX = 0;
@@ -38,27 +36,46 @@ public class PlayerPhysics extends PhysicsComponent {
 
     @Override
     public void handlePhysics(GameObject object, double elapsedTime) {
-        super.handlePhysics(object,elapsedTime);
+        super.handlePhysics(object, elapsedTime);
         oldPosX = object.x_Pos;
         oldPosY = object.y_Pos;
 
         //update position
-        if(isJumping) {
+        if (isJumping) {
             leapFrogIntegration(object, elapsedTime, 0.4f);
-        }else{
+        } else {
             leapFrogIntegration(object, elapsedTime, 1);
         }
         //check for collisions with map
-        for (GameObject o: Game.getInstance().getGameWorld().getMap()) {
+        for (GameObject o : Game.getInstance().getGameWorld().getMap()) {
             Collision col = intersects(this.boundingVolume, o.physics.boundingVolume);
-            if(col!=Collision.NONE){
-                if(o.getTag().equals(GameObject.PLATTFORM_TAG)){
-                    if(col==Collision.TOP){
-                        if(isJumping){
-
-                        }else {
-                            object.y_Pos = oldPosY;
+            if (col != Collision.NONE) {
+                if (o.getTag().equals(GameObject.PLATTFORM_TAG)) {
+                    Game.getInstance().log = col.toString();
+                    if (y_Vel >= 0 &&
+                            (col == Collision.CORNER_LEFT || col == Collision.CORNER_RIGHT)) {
+                        if(col == Collision.CORNER_RIGHT){
+                            object.x_Pos += ((Sphere) boundingVolume).radius/10;
+                        } else {
+                            object.x_Pos -= ((Sphere) boundingVolume).radius/10;
                         }
+                    }
+                    if (y_Vel >= 0 && col == Collision.TOP) {
+                        object.y_Pos = o.y_Pos
+                                - ((AABB) o.physics.boundingVolume).height
+                                - ((Sphere) boundingVolume).radius;
+                        y_Vel = 0;
+                        isJumping = false;
+                    }
+                    if(col == Collision.LEFT && x_Vel>=0){
+                        object.x_Pos = o.x_Pos
+                                - ((AABB) o.physics.boundingVolume).width
+                                - ((Sphere) boundingVolume).radius;
+                    }
+                    if(col == Collision.RIGHT && x_Vel<=0){
+                        object.x_Pos = o.x_Pos
+                                + ((AABB) o.physics.boundingVolume).width
+                                + ((Sphere) boundingVolume).radius;
                     }
                 }
             }

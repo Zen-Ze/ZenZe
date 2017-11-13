@@ -9,7 +9,7 @@ public  class PlattformPhysics extends PhysicsComponent {
         this.y_Vel = 0;
         this.gravity = 0;
         this.acceleration = 0;
-        this.boundingVolume = new AABB(x_Pos, y_Pos, scale);
+        this.boundingVolume = new AABB(x_Pos, y_Pos, scale/2);
     }
 
     @Override
