@@ -17,6 +17,7 @@ import com.ucd.comp41690.team21.zenze.backend.database.generators.ItemGenerator;
 import com.ucd.comp41690.team21.zenze.backend.database.generators.ItemListGenerator;
 import com.ucd.comp41690.team21.zenze.backend.database.generators.ItemListLineGenerator;
 import com.ucd.comp41690.team21.zenze.backend.database.generators.PlayerGenerator;
+import com.ucd.comp41690.team21.zenze.backend.database.misc.AttackInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.AttackListInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.EnemyInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.EnemyListInfo;
@@ -24,7 +25,9 @@ import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemListInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemListLineInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.PlayerInfo;
+import com.ucd.comp41690.team21.zenze.backend.database.models.Attack;
 import com.ucd.comp41690.team21.zenze.backend.database.models.AttackList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.Enemy;
 import com.ucd.comp41690.team21.zenze.backend.database.models.EnemyList;
 import com.ucd.comp41690.team21.zenze.backend.database.models.Item;
 import com.ucd.comp41690.team21.zenze.backend.database.models.ItemList;
@@ -237,7 +240,8 @@ public class DBHelper extends SQLiteOpenHelper {
                         ItemInfo.ItemEntry._ID,
                         ItemInfo.ItemEntry.COLUMN_NAME_NAME,
                         ItemInfo.ItemEntry.COLUMN_NAME_DESCRIPTION,
-                        ItemInfo.ItemEntry.COLUMN_NAME_SPRITE_PATH
+                        ItemInfo.ItemEntry.COLUMN_NAME_SPRITE_PATH,
+                        ItemInfo.ItemEntry.COLUMN_NAME_WEATHER_STATUS
                 }, ItemInfo.ItemEntry._ID + "=?", new String[] { String.valueOf(itemId) }, null, null, null, null);
 
         if (cursor!=null) cursor.moveToFirst();
@@ -477,6 +481,84 @@ public class DBHelper extends SQLiteOpenHelper {
      */
 
     /**
+     * Retrieve an attack from the database.
+     * @param attackId
+     * @return
+     */
+    public Attack getAttack(int attackId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(AttackInfo.AttackEntry.TABLE_NAME,
+                new String[] {
+                        AttackInfo.AttackEntry._ID,
+                        AttackInfo.AttackEntry.COLUMN_NAME_ATTACK_STATE,
+                        AttackInfo.AttackEntry.COLUMN_NAME_NAME,
+                        AttackInfo.AttackEntry.COLUMN_NAME_DAMAGE,
+                        AttackInfo.AttackEntry.COLUMN_NAME_GRAPHICS_PATH,
+                        AttackInfo.AttackEntry.COLUMN_NAME_SCALE,
+                        AttackInfo.AttackEntry.COLUMN_NAME_DESCRIPTION,
+                        AttackInfo.AttackEntry.COLUMN_NAME_WEATHER_STATUS
+                }, AttackInfo.AttackEntry._ID + "=?", new String[] { String.valueOf(attackId) }, null, null, null, null);
+
+        if (cursor!=null) cursor.moveToFirst();
+
+        Attack attack = new Attack(
+                Integer.parseInt(cursor.getString(0)),
+                Boolean.valueOf(cursor.getString(1)),
+                cursor.getString(2),
+                Integer.valueOf(cursor.getString(3)),
+                cursor.getString(4),
+                Integer.valueOf(cursor.getString(5)),
+                cursor.getString(6),
+                WeatherStatus.valueOf(Integer.parseInt(cursor.getString(4)))
+        );
+
+        return attack;
+    }
+
+    /**
+     * Retrieve attacks from the database
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    public List<Attack> getAttacks(int pageNumber, int pageSize, WeatherStatus weatherStatus) {
+        String query =
+                "SELECT * FROM " + AttackInfo.AttackEntry.TABLE_NAME
+                        + " WHERE " + AttackInfo.AttackEntry.COLUMN_NAME_WEATHER_STATUS + " = ? "
+                        + " LIMIT " + String.valueOf(pageSize)
+                        + " OFFSET " + String.valueOf(pageSize*pageNumber);
+
+        List<Attack> attacks = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(query, new String[] {String.valueOf(weatherStatus.getValue())});
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+
+                Attack attack = new Attack(
+                        Integer.parseInt(cursor.getString(0)),
+                        Boolean.valueOf(cursor.getString(1)),
+                        cursor.getString(2),
+                        Integer.valueOf(cursor.getString(3)),
+                        cursor.getString(4),
+                        Integer.valueOf(cursor.getString(5)),
+                        cursor.getString(6),
+                        WeatherStatus.valueOf(Integer.parseInt(cursor.getString(4)))
+                );
+
+                attacks.add(attack);
+
+                cursor.moveToNext();
+            }
+        }
+
+        return attacks;
+
+    }
+
+    /**
      * AttackList
      */
 
@@ -543,6 +625,84 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * Enemy
      */
+
+    /**
+     * Retrieve an enemy from the database.
+     * @param enemyId
+     * @return
+     */
+    public Enemy getEnemy(int enemyId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(AttackInfo.AttackEntry.TABLE_NAME,
+                new String[] {
+                        EnemyInfo.EnemyEntry._ID,
+                        EnemyInfo.EnemyEntry.COLUMN_NAME_NAME,
+                        EnemyInfo.EnemyEntry.COLUMN_NAME_DAMAGE,
+                        EnemyInfo.EnemyEntry.COLUMN_NAME_SPEED,
+                        EnemyInfo.EnemyEntry.COLUMN_NAME_GRAPHICS_PATH,
+                        EnemyInfo.EnemyEntry.COLUMN_NAME_DESCRIPTION,
+                        EnemyInfo.EnemyEntry.COLUMN_NAME_SCALE,
+                        EnemyInfo.EnemyEntry.COLUMN_NAME_WEATHER_STATUS
+                }, AttackInfo.AttackEntry._ID + "=?", new String[] { String.valueOf(enemyId) }, null, null, null, null);
+
+        if (cursor!=null) cursor.moveToFirst();
+
+        Enemy enemy = new Enemy(
+                Integer.parseInt(cursor.getString(0)),
+                cursor.getString(1),
+                Integer.valueOf(cursor.getString(2)),
+                Integer.valueOf(cursor.getString(3)),
+                cursor.getString(4),
+                cursor.getString(5),
+                Integer.valueOf(cursor.getString(6)),
+                WeatherStatus.valueOf(Integer.parseInt(cursor.getString(4)))
+        );
+
+        return enemy;
+    }
+
+    /**
+     * Retrieve enemies from the database
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    public List<Enemy> getEnemies(int pageNumber, int pageSize, WeatherStatus weatherStatus) {
+        String query =
+                "SELECT * FROM " + EnemyInfo.EnemyEntry.TABLE_NAME
+                        + " WHERE " + EnemyInfo.EnemyEntry.COLUMN_NAME_WEATHER_STATUS + " = ? "
+                        + " LIMIT " + String.valueOf(pageSize)
+                        + " OFFSET " + String.valueOf(pageSize*pageNumber);
+
+        List<Enemy> enemies = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(query, new String[] {String.valueOf(weatherStatus.getValue())});
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+
+                Enemy enemy = new Enemy(
+                        Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        Integer.valueOf(cursor.getString(2)),
+                        Integer.valueOf(cursor.getString(3)),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        Integer.valueOf(cursor.getString(6)),
+                        WeatherStatus.valueOf(Integer.parseInt(cursor.getString(4)))
+                );
+
+                enemies.add(enemy);
+
+                cursor.moveToNext();
+            }
+        }
+
+        return enemies;
+
+    }
 
     /**
      * EnemyList
