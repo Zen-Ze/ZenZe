@@ -18,6 +18,7 @@ public class EnemyInfo {
         public static final String COLUMN_NAME_SPEED = "Speed";
         public static final String COLUMN_NAME_DESCRIPTION = "Description";
         public static final String COLUMN_NAME_GRAPHICS_PATH = "GraphicsPath";
+        public static final String COLUMN_NAME_WEATHER_STATUS = "WeatherStatus";
     }
 
 }

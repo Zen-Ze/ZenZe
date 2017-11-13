@@ -1,5 +1,7 @@
 package com.ucd.comp41690.team21.zenze.backend.database.models;
 
+import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
+
 /**
  * Created by timothee on 06/11/17.
  */
@@ -18,6 +20,7 @@ public class Attack extends BaseModel {
      * | Description                             |  TEXT            |                 |
      * | GraphicsPath                            |  TEXT            |                 |
      * | AttackState                             |  INTEGER         |                 |
+     * | WeatherStatus                           |  INTEGER         |                 |
      * +-----------------------------------------+------------------+-----------------+
      */
 
@@ -27,8 +30,9 @@ public class Attack extends BaseModel {
     private String graphicsPath;
     private int scale;
     private String desc;
+    private WeatherStatus weatherStatus;
 
-    public Attack(int id, boolean attackState, String name, int damage, String graphicsPath, int scale, String desc) {
+    public Attack(int id, boolean attackState, String name, int damage, String graphicsPath, int scale, String desc, WeatherStatus weatherStatus) {
         super(id);
         this.attackState = attackState;
         this.name = name;
@@ -36,6 +40,7 @@ public class Attack extends BaseModel {
         this.graphicsPath = graphicsPath;
         this.scale = scale;
         this.desc = desc;
+        this.weatherStatus = weatherStatus;
     }
 
     public String getGraphicsPath() {
@@ -56,6 +61,10 @@ public class Attack extends BaseModel {
 
     public String getName() {
         return name;
+    }
+
+    public WeatherStatus getWeatherStatus() {
+        return weatherStatus;
     }
 
     public void setScale(int scale) {
@@ -80,5 +89,9 @@ public class Attack extends BaseModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setWeatherStatus(WeatherStatus weatherStatus) {
+        this.weatherStatus = weatherStatus;
     }
 }

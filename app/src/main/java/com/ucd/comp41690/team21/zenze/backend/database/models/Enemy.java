@@ -1,5 +1,8 @@
 package com.ucd.comp41690.team21.zenze.backend.database.models;
 
+import com.ucd.comp41690.team21.zenze.backend.weather.WeatherService;
+import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
+
 /**
  * Created by timothee on 06/11/17.
  */
@@ -18,6 +21,7 @@ public class Enemy extends BaseModel {
      * | Description                             |  TEXT            |                 |
      * | GraphicsPath                            |  TEXT            |                 |
      * | Speed                                   |  INTEGER         |                 |
+     * | WeatherStatus                           |  INTEGER         |                 |
      * +-----------------------------------------+------------------+-----------------+
      */
 
@@ -27,8 +31,9 @@ public class Enemy extends BaseModel {
     private String graphicsPath;
     private String desc;
     private int scale;
+    private WeatherStatus weatherStatus;
 
-    public Enemy(int id, String name, int damage, int speed, String graphicsPath, String desc, int scale) {
+    public Enemy(int id, String name, int damage, int speed, String graphicsPath, String desc, int scale, WeatherStatus weatherStatus) {
         super(id);
         this.name = name;
         this.damage = damage;
@@ -36,6 +41,7 @@ public class Enemy extends BaseModel {
         this.graphicsPath = graphicsPath;
         this.desc = desc;
         this.scale = scale;
+        this.weatherStatus = weatherStatus;
     }
 
     public String getName() { return name; }
@@ -60,6 +66,10 @@ public class Enemy extends BaseModel {
         return graphicsPath;
     }
 
+    public WeatherStatus getWeatherStatus() {
+        return weatherStatus;
+    }
+
     public void setName(String name) { this.name = name; }
 
     public void setDesc(String desc) { this.desc = desc; }
@@ -71,4 +81,8 @@ public class Enemy extends BaseModel {
     public void setScale(int scale) { this.scale = scale; }
 
     public void setSpeed(int speed) { this.speed = speed; }
+
+    public void setWeatherStatus(WeatherStatus weatherStatus) {
+        this.weatherStatus = weatherStatus;
+    }
 }

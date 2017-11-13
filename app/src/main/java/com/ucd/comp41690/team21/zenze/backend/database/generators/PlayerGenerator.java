@@ -20,11 +20,11 @@ public class PlayerGenerator {
             + PlayerInfo.PlayerEntry.COLUMN_NAME_SAVED_HEALTH + " INTEGER,"
             + PlayerInfo.PlayerEntry.COLUMN_NAME_CURRENT_LEVEL + " INTEGER,"
             + PlayerInfo.PlayerEntry.COLUMN_NAME_ITEM_LIST_ID + " INTEGER,"
-            + PlayerInfo.PlayerEntry.COLUMN_NAME_ATTACK_LIST_ID + "INTEGER"
-            + PlayerInfo.PlayerEntry.COLUMN_NAME_ENEMY_LIST_ID + "INTEGER"
+            + PlayerInfo.PlayerEntry.COLUMN_NAME_ATTACK_LIST_ID + " INTEGER,"
+            + PlayerInfo.PlayerEntry.COLUMN_NAME_ENEMY_LIST_ID + " INTEGER,"
             + "PRIMARY KEY (" + PlayerInfo.PlayerEntry._ID + "),"
-            + "FOREIGN KEY (" + PlayerInfo.PlayerEntry.COLUMN_NAME_ITEM_LIST_ID + ") REFERENCES " + ItemListInfo.ItemListEntry.TABLE_NAME +"(" + ItemListInfo.ItemListEntry._ID + ")"
-            + "FOREIGN KEY (" + PlayerInfo.PlayerEntry.COLUMN_NAME_ATTACK_LIST_ID + ") REFERENCES " + AttackListInfo.AttackListEntry.TABLE_NAME +"(" + AttackListInfo.AttackListEntry._ID + ")"
+            + "FOREIGN KEY (" + PlayerInfo.PlayerEntry.COLUMN_NAME_ITEM_LIST_ID + ") REFERENCES " + ItemListInfo.ItemListEntry.TABLE_NAME +"(" + ItemListInfo.ItemListEntry._ID + "),"
+            + "FOREIGN KEY (" + PlayerInfo.PlayerEntry.COLUMN_NAME_ATTACK_LIST_ID + ") REFERENCES " + AttackListInfo.AttackListEntry.TABLE_NAME +"(" + AttackListInfo.AttackListEntry._ID + "),"
             + "FOREIGN KEY (" + PlayerInfo.PlayerEntry.COLUMN_NAME_ENEMY_LIST_ID + ") REFERENCES " + EnemyListInfo.EnemyListEntry.TABLE_NAME +"(" + EnemyListInfo.EnemyListEntry._ID + ")"
             + ")";
 

@@ -15,8 +15,8 @@ public class EnemyListLineGenerator {
             + EnemyListLineInfo.EnemyListLineEntry.COLUMN_NAME_AMOUNT + " INTEGER,"
             + EnemyListLineInfo.EnemyListLineEntry.COLUMN_NAME_ENEMY_ID + " INTEGER,"
             + EnemyListLineInfo.EnemyListLineEntry.COLUMN_NAME_ENEMY_LIST_ID + " INTEGER,"
-            + "PRIMARY KEY (" + EnemyListLineInfo.EnemyListLineEntry._ID +")"
-            + "FOREIGN KEY (" + EnemyListLineInfo.EnemyListLineEntry.COLUMN_NAME_ENEMY_LIST_ID + ") REFERENCES " + EnemyListInfo.EnemyListEntry.TABLE_NAME +"(" + EnemyListInfo.EnemyListEntry._ID + ")"
+            + "PRIMARY KEY (" + EnemyListLineInfo.EnemyListLineEntry._ID +"),"
+            + "FOREIGN KEY (" + EnemyListLineInfo.EnemyListLineEntry.COLUMN_NAME_ENEMY_LIST_ID + ") REFERENCES " + EnemyListInfo.EnemyListEntry.TABLE_NAME +"(" + EnemyListInfo.EnemyListEntry._ID + "),"
             + "FOREIGN KEY (" + EnemyListLineInfo.EnemyListLineEntry.COLUMN_NAME_ENEMY_ID + ") REFERENCES " + EnemyInfo.EnemyEntry.TABLE_NAME +"(" + EnemyInfo.EnemyEntry._ID + "))";
 
     public static final String DELETE_ENEMY_LIST_LINE_TABLE = "DROP TABLE IF EXISTS " + EnemyListLineInfo.EnemyListLineEntry.TABLE_NAME;

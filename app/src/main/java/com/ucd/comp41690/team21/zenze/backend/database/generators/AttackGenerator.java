@@ -16,8 +16,9 @@ public class AttackGenerator {
             + AttackInfo.AttackEntry.COLUMN_NAME_SCALE + " INTEGER,"
             + AttackInfo.AttackEntry.COLUMN_NAME_DESCRIPTION + " TEXT,"
             + AttackInfo.AttackEntry.COLUMN_NAME_GRAPHICS_PATH + " TEXT,"
-            + AttackInfo.AttackEntry.COLUMN_NAME_ATTACK_STATE + "INTEGER"
-            + "PRIMARY KEY (" + AttackInfo.AttackEntry._ID + "),"
+            + AttackInfo.AttackEntry.COLUMN_NAME_ATTACK_STATE + " INTEGER,"
+            + AttackInfo.AttackEntry.COLUMN_NAME_WEATHER_STATUS + " INTEGER,"
+            + "PRIMARY KEY (" + AttackInfo.AttackEntry._ID + ")"
             + ")";
 
     public static final String DELETE_ATTACK_TABLE = "DROP TABLE IF EXISTS " + AttackInfo.AttackEntry.TABLE_NAME;

@@ -15,8 +15,8 @@ public class AttackListLineGenerator {
             + AttackListLineInfo.AttackListLineEntry.COLUMN_NAME_AMOUNT + " INTEGER,"
             + AttackListLineInfo.AttackListLineEntry.COLUMN_NAME_ATTACK_ID + " INTEGER,"
             + AttackListLineInfo.AttackListLineEntry.COLUMN_NAME_ATTACK_LIST_ID + " INTEGER,"
-            + "PRIMARY KEY (" + AttackListLineInfo.AttackListLineEntry._ID +")"
-            + "FOREIGN KEY (" + AttackListLineInfo.AttackListLineEntry.COLUMN_NAME_ATTACK_LIST_ID+ ") REFERENCES " + AttackListInfo.AttackListEntry.TABLE_NAME +"(" + AttackListInfo.AttackListEntry._ID + ")"
+            + "PRIMARY KEY (" + AttackListLineInfo.AttackListLineEntry._ID +"),"
+            + "FOREIGN KEY (" + AttackListLineInfo.AttackListLineEntry.COLUMN_NAME_ATTACK_LIST_ID+ ") REFERENCES " + AttackListInfo.AttackListEntry.TABLE_NAME +"(" + AttackListInfo.AttackListEntry._ID + "),"
             + "FOREIGN KEY (" + AttackListLineInfo.AttackListLineEntry.COLUMN_NAME_ATTACK_ID + ") REFERENCES " + AttackInfo.AttackEntry.TABLE_NAME +"(" + AttackInfo.AttackEntry._ID + "))";
 
     public static final String DELETE_ATTACK_LIST_LINE_TABLE = "DROP TABLE IF EXISTS " + AttackListLineInfo.AttackListLineEntry.TABLE_NAME;

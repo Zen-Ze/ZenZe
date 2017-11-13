@@ -13,6 +13,7 @@ public class ItemGenerator {
             + ItemInfo.ItemEntry.COLUMN_NAME_NAME + " VARCHAR(64),"
             + ItemInfo.ItemEntry.COLUMN_NAME_DESCRIPTION + " TEXT,"
             + ItemInfo.ItemEntry.COLUMN_NAME_SPRITE_PATH + " TEXT,"
+            + ItemInfo.ItemEntry.COLUMN_NAME_WEATHER_STATUS + " INTEGER,"
             + "PRIMARY KEY (" + ItemInfo.ItemEntry._ID +"))";
 
     public static final String DELETE_ITEM_TABLE = "DROP TABLE IF EXISTS " + ItemInfo.ItemEntry.TABLE_NAME;

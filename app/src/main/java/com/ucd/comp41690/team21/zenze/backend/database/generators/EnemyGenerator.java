@@ -14,8 +14,9 @@ public class EnemyGenerator {
             + EnemyInfo.EnemyEntry.COLUMN_NAME_SCALE + " INTEGER,"
             + EnemyInfo.EnemyEntry.COLUMN_NAME_DESCRIPTION + " TEXT,"
             + EnemyInfo.EnemyEntry.COLUMN_NAME_GRAPHICS_PATH + " TEXT,"
-            + EnemyInfo.EnemyEntry.COLUMN_NAME_SPEED + "INTEGER"
-            + "PRIMARY KEY (" + EnemyInfo.EnemyEntry._ID + "),"
+            + EnemyInfo.EnemyEntry.COLUMN_NAME_SPEED + " INTEGER,"
+            + EnemyInfo.EnemyEntry.COLUMN_NAME_WEATHER_STATUS + " INTEGER,"
+            + "PRIMARY KEY (" + EnemyInfo.EnemyEntry._ID + ")"
             + ")";
 
     public static final String DELETE_ENEMY_TABLE = "DROP TABLE IF EXISTS " + EnemyInfo.EnemyEntry.TABLE_NAME;

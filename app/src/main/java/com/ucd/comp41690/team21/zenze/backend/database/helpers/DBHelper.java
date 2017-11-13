@@ -7,6 +7,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.ucd.comp41690.team21.zenze.backend.database.generators.AttackGenerator;
+import com.ucd.comp41690.team21.zenze.backend.database.generators.AttackListGenerator;
+import com.ucd.comp41690.team21.zenze.backend.database.generators.AttackListLineGenerator;
+import com.ucd.comp41690.team21.zenze.backend.database.generators.EnemyGenerator;
+import com.ucd.comp41690.team21.zenze.backend.database.generators.EnemyListGenerator;
+import com.ucd.comp41690.team21.zenze.backend.database.generators.EnemyListLineGenerator;
 import com.ucd.comp41690.team21.zenze.backend.database.generators.ItemGenerator;
 import com.ucd.comp41690.team21.zenze.backend.database.generators.ItemListGenerator;
 import com.ucd.comp41690.team21.zenze.backend.database.generators.ItemListLineGenerator;
@@ -19,6 +25,7 @@ import com.ucd.comp41690.team21.zenze.backend.database.models.Item;
 import com.ucd.comp41690.team21.zenze.backend.database.models.ItemList;
 import com.ucd.comp41690.team21.zenze.backend.database.models.ItemListLine;
 import com.ucd.comp41690.team21.zenze.backend.database.models.Player;
+import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,12 +52,16 @@ public class DBHelper extends SQLiteOpenHelper {
         /* WATCH OUT WHEN CREATING TABLES, FOLLOW THE ORDER OF EXECUTION OF THE QUERIES
         * FOREIGN KEY CONSTRAINTS
         * */
-
+        sqLiteDatabase.execSQL(EnemyListGenerator.CREATE_ENEMY_LIST);
+        sqLiteDatabase.execSQL(AttackListGenerator.CREATE_ATTACK_LIST);
         sqLiteDatabase.execSQL(ItemListGenerator.CREATE_ITEM_LIST_TABLE);
         sqLiteDatabase.execSQL(ItemGenerator.CREATE_ITEM_TABLE);
+        sqLiteDatabase.execSQL(AttackGenerator.CREATE_ATTACK_TABLE);
+        sqLiteDatabase.execSQL(EnemyGenerator.CREATE_ENEMY_TABLE);
         sqLiteDatabase.execSQL(PlayerGenerator.CREATE_PLAYER_TABLE);
         sqLiteDatabase.execSQL(ItemListLineGenerator.CREATE_ITEM_LIST_LINE_TABLE);
-
+        sqLiteDatabase.execSQL(EnemyListLineGenerator.CREATE_ENEMY_LIST_LINE_TABLE);
+        sqLiteDatabase.execSQL(AttackListLineGenerator.CREATE_ATTACK_LIST_LINE_TABLE);
     }
 
     @Override
@@ -105,7 +116,9 @@ public class DBHelper extends SQLiteOpenHelper {
                                 PlayerInfo.PlayerEntry.COLUMN_NAME_SAVED_HEALTH,
                                 PlayerInfo.PlayerEntry.COLUMN_NAME_USERNAME,
                                 PlayerInfo.PlayerEntry.COLUMN_NAME_CURRENT_LEVEL,
-                                PlayerInfo.PlayerEntry.COLUMN_NAME_ITEM_LIST_ID
+                                PlayerInfo.PlayerEntry.COLUMN_NAME_ITEM_LIST_ID,
+                                PlayerInfo.PlayerEntry.COLUMN_NAME_ATTACK_LIST_ID,
+                                PlayerInfo.PlayerEntry.COLUMN_NAME_ENEMY_LIST_ID
                             }, PlayerInfo.PlayerEntry._ID + "=?", new String[] { String.valueOf(playerId) }, null, null, null, null);
 
         if (cursor!=null) cursor.moveToFirst();
@@ -117,7 +130,9 @@ public class DBHelper extends SQLiteOpenHelper {
                     Integer.parseInt(cursor.getString(3)),
                     cursor.getString(4),
                     Integer.parseInt(cursor.getString(5)),
-                    Integer.parseInt(cursor.getString(6))
+                    Integer.parseInt(cursor.getString(6)),
+                    Integer.parseInt(cursor.getString(7)),
+                    Integer.parseInt(cursor.getString(8))
                 );
 
         return player;
@@ -152,7 +167,9 @@ public class DBHelper extends SQLiteOpenHelper {
                         Integer.parseInt(cursor.getString(3)),
                         cursor.getString(4),
                         Integer.parseInt(cursor.getString(5)),
-                        Integer.parseInt(cursor.getString(6))
+                        Integer.parseInt(cursor.getString(6)),
+                        Integer.parseInt(cursor.getString(7)),
+                        Integer.parseInt(cursor.getString(8))
                 );
 
                 players.add(player);
@@ -222,7 +239,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 Integer.parseInt(cursor.getString(0)),
                 cursor.getString(1),
                 cursor.getString(2),
-                cursor.getString(3)
+                cursor.getString(3),
+                WeatherStatus.valueOf(cursor.getString(4))
         );
 
         return item;
@@ -251,7 +269,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 Item item = new Item(
                         Integer.parseInt(cursor.getString(0)),
                         cursor.getString(1),
-                        cursor.getString(3)
+                        cursor.getString(3),
+                        WeatherStatus.valueOf(cursor.getString(4))
                 );
 
                 items.add(item);
@@ -444,5 +463,29 @@ public class DBHelper extends SQLiteOpenHelper {
                 , new String[] { String.valueOf(itemListLine.getId()) });
         db.close();
     }
+
+    /**
+     * Attack
+     */
+
+    /**
+     * AttackList
+     */
+
+    /**
+     * AttackListLine
+     */
+
+    /**
+     * Enemy
+     */
+
+    /**
+     * EnemyList
+     */
+
+    /**
+     * EnemyListLine
+     */
 
 }
