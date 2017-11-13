@@ -17,10 +17,15 @@ import com.ucd.comp41690.team21.zenze.backend.database.generators.ItemGenerator;
 import com.ucd.comp41690.team21.zenze.backend.database.generators.ItemListGenerator;
 import com.ucd.comp41690.team21.zenze.backend.database.generators.ItemListLineGenerator;
 import com.ucd.comp41690.team21.zenze.backend.database.generators.PlayerGenerator;
+import com.ucd.comp41690.team21.zenze.backend.database.misc.AttackListInfo;
+import com.ucd.comp41690.team21.zenze.backend.database.misc.EnemyInfo;
+import com.ucd.comp41690.team21.zenze.backend.database.misc.EnemyListInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemListInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemListLineInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.PlayerInfo;
+import com.ucd.comp41690.team21.zenze.backend.database.models.AttackList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.EnemyList;
 import com.ucd.comp41690.team21.zenze.backend.database.models.Item;
 import com.ucd.comp41690.team21.zenze.backend.database.models.ItemList;
 import com.ucd.comp41690.team21.zenze.backend.database.models.ItemListLine;
@@ -196,6 +201,8 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(PlayerInfo.PlayerEntry.COLUMN_NAME_SAVED_HEALTH, player.getSavedHealth());
         contentValues.put(PlayerInfo.PlayerEntry.COLUMN_NAME_ITEM_LIST_ID, player.getItemListId());
         contentValues.put(PlayerInfo.PlayerEntry.COLUMN_NAME_CURRENT_LEVEL, player.getCurrentLevel());
+        contentValues.put(PlayerInfo.PlayerEntry.COLUMN_NAME_ATTACK_LIST_ID, player.getAttackListId());
+        contentValues.put(PlayerInfo.PlayerEntry.COLUMN_NAME_ENEMY_LIST_ID, player.getEnemyListId());
 
         return db.update(PlayerInfo.PlayerEntry.TABLE_NAME, contentValues, PlayerInfo.PlayerEntry._ID + " = ?",
                 new String[] { String.valueOf(player.getId()) });
@@ -240,7 +247,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.getString(1),
                 cursor.getString(2),
                 cursor.getString(3),
-                WeatherStatus.valueOf(cursor.getString(4))
+                WeatherStatus.valueOf(Integer.parseInt(cursor.getString(4)))
         );
 
         return item;
@@ -252,16 +259,17 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param pageSize
      * @return
      */
-    public List<Item> getItems(int pageNumber, int pageSize) {
+    public List<Item> getItems(int pageNumber, int pageSize, WeatherStatus weatherStatus) {
         String query =
                 "SELECT * FROM " + ItemInfo.ItemEntry.TABLE_NAME
+                        + " WHERE " + ItemInfo.ItemEntry.COLUMN_NAME_WEATHER_STATUS + " = ? "
                         + " LIMIT " + String.valueOf(pageSize)
                         + " OFFSET " + String.valueOf(pageSize*pageNumber);
 
         List<Item> items = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery(query, null);
+        Cursor cursor = db.rawQuery(query, new String[] {String.valueOf(weatherStatus.getValue())});
 
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
@@ -270,7 +278,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         Integer.parseInt(cursor.getString(0)),
                         cursor.getString(1),
                         cursor.getString(3),
-                        WeatherStatus.valueOf(cursor.getString(4))
+                        WeatherStatus.valueOf(Integer.parseInt(cursor.getString(4)))
                 );
 
                 items.add(item);
@@ -473,6 +481,62 @@ public class DBHelper extends SQLiteOpenHelper {
      */
 
     /**
+     * Add an attack list and link it to a player.
+     * This is done by creating the attack list, retrieving the id of the created attack list, and
+     * proceed to update the player.
+     * @param player
+     */
+    public void addAttackList(Player player) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+
+        db.insert(AttackListInfo.AttackListEntry.TABLE_NAME, null, contentValues);
+
+        String queryToGetLastItem = "SELECT * FROM " + AttackListInfo.AttackListEntry.TABLE_NAME
+                + " ORDER BY " + AttackListInfo.AttackListEntry._ID + " DESC LIMIT 1";
+
+        Cursor cursor = db.rawQuery(queryToGetLastItem, null);
+        cursor.moveToLast();
+
+        int attackListId = Integer.valueOf(cursor.getString(0));
+
+        player.setAttackListId(attackListId);
+
+        this.updatePlayer(player);
+
+        db.close();
+    }
+
+    /**
+     * Retrieve an item list
+     * @param attackListId
+     * @return
+     */
+    public AttackList getAttackList(int attackListId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(AttackListInfo.AttackListEntry.TABLE_NAME,
+                new String[] {
+                        AttackListInfo.AttackListEntry._ID
+                }, AttackListInfo.AttackListEntry._ID + "=?", new String[] { String.valueOf(attackListId) }, null, null, null, null);
+
+        if (cursor!=null) cursor.moveToFirst();
+
+        AttackList attackList = new AttackList(
+                Integer.parseInt(cursor.getString(0))
+        );
+
+        return attackList;
+    }
+
+    public void deleteAttackList(AttackList attackList) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(AttackListInfo.AttackListEntry.TABLE_NAME, AttackListInfo.AttackListEntry._ID + " = ?", new String[] { String.valueOf(attackList.getId()) });
+        db.close();
+    }
+
+    /**
      * AttackListLine
      */
 
@@ -483,6 +547,62 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * EnemyList
      */
+    /**
+     * Add an enemy list and link it to a player.
+     * This is done by creating the enemy list, retrieving the id of the created enemy list, and
+     * proceed to update the player.
+     * @param player
+     */
+    public void addEnemyList(Player player) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+
+        db.insert(EnemyListInfo.EnemyListEntry.TABLE_NAME, null, contentValues);
+
+        String queryToGetLastItem = "SELECT * FROM " + EnemyListInfo.EnemyListEntry.TABLE_NAME
+                + " ORDER BY " + EnemyListInfo.EnemyListEntry._ID + " DESC LIMIT 1";
+
+        Cursor cursor = db.rawQuery(queryToGetLastItem, null);
+        cursor.moveToLast();
+
+        int enemyListId = Integer.valueOf(cursor.getString(0));
+
+        player.setAttackListId(enemyListId);
+
+        this.updatePlayer(player);
+
+        db.close();
+    }
+
+    /**
+     * Retrieve an item list
+     * @param enemyListId
+     * @return
+     */
+    public EnemyList getEnemyList(int enemyListId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(EnemyListInfo.EnemyListEntry.TABLE_NAME,
+                new String[] {
+                        EnemyListInfo.EnemyListEntry._ID
+                }, EnemyListInfo.EnemyListEntry._ID + "=?", new String[] { String.valueOf(enemyListId) }, null, null, null, null);
+
+        if (cursor!=null) cursor.moveToFirst();
+
+        EnemyList enemyList = new EnemyList(
+                Integer.parseInt(cursor.getString(0))
+        );
+
+        return enemyList;
+    }
+
+    public void deleteEnemyList(EnemyList enemyList) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(EnemyListInfo.EnemyListEntry.TABLE_NAME, EnemyListInfo.EnemyListEntry._ID + " = ?", new String[] { String.valueOf(enemyList.getId()) });
+        db.close();
+    }
+
 
     /**
      * EnemyListLine
