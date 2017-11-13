@@ -9,7 +9,9 @@ public abstract class PhysicsComponent {
     public float acceleration;
     public BoundingVolume boundingVolume;
 
-    public abstract void handlePhysics(GameObject object, double elapsedTime);
+    public void handlePhysics(GameObject object, double elapsedTime){
+        boundingVolume.update(object);
+    }
 
     public void leapFrogIntegration(GameObject object, double elapsedTime, float damping){
         x_Vel += acceleration*elapsedTime;
@@ -25,35 +27,41 @@ public abstract class PhysicsComponent {
      * @param rect
      * @return true if the two of them intersect
      */
-    public boolean intersects(Sphere sphere, AABB rect){
+    public Collision intersects(Sphere sphere, AABB rect){
         //compute the distance between the two centers
         float x_distance = Math.abs(sphere.x_Pos - rect.x_Pos);
         float y_distance = Math.abs(sphere.y_Pos - rect.y_Pos);
 
         //If distance greater than volumes they do not intersect
         if(x_distance > (sphere.radius + rect.width)){
-            return false;
+            return Collision.NONE;
         }
         if(y_distance > (sphere.radius + rect.height)){
-            return false;
+            return Collision.NONE;
         }
         //Sphere inside rectangle
-        if(x_distance <= rect.width){
-            return true;
+        if(x_distance < rect.width){
+            return Collision.SIDE;
         }
-        if(y_distance <= rect.height){
-            return true;
+        if(y_distance < rect.height){
+            if(sphere.y_Pos >= rect.y_Pos){
+                return Collision.BOTTOM;
+            }
+            return Collision.TOP;
         }
         //corner case
         double cornerDist_sq = Math.pow(x_distance-rect.width,2)+Math.pow(y_distance-rect.height,2);
-        return (cornerDist_sq <= Math.pow(sphere.radius,2));
+        if(cornerDist_sq <= Math.pow(sphere.radius,2)){
+            return Collision.CORNER;
+        }
+        return Collision.NONE;
     }
 
-    public boolean intersects(BoundingVolume a, BoundingVolume b){
+    public Collision intersects(BoundingVolume a, BoundingVolume b){
         if(a.getClass().equals(Sphere.class)&&b.getClass().equals(AABB.class)){
             return intersects((Sphere)a, (AABB)b);
         }
-        return false;
+        return Collision.NONE;
     }
 
     public class BoundingVolume{
@@ -95,5 +103,13 @@ public abstract class PhysicsComponent {
             this.width = dimension;
             this.height = dimension;
         }
+    }
+
+    public enum Collision{
+        TOP,
+        BOTTOM,
+        SIDE,
+        CORNER,
+        NONE;
     }
 }

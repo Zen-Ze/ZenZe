@@ -13,6 +13,9 @@ public class PlayerPhysics extends PhysicsComponent {
     private final float earlyJumpVelocity;
     public boolean isJumping;
 
+    private float oldPosX;
+    private float oldPosY;
+
     public PlayerPhysics(int minJumpHeight, int maxJumpHeight, float jumpTime,
                          float rightBorder, float ground, float x_Pos, float y_Pos, float scale) {
         x_Vel = 0;
@@ -28,10 +31,17 @@ public class PlayerPhysics extends PhysicsComponent {
         this.ground = ground - 2 * ((Sphere)boundingVolume).radius;
         this.rightBorder = rightBorder - 4 * ((Sphere)boundingVolume).radius;
         isJumping = false;
+
+        oldPosX = 0;
+        oldPosY = 0;
     }
 
     @Override
     public void handlePhysics(GameObject object, double elapsedTime) {
+        super.handlePhysics(object,elapsedTime);
+        oldPosX = object.x_Pos;
+        oldPosY = object.y_Pos;
+
         //update position
         if(isJumping) {
             leapFrogIntegration(object, elapsedTime, 0.4f);
@@ -40,10 +50,17 @@ public class PlayerPhysics extends PhysicsComponent {
         }
         //check for collisions with map
         for (GameObject o: Game.getInstance().getGameWorld().getMap()) {
-            if(intersects(this.boundingVolume, o.physics.boundingVolume)){
-                Game.getInstance().log = "Collision";
-            } else{
-                Game.getInstance().log = "In the Air!";
+            Collision col = intersects(this.boundingVolume, o.physics.boundingVolume);
+            if(col!=Collision.NONE){
+                if(o.getTag().equals(GameObject.PLATTFORM_TAG)){
+                    if(col==Collision.TOP){
+                        if(isJumping){
+
+                        }else {
+                            object.y_Pos = oldPosY;
+                        }
+                    }
+                }
             }
         }
         //keep player inside the visible space
