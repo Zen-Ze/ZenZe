@@ -19,6 +19,7 @@ import com.ucd.comp41690.team21.zenze.backend.database.generators.ItemListLineGe
 import com.ucd.comp41690.team21.zenze.backend.database.generators.PlayerGenerator;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.AttackInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.AttackListInfo;
+import com.ucd.comp41690.team21.zenze.backend.database.misc.AttackListLineInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.EnemyInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.EnemyListInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemInfo;
@@ -27,6 +28,7 @@ import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemListLineInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.PlayerInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.models.Attack;
 import com.ucd.comp41690.team21.zenze.backend.database.models.AttackList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.AttackListLine;
 import com.ucd.comp41690.team21.zenze.backend.database.models.Enemy;
 import com.ucd.comp41690.team21.zenze.backend.database.models.EnemyList;
 import com.ucd.comp41690.team21.zenze.backend.database.models.Item;
@@ -621,6 +623,123 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * AttackListLine
      */
+
+    /**
+     * Insert an item list line in the database.
+     * @param attackListLine
+     */
+    public void addAttackListLine(AttackListLine attackListLine) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(AttackListLineInfo.AttackListLineEntry.COLUMN_NAME_AMOUNT, attackListLine.getAmount());
+        contentValues.put(AttackListLineInfo.AttackListLineEntry.COLUMN_NAME_ATTACK_ID, attackListLine.getAttackId());
+        contentValues.put(AttackListLineInfo.AttackListLineEntry.COLUMN_NAME_ATTACK_LIST_ID, attackListLine.getAttackListId());
+
+        db.insert(AttackListLineInfo.AttackListLineEntry.TABLE_NAME, null, contentValues);
+        db.close();
+    }
+
+    /**
+     * Retrieve an item list line from the database.
+     * @param attackListLineId
+     * @return
+     */
+    public AttackListLine getAttackListLine(int attackListLineId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // int id, int amount, int itemId, int itemListId
+
+
+        Cursor cursor = db.query(ItemInfo.ItemEntry.TABLE_NAME,
+                new String[] {
+                        AttackListLineInfo.AttackListLineEntry._ID,
+                        AttackListLineInfo.AttackListLineEntry.COLUMN_NAME_AMOUNT,
+                        AttackListLineInfo.AttackListLineEntry.COLUMN_NAME_ATTACK_ID,
+                        AttackListLineInfo.AttackListLineEntry.COLUMN_NAME_ATTACK_LIST_ID
+                }, ItemListLineInfo.ItemListLineEntry._ID + "=?", new String[] { String.valueOf(attackListLineId) }, null, null, null, null);
+
+        if (cursor!=null) cursor.moveToFirst();
+
+        AttackListLine attackListLine = new AttackListLine(
+                Integer.parseInt(cursor.getString(0)),
+                Integer.valueOf(cursor.getString(1)),
+                Integer.valueOf(cursor.getString(2)),
+                Integer.valueOf(cursor.getString(3))
+        );
+
+        return attackListLine;
+    }
+
+    /**
+     * Retrieve item list lines from item list id.
+     * You should use this and then retrieve items 1 by 1 for displaying.
+     * Also, if you change page, PLEASE do not re-create an instance, we're working with mobile devices
+     * so there are limitations.
+     * @param pageNumber
+     * @param pageSize
+     * @param attackListId
+     * @return
+     */
+    public List<AttackListLine> getAttackListLines(int pageNumber, int pageSize, int attackListId) {
+        String query =
+                "SELECT * FROM " + AttackListLineInfo.AttackListLineEntry._ID
+                        + "WHERE " + AttackListLineInfo.AttackListLineEntry.COLUMN_NAME_ATTACK_LIST_ID + " = " + String.valueOf(attackListId)
+                        + " LIMIT " + String.valueOf(pageSize)
+                        + " OFFSET " + String.valueOf(pageSize*pageNumber);
+
+        List<AttackListLine> attackListLines = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+
+                AttackListLine attackListLine = new AttackListLine(
+                        Integer.parseInt(cursor.getString(0)),
+                        Integer.valueOf(cursor.getString(1)),
+                        Integer.valueOf(cursor.getString(2)),
+                        Integer.valueOf(cursor.getString(3))
+                );
+
+                attackListLines.add(attackListLine);
+
+                cursor.moveToNext();
+            }
+        }
+
+        return attackListLines;
+
+    }
+
+    /**
+     * Update an item list line.
+     * @param attackListLine
+     * @return
+     */
+    public int updateAttackListLine(AttackListLine attackListLine) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(AttackListLineInfo.AttackListLineEntry.COLUMN_NAME_AMOUNT, attackListLine.getAmount());
+        contentValues.put(AttackListLineInfo.AttackListLineEntry.COLUMN_NAME_ATTACK_LIST_ID, attackListLine.getAttackListId());
+        contentValues.put(AttackListLineInfo.AttackListLineEntry.COLUMN_NAME_ATTACK_ID, attackListLine.getAttackId());
+
+        return db.update(AttackListLineInfo.AttackListLineEntry.TABLE_NAME, contentValues, AttackListLineInfo.AttackListLineEntry._ID + " = ?",
+                new String[] { String.valueOf(attackListLine.getId()) });
+    }
+
+    /**
+     * Delete an item list line from the database.
+     * @param attackListLine
+     */
+    public void deleteAttackListLine(AttackListLine attackListLine) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(AttackListLineInfo.AttackListLineEntry.TABLE_NAME, AttackListLineInfo.AttackListLineEntry._ID + " = ?"
+                , new String[] { String.valueOf(attackListLine.getId()) });
+        db.close();
+    }
 
     /**
      * Enemy
