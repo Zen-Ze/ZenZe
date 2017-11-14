@@ -27,7 +27,7 @@ public class MainMenuActivity extends Activity {
         start_game.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                startGame(view);
+                startGame();
             }
         });
 
@@ -35,16 +35,16 @@ public class MainMenuActivity extends Activity {
         bt_help.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Help(view);
+                Help();
             }
         });
         // When user clicks settings button
-        bt_settings.setOnClickListener(new View.OnClickListener(){
+      /*  bt_settings.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Settings(view);
+                Settings();
             }
-        });
+        });*/
 
 
 
@@ -52,17 +52,18 @@ public class MainMenuActivity extends Activity {
 
     /**
      * is called when start-button is clicked
-     * @param v
+     * @param
      */
-    private void startGame(View v){
+    private void startGame(){
         startActivity(new Intent( MainMenuActivity.this, GameActivity.class));
     }
-    private void Help(View v){
+    private void Help(){
         startActivity(new Intent( MainMenuActivity.this, Help.class));
     }
-    private void Settings(View v){
+    /*private void Settings(){
         startActivity(new Intent( MainMenuActivity.this, Settings.class));
-    }
+    }*/
+
 
 
 }

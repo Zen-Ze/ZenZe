@@ -18,16 +18,16 @@
         </activity>
         <activity android:name=".Activities.GameActivity" />
         <activity
-            android:name=".Activities.SettingsActivity"
-            android:label="@string/title_activity_settings"
+            android:name=".Activities.Help"
+            android:label="@string/title_activity_help"
             android:parentActivityName=".Activities.MainMenuActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ucd.comp41690.team21.zenze.Activities.MainMenuActivity" />
         </activity>
         <activity
-            android:name=".Activities.Help"
-            android:label="@string/title_activity_help"
+            android:name=".Activities.Settings"
+            android:label="@string/title_activity_settings"
             android:parentActivityName=".Activities.MainMenuActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

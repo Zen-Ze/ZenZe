@@ -8,7 +8,15 @@
 
     <!-- Strings related to Settings -->
     <string name="title_activity_settings">Settings</string>
-
+    <string name="dev_options_switch">Developer options</string>
+    <string name="dev_options_descriptions"> Switch the developer options On or Off</string>
+    <string name="weather_options_text"> Weather Options </string>
+    <string name="weather_sunny"> Sunny weather </string>
+    <string name="weather_sunny_description"> switch the game to play sunny levels </string>
+    <string name="weather_rainy"> Rainy weather </string>
+    <string name="weather_rainy_description"> Switch the game to play rainy levels </string>
+    <string name="weather_windy"> Windy weather </string>
+    <string name="weather_windy_description"> Switch the game to play windy levels </string>
 
 
     <!--Help-->
@@ -103,4 +111,6 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+
+
 </resources>
