@@ -1,5 +1,11 @@
 package com.ucd.comp41690.team21.zenze.backend.database.generators;
 
+<<<<<<< HEAD
+=======
+import com.ucd.comp41690.team21.zenze.backend.database.misc.AttackInfo;
+import com.ucd.comp41690.team21.zenze.backend.database.misc.AttackListInfo;
+import com.ucd.comp41690.team21.zenze.backend.database.misc.EnemyListInfo;
+>>>>>>> 9af233b6a60eb06f62cfe07927a2926b4f0eeda1
 import com.ucd.comp41690.team21.zenze.backend.database.misc.ItemListInfo;
 import com.ucd.comp41690.team21.zenze.backend.database.misc.PlayerInfo;
 
@@ -17,8 +23,18 @@ public class PlayerGenerator {
             + PlayerInfo.PlayerEntry.COLUMN_NAME_SAVED_HEALTH + " INTEGER,"
             + PlayerInfo.PlayerEntry.COLUMN_NAME_CURRENT_LEVEL + " INTEGER,"
             + PlayerInfo.PlayerEntry.COLUMN_NAME_ITEM_LIST_ID + " INTEGER,"
+<<<<<<< HEAD
             + "PRIMARY KEY (" + PlayerInfo.PlayerEntry._ID + "),"
             + "FOREIGN KEY (" + PlayerInfo.PlayerEntry.COLUMN_NAME_ITEM_LIST_ID + ") REFERENCES " + ItemListInfo.ItemListEntry.TABLE_NAME +"(" + ItemListInfo.ItemListEntry._ID + "))";
+=======
+            + PlayerInfo.PlayerEntry.COLUMN_NAME_ATTACK_LIST_ID + " INTEGER,"
+            + PlayerInfo.PlayerEntry.COLUMN_NAME_ENEMY_LIST_ID + " INTEGER,"
+            + "PRIMARY KEY (" + PlayerInfo.PlayerEntry._ID + "),"
+            + "FOREIGN KEY (" + PlayerInfo.PlayerEntry.COLUMN_NAME_ITEM_LIST_ID + ") REFERENCES " + ItemListInfo.ItemListEntry.TABLE_NAME +"(" + ItemListInfo.ItemListEntry._ID + "),"
+            + "FOREIGN KEY (" + PlayerInfo.PlayerEntry.COLUMN_NAME_ATTACK_LIST_ID + ") REFERENCES " + AttackListInfo.AttackListEntry.TABLE_NAME +"(" + AttackListInfo.AttackListEntry._ID + "),"
+            + "FOREIGN KEY (" + PlayerInfo.PlayerEntry.COLUMN_NAME_ENEMY_LIST_ID + ") REFERENCES " + EnemyListInfo.EnemyListEntry.TABLE_NAME +"(" + EnemyListInfo.EnemyListEntry._ID + ")"
+            + ")";
+>>>>>>> 9af233b6a60eb06f62cfe07927a2926b4f0eeda1
 
     public static final String DELETE_PLAYER_TABLE = "DROP TABLE IF EXISTS " + PlayerInfo.PlayerEntry.TABLE_NAME;
 

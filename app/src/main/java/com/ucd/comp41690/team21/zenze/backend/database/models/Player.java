@@ -18,6 +18,11 @@ public class Player extends BaseModel {
      * | Username                                |  VARCHAR(64)     |                 |
      * | CurrentLevel                            |  INTEGER         |                 |
      * | ItemListId                              |  INTEGER         |  FGN            |
+<<<<<<< HEAD
+=======
+     * | EnemyListId                             |  INTEGER         |  FGN            |
+     * | AttackListId                            |  INTEGER         |  FGN            |
+>>>>>>> 9af233b6a60eb06f62cfe07927a2926b4f0eeda1
      * +-----------------------------------------+------------------+-----------------+
      */
 
@@ -27,8 +32,15 @@ public class Player extends BaseModel {
     private String username;
     private int currentLevel;
     private int itemListId;
+<<<<<<< HEAD
 
     public Player(int id, int lastCoordX, int lastCoordY, int savedHealth, String username, int currentLevel, int itemListId) {
+=======
+    private int attackListId;
+    private int enemyListId;
+
+    public Player(int id, int lastCoordX, int lastCoordY, int savedHealth, String username, int currentLevel, int itemListId, int attackListId, int enemyListId) {
+>>>>>>> 9af233b6a60eb06f62cfe07927a2926b4f0eeda1
         super(id);
         this.lastCoordX = lastCoordX;
         this.lastCoordY = lastCoordY;
@@ -36,6 +48,11 @@ public class Player extends BaseModel {
         this.username = username;
         this.currentLevel = currentLevel;
         this.itemListId = itemListId;
+<<<<<<< HEAD
+=======
+        this.attackListId = attackListId;
+        this.enemyListId = enemyListId;
+>>>>>>> 9af233b6a60eb06f62cfe07927a2926b4f0eeda1
     }
 
     public void setLastCoordX(int lastCoordX) {
@@ -58,6 +75,13 @@ public class Player extends BaseModel {
 
     public void setItemListId(int itemListId) { this.itemListId = itemListId; }
 
+<<<<<<< HEAD
+=======
+    public void setAttackListId(int attackListId) { this.attackListId = attackListId; }
+
+    public void setEnemyListId(int enemyListId) { this.enemyListId = enemyListId; }
+
+>>>>>>> 9af233b6a60eb06f62cfe07927a2926b4f0eeda1
     public int getLastCoordX() {
         return lastCoordX;
     }
@@ -77,5 +101,12 @@ public class Player extends BaseModel {
     public int getCurrentLevel() { return currentLevel; }
 
     public int getItemListId() { return itemListId; }
+<<<<<<< HEAD
+=======
+
+    public int getAttackListId() { return attackListId; }
+
+    public int getEnemyListId() { return enemyListId; }
+>>>>>>> 9af233b6a60eb06f62cfe07927a2926b4f0eeda1
 }
 
