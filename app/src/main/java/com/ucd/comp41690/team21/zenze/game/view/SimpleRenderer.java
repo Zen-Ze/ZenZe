@@ -6,8 +6,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.TextView;
 
+import com.ucd.comp41690.team21.zenze.activities.GameActivity;
 import com.ucd.comp41690.team21.zenze.game.Game;
 import com.ucd.comp41690.team21.zenze.game.GameObject;
 import com.ucd.comp41690.team21.zenze.game.GameWorld;
@@ -22,9 +22,6 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
     private Paint paint;
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
-
-    //UI
-    private TextView text;
 
     //dimensions
     private final int numTilesH;
@@ -43,8 +40,6 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
         super(context);
         surfaceHolder = getHolder();
         paint = new Paint();
-        text = new TextView(context);
-        text.setText("Hello World!");
 
         width = Game.getInstance().getWidth();
         height = Game.getInstance().getHeight();
@@ -96,10 +91,6 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
                                     break;
                             }
                         }
-
-                        paint.setColor(Color.WHITE);
-                        paint.setTextSize(75);
-                        canvas.drawText(Game.getInstance().log, 100,200,paint);
                     }
                 }
             } finally {
