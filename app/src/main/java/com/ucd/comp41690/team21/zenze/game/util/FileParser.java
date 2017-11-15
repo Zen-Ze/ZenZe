@@ -99,7 +99,7 @@ public class FileParser {
                         x = 0;
                         y++;
                         break;
-                    case '1'://Player
+                    case 'P'://Player
                         PlayerInputHandler playerInputHandler = new PlayerInputHandler();
                         PlayerPhysics playerPhysics = new PlayerPhysics(playerMinJumpHeight,
                                 playerMaxJumpHeight, playerJumpTime, numTilesV, numTilesH, x, y, playerScale);
@@ -124,6 +124,10 @@ public class FileParser {
                                 null, plattformPhysics, null, x, y, GameObject.PLATTFORM_TAG);
                         world.addPlatform(platform);
                         x++;
+                        break;
+                    case 'I':
+
+                        //GameObject item = new GameObject(null, itemPhysics, itemType, x,y,GameObject.ITEM_TAG);
                         break;
                     default:
                         x++;

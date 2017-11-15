@@ -14,6 +14,8 @@ public class GameObject {
     public static final String PLAYER_TAG = "Player";
     public static final String PLATTFORM_TAG = "Plattform";
     public static final String CAMERA_TAG = "Camera";
+    public static final String ITEM_TAG = "Item";
+    public static final String ENEMY_TAG = "Enemy";
 
     //Components
     public InputComponent inputHandler;
