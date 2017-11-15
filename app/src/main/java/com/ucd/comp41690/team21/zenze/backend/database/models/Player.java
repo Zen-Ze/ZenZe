@@ -18,6 +18,8 @@ public class Player extends BaseModel {
      * | Username                                |  VARCHAR(64)     |                 |
      * | CurrentLevel                            |  INTEGER         |                 |
      * | ItemListId                              |  INTEGER         |  FGN            |
+     * | EnemyListId                             |  INTEGER         |  FGN            |
+     * | AttackListId                            |  INTEGER         |  FGN            |
      * +-----------------------------------------+------------------+-----------------+
      */
 
@@ -27,8 +29,10 @@ public class Player extends BaseModel {
     private String username;
     private int currentLevel;
     private int itemListId;
+    private int attackListId;
+    private int enemyListId;
 
-    public Player(int id, int lastCoordX, int lastCoordY, int savedHealth, String username, int currentLevel, int itemListId) {
+    public Player(int id, int lastCoordX, int lastCoordY, int savedHealth, String username, int currentLevel, int itemListId, int attackListId, int enemyListId) {
         super(id);
         this.lastCoordX = lastCoordX;
         this.lastCoordY = lastCoordY;
@@ -36,6 +40,8 @@ public class Player extends BaseModel {
         this.username = username;
         this.currentLevel = currentLevel;
         this.itemListId = itemListId;
+        this.attackListId = attackListId;
+        this.enemyListId = enemyListId;
     }
 
     public void setLastCoordX(int lastCoordX) {
@@ -58,6 +64,10 @@ public class Player extends BaseModel {
 
     public void setItemListId(int itemListId) { this.itemListId = itemListId; }
 
+    public void setAttackListId(int attackListId) { this.attackListId = attackListId; }
+
+    public void setEnemyListId(int enemyListId) { this.enemyListId = enemyListId; }
+
     public int getLastCoordX() {
         return lastCoordX;
     }
@@ -77,5 +87,9 @@ public class Player extends BaseModel {
     public int getCurrentLevel() { return currentLevel; }
 
     public int getItemListId() { return itemListId; }
+
+    public int getAttackListId() { return attackListId; }
+
+    public int getEnemyListId() { return enemyListId; }
 }
 

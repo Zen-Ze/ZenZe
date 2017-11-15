@@ -21,6 +21,8 @@ public final class PlayerInfo {
         public static final String COLUMN_NAME_LAST_COORD_Y = "LastCoordY";
         public static final String COLUMN_NAME_USERNAME = "Username";
         public static final String COLUMN_NAME_SAVED_HEALTH = "SavedHealth";
+        public static final String COLUMN_NAME_ATTACK_LIST_ID = "AttackListId";
+        public static final String COLUMN_NAME_ENEMY_LIST_ID = "EnemyListId";
         public static final String COLUMN_NAME_ITEM_LIST_ID = "ItemListId";
         public static final String COLUMN_NAME_CURRENT_LEVEL = "CurrentLevel";
     }
