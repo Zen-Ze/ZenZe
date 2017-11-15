@@ -1,4 +1,4 @@
-package com.ucd.comp41690.team21.zenze.Activities;
+package com.ucd.comp41690.team21.zenze.activities;
 
 import android.os.Bundle;
 import android.app.Activity;

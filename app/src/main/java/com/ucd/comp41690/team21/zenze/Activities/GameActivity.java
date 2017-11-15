@@ -1,4 +1,4 @@
-package com.ucd.comp41690.team21.zenze.Activities;
+package com.ucd.comp41690.team21.zenze.activities;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
