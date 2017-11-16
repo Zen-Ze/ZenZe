@@ -45,12 +45,10 @@
         <provider
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider165971933990795"
-            android:exported="true" />
+            android:exported="true" /><![CDATA[
 
-        <activity
-            android:name=".activities.ShareActivity">
-        </activity>
->>>>>>> 9af233b6a60eb06f62cfe07927a2926b4f0eeda1
+        >>>>>>> 9af233b6a60eb06f62cfe07927a2926b4f0eeda1
+    ]]>
     </application>
 
 </manifest>
