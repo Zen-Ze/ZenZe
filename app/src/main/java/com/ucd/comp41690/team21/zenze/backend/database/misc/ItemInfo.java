@@ -21,10 +21,6 @@ public final class ItemInfo {
         public static final String COLUMN_NAME_NAME = "Name";
         public static final String COLUMN_NAME_DESCRIPTION = "Description";
         public static final String COLUMN_NAME_SPRITE_PATH = "SpritePath";
-<<<<<<< HEAD
-=======
-        public static final String COLUMN_NAME_WEATHER_STATUS = "WeatherStatus";
->>>>>>> 9af233b6a60eb06f62cfe07927a2926b4f0eeda1
     }
 
 }
