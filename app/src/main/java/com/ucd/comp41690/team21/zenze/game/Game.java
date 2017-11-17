@@ -1,10 +1,13 @@
 package com.ucd.comp41690.team21.zenze.game;
 
 import android.content.Context;
+import android.opengl.GLSurfaceView;
+import android.util.Log;
+import android.view.InputEvent;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
-import com.ucd.comp41690.team21.zenze.game.util.InputEvent;
 import com.ucd.comp41690.team21.zenze.game.util.Observer;
 import com.ucd.comp41690.team21.zenze.game.util.Subject;
 import com.ucd.comp41690.team21.zenze.game.view.Renderer;
@@ -28,7 +31,6 @@ public class Game implements Runnable, Subject<InputEvent> {
     private static Game instance;
     private int gameWidth;
     private int gameHeight;
-    public String log;
 
     public Game(Context context, int width, int height, WeatherStatus status) {
         Game.instance = this;
@@ -101,6 +103,10 @@ public class Game implements Runnable, Subject<InputEvent> {
         return gameView.getView();
     }
 
+    public void onTouchEvent(MotionEvent event) {
+        notify(event);
+    }
+
     public int getWidth() {
         return gameWidth;
     }
@@ -117,8 +123,8 @@ public class Game implements Runnable, Subject<InputEvent> {
         return gameWorld;
     }
 
-    public void onInputEvent(InputEvent event) {
-        notify(event);
+    public Renderer getGameView() {
+        return gameView;
     }
 
     public void addObserver(Observer<InputEvent> observer) {
