@@ -30,7 +30,7 @@ public class GameWorld {
         FileParser.loadWorld(context, this);
         numTilesH = FileParser.getNumTilesH();
         numTilesV = FileParser.getNumTilesV();
-        state = FileParser.loadState(status);
+        state = FileParser.loadState(status, context);
     }
 
     public void update(double elapsedTime){

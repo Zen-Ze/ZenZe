@@ -7,6 +7,7 @@ import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 import com.ucd.comp41690.team21.zenze.game.util.InputEvent;
 import com.ucd.comp41690.team21.zenze.game.util.Observer;
 import com.ucd.comp41690.team21.zenze.game.util.Subject;
+import com.ucd.comp41690.team21.zenze.game.view.GraphicsRenderer;
 import com.ucd.comp41690.team21.zenze.game.view.Renderer;
 import com.ucd.comp41690.team21.zenze.game.view.SimpleRenderer;
 
@@ -37,7 +38,8 @@ public class Game implements Runnable, Subject<InputEvent> {
         this.inputObserverList = new LinkedList<>();
 
         this.gameWorld = new GameWorld(context, status);
-        this.gameView = new SimpleRenderer(context, gameWorld);
+        //this.gameView = new SimpleRenderer(context, gameWorld);
+        this.gameView = new GraphicsRenderer(context, gameWorld);
         this.gameThread  = null;
         this.log = "";
     }
