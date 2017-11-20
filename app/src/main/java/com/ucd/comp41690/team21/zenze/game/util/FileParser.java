@@ -12,6 +12,7 @@ import com.ucd.comp41690.team21.zenze.game.GameWorld;
 import com.ucd.comp41690.team21.zenze.game.components.CameraAI;
 import com.ucd.comp41690.team21.zenze.game.components.EnemyAI;
 import com.ucd.comp41690.team21.zenze.game.components.EnemyPhyiscs;
+import com.ucd.comp41690.team21.zenze.game.components.PhysicsComponent;
 import com.ucd.comp41690.team21.zenze.game.components.PlattformPhysics;
 import com.ucd.comp41690.team21.zenze.game.components.PlayerInputHandler;
 import com.ucd.comp41690.team21.zenze.game.components.PlayerPhysics;
@@ -41,6 +42,9 @@ public class FileParser {
     //Camera stats
     private static int cameraMovementWindow = 0;
     private static float cameraMinSpeed = 0;
+
+    //Item stats
+    private static float itemSize = 0;
 
     //Tile Map stats
     private static int numTilesV = 0;
@@ -73,6 +77,7 @@ public class FileParser {
             playerScale = (float) gameConfig.getDouble("Player_Scale");
             cameraMovementWindow = gameConfig.getInt("Camera_MovementWindow");
             cameraMinSpeed = gameConfig.getInt("Camera_MinSpeed");
+            itemSize = (float) gameConfig.getDouble("Item_Scale");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -127,8 +132,9 @@ public class FileParser {
                         world.addPlatform(platform);
                         break;
                     case 'I':
-                        Type itemType = new Type(0,0,0.5f);
-                        GameObject item = new GameObject(null, null, itemType, x,y,GameObject.ITEM_TAG);
+                        PhysicsComponent itemPhysics = new PhysicsComponent(PhysicsComponent.SPHERE,x,y, itemSize);
+                        Type itemType = new Type(0,0,itemSize);
+                        GameObject item = new GameObject(null, itemPhysics, itemType, x,y,GameObject.ITEM_TAG);
                         world.addObject(item);
                         break;
                     case 'E':

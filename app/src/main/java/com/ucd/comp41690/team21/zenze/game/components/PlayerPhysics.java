@@ -11,11 +11,10 @@ public class PlayerPhysics extends PhysicsComponent {
     private final float earlyJumpVelocity;
     public boolean isJumping;
 
-    private float oldPosX;
-    private float oldPosY;
-
     public PlayerPhysics(int minJumpHeight, int maxJumpHeight, float jumpTime,
                          float rightBorder, float ground, float x_Pos, float y_Pos, float scale) {
+        super(PhysicsComponent.SPHERE, x_Pos, y_Pos, scale);
+
         x_Vel = 0;
         y_Vel = 0;
         acceleration = 0;
@@ -24,21 +23,15 @@ public class PlayerPhysics extends PhysicsComponent {
         this.jumpVelocity = (float) -Math.sqrt(2 * gravity * maxJumpHeight);
         this.earlyJumpVelocity = (float) -Math.sqrt(jumpVelocity * jumpVelocity
                 - 2 * gravity * (maxJumpHeight - minJumpHeight));
-
-        this.boundingVolume = new Sphere(x_Pos, y_Pos, scale / 2);
-        this.ground = ground - 2 * ((Sphere) boundingVolume).radius;
-        this.rightBorder = rightBorder - 4 * ((Sphere) boundingVolume).radius;
         isJumping = false;
 
-        oldPosX = 0;
-        oldPosY = 0;
+        this.ground = ground - 2 * ((Sphere) boundingVolume).radius;
+        this.rightBorder = rightBorder - 4 * ((Sphere) boundingVolume).radius;
     }
 
     @Override
     public void handlePhysics(GameObject object, double elapsedTime) {
         super.handlePhysics(object, elapsedTime);
-        oldPosX = object.x_Pos;
-        oldPosY = object.y_Pos;
 
         //update position
         if (isJumping) {
@@ -51,7 +44,6 @@ public class PlayerPhysics extends PhysicsComponent {
             Collision col = intersects(this.boundingVolume, o.physics.boundingVolume);
             if (col != Collision.NONE) {
                 if (o.getTag().equals(GameObject.PLATTFORM_TAG)) {
-                    Game.getInstance().log = col.toString();
                     if (y_Vel >= 0 &&
                             (col == Collision.CORNER_LEFT || col == Collision.CORNER_RIGHT)) {
                         if(col == Collision.CORNER_RIGHT){
@@ -77,6 +69,14 @@ public class PlayerPhysics extends PhysicsComponent {
                                 + ((AABB) o.physics.boundingVolume).width
                                 + ((Sphere) boundingVolume).radius;
                     }
+                }
+            }
+        }
+        //check for collisions with other game objects
+        for(GameObject o : Game.getInstance().getGameWorld().getEntities()){
+            if(o.getTag().equals(GameObject.ITEM_TAG)){
+                if(intersects(this.boundingVolume, o.physics.boundingVolume) != Collision.NONE) {
+                    o.isAlive = false;
                 }
             }
         }

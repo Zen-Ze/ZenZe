@@ -3,12 +3,28 @@ package com.ucd.comp41690.team21.zenze.game.components;
 import com.ucd.comp41690.team21.zenze.game.Game;
 import com.ucd.comp41690.team21.zenze.game.GameObject;
 
-public abstract class PhysicsComponent {
+public class PhysicsComponent {
+    public final static int SPHERE = 0;
+    public final static int RECTANGULAR = 1;
+
     public float x_Vel;
     public float y_Vel;
     public float gravity;
     public float acceleration;
     public BoundingVolume boundingVolume;
+
+    public PhysicsComponent(int boundingVolume, float x, float y, float scale){
+        switch (boundingVolume){
+            case SPHERE:
+                this.boundingVolume = new Sphere(x,y,scale/2);
+                break;
+            case RECTANGULAR:
+                this.boundingVolume = new AABB(x,y,scale/2);
+                break;
+            default:
+                this.boundingVolume = null;
+        }
+    }
 
     public void handlePhysics(GameObject object, double elapsedTime){
         boundingVolume.update(object);
@@ -67,9 +83,19 @@ public abstract class PhysicsComponent {
         return Collision.NONE;
     }
 
+    public Collision intersects(Sphere a, Sphere b){
+        if ((Math.pow(b.x_Pos-a.x_Pos,2) + Math.pow(b.y_Pos-a.y_Pos,2))
+                < Math.pow(a.radius+b.radius,2)){
+            return Collision.TOP;
+        }
+        return Collision.NONE;
+    }
+
     public Collision intersects(BoundingVolume a, BoundingVolume b){
         if(a.getClass().equals(Sphere.class)&&b.getClass().equals(AABB.class)){
             return intersects((Sphere)a, (AABB)b);
+        }else if(a.getClass().equals(Sphere.class)&&b.getClass().equals(Sphere.class)){
+            return intersects((Sphere)a, (Sphere)b);
         }
         return Collision.NONE;
     }
