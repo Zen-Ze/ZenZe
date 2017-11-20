@@ -1,38 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ucd.comp41690.team21.zenze.activities.MainMenuActivity">
+    tools:context="com.ucd.comp41690.team21.zenze.activities.MainMenuActivity"
+    tools:layout_editor_absoluteY="81dp">
 
 
     <Button
-        android:id="@+id/start_game"
+        android:id="@+id/start_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:onClick="startGame"
-        android:text="@string/start_game"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:text="@string/mm_start"
+        app:layout_constraintBottom_toTopOf="@+id/setting_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.501" />
+        app:layout_constraintVertical_bias="0.908" />
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
         style="@style/FacebookLoginButton"
-        android:layout_width="485dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_alignParentLeft="true"
+        android:layout_width="266dp"
+        android:layout_height="37dp"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        tools:layout_editor_absoluteX="-27dp"
-        tools:layout_editor_absoluteY="480dp"
+        android:layout_marginBottom="148dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_weight="1"
+        android:text="@string/mm_share"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         tools:text="Login Facebook" />
+
+    <Button
+        android:id="@+id/help_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/mm_Help"
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/setting_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/mm_settings"
+        app:layout_constraintBottom_toTopOf="@+id/help_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

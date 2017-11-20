@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.ucd.comp41690.team21.zenze">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,13 +17,12 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity
+        <activity xmlns:tools="http://schemas.android.com/tools"
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
-            xmlns:tools="http://schemas.android.com/tools"
-            tools:replace="android:theme"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            tools:replace="android:theme" />
         <activity android:name=".activities.MainMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,15 +30,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.GameActivity"></activity>
+        <activity android:name=".activities.GameActivity" />
 
         <provider
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider165971933990795"
             android:exported="true" />
 
+        <activity android:name=".activities.ShareActivity"></activity>
         <activity
-            android:name=".activities.ShareActivity">
+            android:name=".activities.Help"
+            android:label="@string/title_activity_help"
+            android:parentActivityName=".activities.MainMenuActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ucd.comp41690.team21.zenze.activities.MainMenuActivity" />
         </activity>
     </application>
 

@@ -5,12 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import com.facebook.*;
+import android.widget.Button;
+
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -38,17 +39,44 @@ public class MainMenuActivity extends Activity {
     private AccessTokenTracker accessTokenTracker;
     private AccessToken accessToken ;
     private final static String TAG = MainMenuActivity.class.getName().toString();
-    @Override
 
+    LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
+    Button helpButton = (Button) findViewById(R.id.help_button);
+    Button startButton = (Button) findViewById(R.id.start_button);
+    Button settingsButton = (Button) findViewById(R.id.setting_button);
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
+        // Start game
+        startButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startGame(v);
+            }
+        });
+
+        // Start help
+        helpButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startHelp(v);
+            }
+        });
+        // Start settings
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startSetting(v);
+            }
+        });
+
+
         //Initialize FB SDK
         FacebookSdk.sdkInitialize(getApplicationContext(), new FacebookSdk.InitializeCallback() {
             @Override
             public void onInitialized() {
-                //AccessToken is for us to check whether we have previously logged in into
-                //this app, and this information is save in shared preferences and sets it during SDK initialization
+                // AccessToken is for us to check whether we have previously logged in into
+                // This app, and this information is save in shared preferences and sets it during SDK initialization
                 accessToken = AccessToken.getCurrentAccessToken();
                 if (accessToken == null) {
                     Log.d(TAG, "not log in yet");
@@ -74,7 +102,6 @@ public class MainMenuActivity extends Activity {
             }
         };
 
-        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -113,8 +140,7 @@ public class MainMenuActivity extends Activity {
                 md.update(signature.toByteArray());
                 Log.i("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
-        } catch (PackageManager.NameNotFoundException e) {
-        } catch (NoSuchAlgorithmException e) {
+        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
         }
     }
 
@@ -123,12 +149,10 @@ public class MainMenuActivity extends Activity {
         super.onActivityResult(requestCode, responseCode, intent);
         //Facebook login
         callbackManager.onActivityResult(requestCode, responseCode, intent);
-
     }
 
     @Override
     protected void onPause() {
-
         super.onPause();
     }
 
@@ -141,10 +165,24 @@ public class MainMenuActivity extends Activity {
      * is called when start-button is clicked
      * @param v
      */
+
+    // Intent to start game activity
     public void startGame(View v){
         Intent gameIntent = new Intent(MainMenuActivity.this, GameActivity.class);
         // TODO: Get Location from GPS, and change null to a Location
         gameIntent.putExtra("Game State", WeatherService.getWeatherStatus(null, getApplicationContext()));
         startActivity(gameIntent);
+    }
+
+    // Intent to start help activity
+    public void startHelp(View v){
+        Intent helpIntent = new Intent(MainMenuActivity.this, Help.class);
+        startActivity(helpIntent);
+    }
+
+    // Intent to start setting activity
+    public void startSetting(View v){
+        Intent helpIntent = new Intent(MainMenuActivity.this, Settings.class);
+        startActivity(helpIntent);
     }
 }
