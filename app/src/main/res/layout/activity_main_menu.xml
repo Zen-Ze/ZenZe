@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/backgroundv2"
     tools:context="com.ucd.comp41690.team21.zenze.activities.MainMenuActivity"
     tools:layout_editor_absoluteY="81dp">
-
 
     <Button
         android:id="@+id/start_button"
@@ -64,4 +64,5 @@
         app:layout_constraintBottom_toTopOf="@+id/help_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 </android.support.constraint.ConstraintLayout>
