@@ -80,14 +80,29 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
                             );
                         }
                         //Draw each entity in the game world
+                        float x,y;
                         for (GameObject o : world.getEntities()) {
                             switch (o.getTag()) {
                                 //represent Player as white circle
                                 case GameObject.PLAYER_TAG:
-                                    float x = (o.x_Pos - offset) * tileSize + tileSize / 2;
-                                    float y = o.y_Pos * tileSize + tileSize / 2;
+                                    x = (o.x_Pos - offset) * tileSize + tileSize / 2;
+                                    y = o.y_Pos * tileSize + tileSize / 2;
                                     paint.setStyle(Paint.Style.FILL);
                                     paint.setColor(Color.WHITE);
+                                    canvas.drawCircle(x, y, tileSize / 2 * o.scale, paint);
+                                    break;
+                                case GameObject.ITEM_TAG:
+                                    x = (o.x_Pos - offset) * tileSize + tileSize / 2;
+                                    y = o.y_Pos * tileSize + tileSize / 2;
+                                    paint.setStyle(Paint.Style.FILL);
+                                    paint.setColor(Color.YELLOW);
+                                    canvas.drawCircle(x, y, tileSize / 2 * o.scale, paint);
+                                    break;
+                                case GameObject.ENEMY_TAG:
+                                    x = (o.x_Pos - offset) * tileSize + tileSize / 2;
+                                    y = o.y_Pos * tileSize + tileSize / 2;
+                                    paint.setStyle(Paint.Style.FILL);
+                                    paint.setColor(Color.RED);
                                     canvas.drawCircle(x, y, tileSize / 2 * o.scale, paint);
                                     break;
                             }

@@ -55,9 +55,9 @@ public class PlayerPhysics extends PhysicsComponent {
                     if (y_Vel >= 0 &&
                             (col == Collision.CORNER_LEFT || col == Collision.CORNER_RIGHT)) {
                         if(col == Collision.CORNER_RIGHT){
-                            object.x_Pos += ((Sphere) boundingVolume).radius/10;
+                            object.x_Pos += ((Sphere) boundingVolume).radius/5;
                         } else {
-                            object.x_Pos -= ((Sphere) boundingVolume).radius/10;
+                            object.x_Pos -= ((Sphere) boundingVolume).radius/5;
                         }
                     }
                     if (y_Vel >= 0 && col == Collision.TOP) {
@@ -67,12 +67,12 @@ public class PlayerPhysics extends PhysicsComponent {
                         y_Vel = 0;
                         isJumping = false;
                     }
-                    if(col == Collision.LEFT && x_Vel>=0){
+                    if(col == Collision.LEFT && x_Vel>=0 && !isJumping){
                         object.x_Pos = o.x_Pos
                                 - ((AABB) o.physics.boundingVolume).width
                                 - ((Sphere) boundingVolume).radius;
                     }
-                    if(col == Collision.RIGHT && x_Vel<=0){
+                    if(col == Collision.RIGHT && x_Vel<=0 && !isJumping){
                         object.x_Pos = o.x_Pos
                                 + ((AABB) o.physics.boundingVolume).width
                                 + ((Sphere) boundingVolume).radius;

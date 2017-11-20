@@ -10,6 +10,8 @@ import com.ucd.comp41690.team21.zenze.game.GameObject;
 import com.ucd.comp41690.team21.zenze.game.GameState;
 import com.ucd.comp41690.team21.zenze.game.GameWorld;
 import com.ucd.comp41690.team21.zenze.game.components.CameraAI;
+import com.ucd.comp41690.team21.zenze.game.components.EnemyAI;
+import com.ucd.comp41690.team21.zenze.game.components.EnemyPhyiscs;
 import com.ucd.comp41690.team21.zenze.game.components.PlattformPhysics;
 import com.ucd.comp41690.team21.zenze.game.components.PlayerInputHandler;
 import com.ucd.comp41690.team21.zenze.game.components.PlayerPhysics;
@@ -98,7 +100,7 @@ public class FileParser {
                     case '\n':
                         x = 0;
                         y++;
-                        break;
+                        continue;
                     case 'P'://Player
                         PlayerInputHandler playerInputHandler = new PlayerInputHandler();
                         PlayerPhysics playerPhysics = new PlayerPhysics(playerMinJumpHeight,
@@ -123,15 +125,21 @@ public class FileParser {
                         GameObject platform = new GameObject(
                                 null, plattformPhysics, null, x, y, GameObject.PLATTFORM_TAG);
                         world.addPlatform(platform);
-                        x++;
                         break;
                     case 'I':
-
-                        //GameObject item = new GameObject(null, itemPhysics, itemType, x,y,GameObject.ITEM_TAG);
+                        Type itemType = new Type(0,0,0.5f);
+                        GameObject item = new GameObject(null, null, itemType, x,y,GameObject.ITEM_TAG);
+                        world.addObject(item);
                         break;
-                    default:
-                        x++;
+                    case 'E':
+                        EnemyPhyiscs enemyPhysics = new EnemyPhyiscs();
+                        EnemyAI enemyAI = new EnemyAI();
+                        Type enemyType = new Type(100,1,1);
+                        GameObject enemy = new GameObject(enemyAI, enemyPhysics, enemyType, x, y, GameObject.ENEMY_TAG);
+                        world.addObject(enemy);
+                        break;
                 }
+                x++;
             }
         } catch (IOException e) {
             e.printStackTrace();
