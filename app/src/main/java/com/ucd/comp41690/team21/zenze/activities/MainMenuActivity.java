@@ -61,7 +61,6 @@ public class MainMenuActivity extends Activity {
         });
 
         setContentView(R.layout.activity_main_menu);
-
         //register a callback to respond to a login result,
         callbackManager = CallbackManager.Factory.create();
 

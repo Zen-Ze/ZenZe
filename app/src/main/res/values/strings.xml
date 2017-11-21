@@ -2,4 +2,5 @@
     <string name="app_name">ZenZe</string>
     <string name="start_game">Start Game</string>
     <string name="facebook_app_id">165971933990795</string>
+    <string name="openweathermap_api_key">8d84d30e323c71e8fdd92f9a8f35e794</string>
 </resources>
