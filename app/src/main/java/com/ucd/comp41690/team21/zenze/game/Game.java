@@ -1,6 +1,7 @@
 package com.ucd.comp41690.team21.zenze.game;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.SurfaceView;
 
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
@@ -50,15 +51,12 @@ public class Game implements Runnable, Subject<InputEvent> {
         double beginTime = 0;
         double elapsedTime = 0;
         double framesSkipped = 0;
-        long prevUpdate = System.currentTimeMillis();
 
         while (running) {
             beginTime = System.currentTimeMillis();
             framesSkipped = 0;
 
-            double updateTime = System.currentTimeMillis();
-            gameWorld.update((updateTime - prevUpdate) / 1000);
-            prevUpdate = System.currentTimeMillis();
+            gameWorld.update(elapsedTime / 100);
             gameView.render(gameWorld);
 
             elapsedTime = System.currentTimeMillis() - beginTime;
@@ -73,8 +71,9 @@ public class Game implements Runnable, Subject<InputEvent> {
             }
             while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS) {
                 //catch up on updates, leave out rendering step
-                gameWorld.update((System.currentTimeMillis() - prevUpdate) / 1000);
-                prevUpdate = System.currentTimeMillis();
+                beginTime = System.currentTimeMillis();
+                gameWorld.update(elapsedTime / 100);
+                elapsedTime = System.currentTimeMillis() - beginTime;
                 sleepTime += MS_PER_UPDATE;
                 framesSkipped++;
             }

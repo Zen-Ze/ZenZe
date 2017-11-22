@@ -157,7 +157,7 @@ public class FileParser {
     public static GameState loadState(WeatherStatus status, Context context) {
         Bitmap tileImage, backgroundImage, playerImage, enemyImage;
         playerImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.character);
-        enemyImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy);
+        enemyImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy_red);
         switch (status) {
             case SUNNY:
                 tileImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_sunny);

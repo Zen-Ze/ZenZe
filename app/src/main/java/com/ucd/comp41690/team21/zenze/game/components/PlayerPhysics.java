@@ -32,7 +32,7 @@ public class PlayerPhysics extends PhysicsComponent {
     @Override
     public void handlePhysics(GameObject object, double elapsedTime) {
         super.handlePhysics(object, elapsedTime);
-
+        Game.getInstance().log = elapsedTime + "";
         //update position
         if (isJumping) {
             leapFrogIntegration(object, elapsedTime, 0.4f);

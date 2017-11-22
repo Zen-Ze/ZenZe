@@ -74,11 +74,14 @@ public class GraphicsRenderer extends SurfaceView implements Renderer {
 
                         //Draw the tile map
                         for (GameObject o : world.getMap()){
-                            rect = new Rect((int)((o.x_Pos - offset) * tileSize),
-                                    (int)(o.y_Pos * tileSize),
-                                    (int)((o.x_Pos - offset) * tileSize + tileSize)+1,
-                                    (int)(o.y_Pos * tileSize + tileSize)+1);
-                            canvas.drawBitmap(world.getState().getTileImage(), null, rect, paint);
+                            float left = (o.x_Pos - offset) * tileSize;
+                            if(left >= -tileSize && left <= width) {
+                                rect = new Rect((int) left,
+                                        (int) (o.y_Pos * tileSize),
+                                        (int) ((o.x_Pos - offset) * tileSize + tileSize) + 1,
+                                        (int) (o.y_Pos * tileSize + tileSize) + 1);
+                                canvas.drawBitmap(world.getState().getTileImage(), null, rect, paint);
+                            }
                         }
                         //Draw each entity in the game world
                         float x,y;
