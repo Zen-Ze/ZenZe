@@ -1,15 +1,23 @@
 package com.ucd.comp41690.team21.zenze.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
+
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -24,6 +32,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.ucd.comp41690.team21.zenze.R;
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherService;
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
@@ -32,16 +45,26 @@ import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
  * Main Activity that launches on start
  * contains the game Menu
  */
-public class MainMenuActivity extends Activity {
+public class MainMenuActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
+    private static final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
+    private GoogleApiClient googleApiClient;
+
     private CallbackManager callbackManager;
     private AccessTokenTracker accessTokenTracker;
-    private AccessToken accessToken ;
+    private AccessToken accessToken;
     private final static String TAG = MainMenuActivity.class.getName().toString();
-    @Override
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_ACCESS_COARSE_LOCATION);
+        }
+
         //Initialize FB SDK
         FacebookSdk.sdkInitialize(getApplicationContext(), new FacebookSdk.InitializeCallback() {
             @Override
@@ -55,10 +78,11 @@ public class MainMenuActivity extends Activity {
                     Log.d(TAG, "Logged in");
                     Intent main = new Intent(MainMenuActivity.this, ShareActivity.class);
                     startActivity(main);
-
                 }
             }
         });
+
+        googleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
 
         setContentView(R.layout.activity_main_menu);
 
@@ -83,6 +107,7 @@ public class MainMenuActivity extends Activity {
                 Intent main = new Intent(MainMenuActivity.this, ShareActivity.class);
                 startActivity(main);
             }
+
             @Override
             public void onCancel() {
             }
@@ -93,7 +118,7 @@ public class MainMenuActivity extends Activity {
         });
 
         //Set permission to use in this app
-        List<String> permissionNeeds = Arrays.asList("user_friends","email","user_birthday");
+        List<String> permissionNeeds = Arrays.asList("user_friends", "email", "user_birthday");
         loginButton.setReadPermissions(permissionNeeds);
 
         accessTokenTracker.startTracking();
@@ -132,6 +157,7 @@ public class MainMenuActivity extends Activity {
     }
 
     protected void onStop() {
+        googleApiClient.disconnect();
         super.onStop();
         accessTokenTracker.stopTracking();
     }
@@ -140,10 +166,52 @@ public class MainMenuActivity extends Activity {
      * is called when start-button is clicked
      * @param v
      */
-    public void startGame(View v){
+    public void startGame(View v) {
         Intent gameIntent = new Intent(MainMenuActivity.this, GameActivity.class);
-        // TODO: Get Location from GPS, and change null to a Location
-        gameIntent.putExtra("Game State", WeatherService.getWeatherStatus(null, getApplicationContext()));
+
+        Location location = null;
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        }
+
+        gameIntent.putExtra("Game State", WeatherService.getWeatherStatus(location, getApplicationContext()));
         startActivity(gameIntent);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (googleApiClient != null) {
+            googleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_ACCESS_COARSE_LOCATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                    Toast.makeText(this, "This application requires your location!", Toast.LENGTH_SHORT).show();
+                }
+
+                break;
+        }
     }
 }
