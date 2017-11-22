@@ -96,7 +96,7 @@ public class GraphicsRenderer extends SurfaceView implements Renderer {
                                     canvas.drawBitmap(world.getState().getPlayerImage(), null, rect, paint);
                                     break;
                                 case GameObject.ITEM_TAG:
-                                    //canvas.drawBitmap(world.getState().getPlayerImage(), null, rect, paint);
+                                    canvas.drawBitmap(world.getState().getItemImage(), null, rect, paint);
                                     break;
                                 case GameObject.ENEMY_TAG:
                                     canvas.drawBitmap(world.getState().getEnemyImage(), null, rect, paint);

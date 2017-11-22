@@ -155,26 +155,27 @@ public class FileParser {
     }
 
     public static GameState loadState(WeatherStatus status, Context context) {
-        Bitmap tileImage, backgroundImage, playerImage, enemyImage;
+        Bitmap tileImage, backgroundImage, playerImage, enemyImage, itemImage;
         playerImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.character);
         enemyImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy_red);
+        itemImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item);
         switch (status) {
             case SUNNY:
                 tileImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_sunny);
                 backgroundImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.bg_sunny);
-                return new GameState(Color.RED, tileImage, backgroundImage, playerImage, enemyImage);
+                return new GameState(Color.RED, tileImage, backgroundImage, playerImage, enemyImage, itemImage);
             case RAINY:
                 tileImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_rainy);
                 backgroundImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.bg_rainy);
-                return new GameState(Color.BLUE, tileImage, backgroundImage, playerImage, enemyImage);
+                return new GameState(Color.BLUE, tileImage, backgroundImage, playerImage, enemyImage, itemImage);
             case SNOWY:
                 tileImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_snowy);
                 backgroundImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.bg_snowy);
-                return new GameState(Color.WHITE, tileImage, backgroundImage, playerImage, enemyImage);
+                return new GameState(Color.WHITE, tileImage, backgroundImage, playerImage, enemyImage, itemImage);
             default:
                 tileImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_sunny);
                 backgroundImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.bg_sunny);
-                return new GameState(Color.GRAY, tileImage, backgroundImage, playerImage, enemyImage);
+                return new GameState(Color.GRAY, tileImage, backgroundImage, playerImage, enemyImage, itemImage);
         }
     }
 

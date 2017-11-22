@@ -16,14 +16,17 @@ public class GameState {
     private Bitmap backgroundImage;
     private Bitmap playerImage;
     private Bitmap enemyImage;
+    private Bitmap itemImage;
 
 
-    public GameState(int background, Bitmap tileImage, Bitmap backgroundImage, Bitmap playerImage, Bitmap enemyImage){
+    public GameState(int background, Bitmap tileImage, Bitmap backgroundImage,
+                     Bitmap playerImage, Bitmap enemyImage, Bitmap itemImage){
         this.background = background;
         this.tileImage = tileImage;
         this.backgroundImage = backgroundImage;
         this.playerImage = playerImage;
         this.enemyImage = enemyImage;
+        this.itemImage = itemImage;
     }
 
     public int getBackground() {
@@ -44,5 +47,9 @@ public class GameState {
 
     public Bitmap getEnemyImage() {
         return enemyImage;
+    }
+
+    public Bitmap getItemImage() {
+        return itemImage;
     }
 }
