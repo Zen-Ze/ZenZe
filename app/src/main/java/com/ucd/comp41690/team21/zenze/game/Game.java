@@ -51,12 +51,15 @@ public class Game implements Runnable, Subject<InputEvent> {
         double beginTime = 0;
         double elapsedTime = 0;
         double framesSkipped = 0;
+        long prevUpdate = System.currentTimeMillis();
 
         while (running) {
             beginTime = System.currentTimeMillis();
             framesSkipped = 0;
 
-            gameWorld.update(elapsedTime / 100);
+            double updateTime = System.currentTimeMillis();
+            gameWorld.update((updateTime - prevUpdate) / 1000);
+            prevUpdate = System.currentTimeMillis();
             gameView.render(gameWorld);
 
             elapsedTime = System.currentTimeMillis() - beginTime;
@@ -71,9 +74,8 @@ public class Game implements Runnable, Subject<InputEvent> {
             }
             while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS) {
                 //catch up on updates, leave out rendering step
-                beginTime = System.currentTimeMillis();
-                gameWorld.update(elapsedTime / 100);
-                elapsedTime = System.currentTimeMillis() - beginTime;
+                gameWorld.update((System.currentTimeMillis() - prevUpdate) / 1000);
+                prevUpdate = System.currentTimeMillis();
                 sleepTime += MS_PER_UPDATE;
                 framesSkipped++;
             }
