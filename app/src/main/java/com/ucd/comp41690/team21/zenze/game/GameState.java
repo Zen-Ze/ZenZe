@@ -17,16 +17,21 @@ public class GameState {
     private Bitmap playerImage;
     private Bitmap enemyImage;
     private Bitmap itemImage;
+    private Bitmap attackImage;
+    private Bitmap enemyAttackImage;
 
 
     public GameState(int background, Bitmap tileImage, Bitmap backgroundImage,
-                     Bitmap playerImage, Bitmap enemyImage, Bitmap itemImage){
+                     Bitmap playerImage, Bitmap enemyImage, Bitmap itemImage,
+                     Bitmap attackImage, Bitmap enemyAttackImage){
         this.background = background;
         this.tileImage = tileImage;
         this.backgroundImage = backgroundImage;
         this.playerImage = playerImage;
         this.enemyImage = enemyImage;
         this.itemImage = itemImage;
+        this.attackImage = attackImage;
+        this.enemyAttackImage = enemyAttackImage;
     }
 
     public int getBackground() {
@@ -52,4 +57,13 @@ public class GameState {
     public Bitmap getItemImage() {
         return itemImage;
     }
+
+    public Bitmap getAttackImage() {
+        return attackImage;
+    }
+
+    public Bitmap getEnemyAttackImage() {
+        return enemyAttackImage;
+    }
+
 }
