@@ -58,7 +58,7 @@ public class Game implements Runnable, Subject<InputEvent> {
             framesSkipped = 0;
 
             double updateTime = System.currentTimeMillis();
-            gameWorld.update((updateTime - prevUpdate) / 1000);
+            gameWorld.update(Math.max((updateTime - prevUpdate),0.0001) / 1000);
             prevUpdate = System.currentTimeMillis();
             gameView.render(gameWorld);
 
@@ -74,7 +74,7 @@ public class Game implements Runnable, Subject<InputEvent> {
             }
             while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS) {
                 //catch up on updates, leave out rendering step
-                gameWorld.update((System.currentTimeMillis() - prevUpdate) / 1000);
+                gameWorld.update(Math.max((System.currentTimeMillis() - prevUpdate),0.0001) / 1000);
                 prevUpdate = System.currentTimeMillis();
                 sleepTime += MS_PER_UPDATE;
                 framesSkipped++;
