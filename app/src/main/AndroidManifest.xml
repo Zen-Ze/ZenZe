@@ -37,10 +37,18 @@
             android:authorities="com.facebook.app.FacebookContentProvider165971933990795"
             android:exported="true" />
 
-        <activity android:name=".activities.ShareActivity"></activity>
+        <activity android:name=".activities.ShareActivity" />
         <activity
             android:name=".activities.Help"
             android:label="@string/title_activity_help"
+            android:parentActivityName=".activities.MainMenuActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ucd.comp41690.team21.zenze.activities.MainMenuActivity" />
+        </activity>
+        <activity
+            android:name=".activities.Settings"
+            android:label="@string/title_activity_settings"
             android:parentActivityName=".activities.MainMenuActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
