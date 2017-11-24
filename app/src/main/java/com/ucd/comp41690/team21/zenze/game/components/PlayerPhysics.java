@@ -43,7 +43,7 @@ public class PlayerPhysics extends PhysicsComponent {
         for (GameObject o : Game.getInstance().getGameWorld().getMap()) {
             Collision col = intersects(this.boundingVolume, o.physics.boundingVolume);
             if (col != Collision.NONE) {
-                if (o.getTag().equals(GameObject.PLATTFORM_TAG)) {
+                if (o.getTag().equals(GameObject.PLATFORM_TAG)) {
                     if (y_Vel >= 0 &&
                             (col == Collision.CORNER_LEFT || col == Collision.CORNER_RIGHT)) {
                         if(col == Collision.CORNER_RIGHT){

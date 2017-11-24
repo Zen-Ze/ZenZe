@@ -6,5 +6,6 @@
   "Player_Scale" : 1,
   "Camera_MovementWindow" : 2,
   "Camera_MinSpeed" : 0.0,
-  "Item_Scale" : 0.5
+  "Item_Scale" : 0.5,
+  "Platform_Scale" : 1
 }

@@ -26,11 +26,10 @@ public class GameWorld {
     public GameWorld(Context context, WeatherStatus status){
         entities = new LinkedList<>();
         tileMap = new LinkedList<>();
-        FileParser.init(context);
+        state = FileParser.init(context, status);
         FileParser.loadWorld(context, this);
         numTilesH = FileParser.getNumTilesH();
         numTilesV = FileParser.getNumTilesV();
-        state = FileParser.loadState(status, context);
     }
 
     public void update(double elapsedTime){

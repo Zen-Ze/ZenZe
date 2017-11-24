@@ -80,27 +80,18 @@ public class GraphicsRenderer extends SurfaceView implements Renderer {
                                         (int) (o.y_Pos * tileSize),
                                         (int) ((o.x_Pos - offset) * tileSize + tileSize) + 1,
                                         (int) (o.y_Pos * tileSize + tileSize) + 1);
-                                canvas.drawBitmap(world.getState().getTileImage(), null, rect, paint);
+                                canvas.drawBitmap(o.type.getImage(), null, rect, paint);
                             }
                         }
                         //Draw each entity in the game world
                         float x,y;
                         for (GameObject o : world.getEntities()) {
-                            rect = new Rect((int)((o.x_Pos - offset) * tileSize),
-                                    (int)(o.y_Pos * tileSize),
-                                    (int)((o.x_Pos - offset) * tileSize + tileSize)+1,
-                                    (int)(o.y_Pos * tileSize + tileSize)+1);
-                            switch (o.getTag()) {
-                                //represent Player as white circle
-                                case GameObject.PLAYER_TAG:
-                                    canvas.drawBitmap(world.getState().getPlayerImage(), null, rect, paint);
-                                    break;
-                                case GameObject.ITEM_TAG:
-                                    canvas.drawBitmap(world.getState().getItemImage(), null, rect, paint);
-                                    break;
-                                case GameObject.ENEMY_TAG:
-                                    canvas.drawBitmap(world.getState().getEnemyImage(), null, rect, paint);
-                                    break;
+                            if(o.type != null) {
+                                rect = new Rect((int) ((o.x_Pos - offset) * tileSize),
+                                        (int) (o.y_Pos * tileSize),
+                                        (int) ((o.x_Pos - offset) * tileSize + tileSize) + 1,
+                                        (int) (o.y_Pos * tileSize + tileSize) + 1);
+                                canvas.drawBitmap(o.type.getImage(), null, rect, paint);
                             }
                         }
 
