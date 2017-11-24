@@ -44,8 +44,13 @@ public class FileParser {
     private static int cameraMovementWindow = 0;
     private static float cameraMinSpeed = 0;
 
+    //Enemy stats
+    private static float enemySize = 0;
+    private static int enemyHealth = 0;
+
     //Item stats
     private static float itemSize = 0;
+    private static float specialItemSize = 0;
 
     //Tile Map stats
     private static int numTilesV = 0;
@@ -76,15 +81,23 @@ public class FileParser {
         }
         try {
             JSONObject gameConfig = new JSONObject(sb.toString());
+            //Player
             playerSpeed = gameConfig.getInt("Player_Speed");
             playerMaxJumpHeight = gameConfig.getInt("Player_MaxJumpHeight");
             playerMinJumpHeight = gameConfig.getInt("Player_MinJumpHeight");
             playerJumpTime = (float) gameConfig.getDouble("Player_JumpTime");
             playerScale = (float) gameConfig.getDouble("Player_Scale");
+            //camera
             cameraMovementWindow = gameConfig.getInt("Camera_MovementWindow");
             cameraMinSpeed = gameConfig.getInt("Camera_MinSpeed");
+            //Items
             itemSize = (float) gameConfig.getDouble("Item_Scale");
+            specialItemSize = (float) gameConfig.getDouble("SpecialItem_Scale");
+            //Platforms
             platformSize = (float) gameConfig.getDouble("Platform_Scale");
+            //Enemies
+            enemyHealth = gameConfig.getInt("Enemy_Health");
+            enemySize = (float) gameConfig.getDouble("Enemy_Scale");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -184,9 +197,9 @@ public class FileParser {
                     case '*':
                         PlatformPhysics platformMiddlePhysics =
                                 new PlatformPhysics(x, y, platformSize);
-                        Type plattformMiddleType = new Type(0, 0, platformSize, tileMiddleImage);
+                        Type platformMiddleType = new Type(0, 0, platformSize, tileMiddleImage);
                         GameObject platformMiddle = new GameObject(
-                                null, platformMiddlePhysics, plattformMiddleType, x, y, GameObject.M_PLATFORM_TAG);
+                                null, platformMiddlePhysics, platformMiddleType, x, y, GameObject.M_PLATFORM_TAG);
                         world.addPlatform(platformMiddle);
                         break;
                     case 'I':
@@ -199,15 +212,15 @@ public class FileParser {
                     case 'S':
                         PhysicsComponent specialItemPhysics =
                                 new PhysicsComponent(PhysicsComponent.SPHERE, x, y, itemSize);
-                        Type specialItemType = new Type(0, 0, itemSize, specialItemImage);
+                        Type specialItemType = new Type(0, 0, specialItemSize, specialItemImage);
                         GameObject specialItem = new GameObject(
                                 null, specialItemPhysics, specialItemType, x, y, GameObject.S_ITEM_TAG);
                         world.addObject(specialItem);
                         break;
                     case 'E':
-                        EnemyPhyiscs enemyPhysics = new EnemyPhyiscs();
+                        EnemyPhyiscs enemyPhysics = new EnemyPhyiscs(x,y,enemySize);
                         EnemyAI enemyAI = new EnemyAI();
-                        Type enemyType = new Type(100, 1, 1, enemyImage);
+                        Type enemyType = new Type(enemyHealth, 0, enemySize, enemyImage);
                         GameObject enemy = new GameObject(enemyAI, enemyPhysics, enemyType, x, y, GameObject.ENEMY_TAG);
                         world.addObject(enemy);
                         break;

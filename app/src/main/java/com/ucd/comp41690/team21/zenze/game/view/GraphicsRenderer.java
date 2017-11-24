@@ -34,6 +34,7 @@ public class GraphicsRenderer extends SurfaceView implements Renderer {
     private final int width;
     private final int height;
     private final float tileSize;
+    private final float tileRatio;
 
     /**
      * Initialise the canvas for the renderer
@@ -50,6 +51,7 @@ public class GraphicsRenderer extends SurfaceView implements Renderer {
         numTilesH = world.getNumTilesH();
         numTilesV = world.getNumTilesV();
         tileSize = height / (float)numTilesH;
+        tileRatio = tileSize/2;
         numTilesAcross = (int)(width / tileSize) + 2;
     }
 
@@ -73,25 +75,34 @@ public class GraphicsRenderer extends SurfaceView implements Renderer {
                         canvas.drawBitmap(world.getState().getBackgroundImage(), src, rect, paint);
 
                         //Draw the tile map
+                        float left, right, top, bottom;
                         for (GameObject o : world.getMap()){
-                            float left = (o.x_Pos - offset) * tileSize;
+                            left = (o.x_Pos - offset) * tileSize - o.scale*tileRatio + tileRatio;
                             if(left >= -tileSize && left <= width) {
+                                right = (o.x_Pos - offset) * tileSize + o.scale*tileRatio + tileRatio;
+                                top = o.y_Pos * tileSize - o.scale*tileRatio + tileRatio;
+                                bottom = o.y_Pos * tileSize + o.scale*tileRatio + tileRatio;
                                 rect = new Rect((int) left,
-                                        (int) (o.y_Pos * tileSize),
-                                        (int) ((o.x_Pos - offset) * tileSize + tileSize) + 1,
-                                        (int) (o.y_Pos * tileSize + tileSize) + 1);
+                                        (int) top,
+                                        ((int)right) + 1,
+                                        ((int) bottom) + 1);
                                 canvas.drawBitmap(o.type.getImage(), null, rect, paint);
                             }
                         }
                         //Draw each entity in the game world
-                        float x,y;
                         for (GameObject o : world.getEntities()) {
                             if(o.type != null) {
-                                rect = new Rect((int) ((o.x_Pos - offset) * tileSize),
-                                        (int) (o.y_Pos * tileSize),
-                                        (int) ((o.x_Pos - offset) * tileSize + tileSize) + 1,
-                                        (int) (o.y_Pos * tileSize + tileSize) + 1);
-                                canvas.drawBitmap(o.type.getImage(), null, rect, paint);
+                                left = (o.x_Pos - offset) * tileSize - o.scale*tileRatio + tileRatio;
+                                if(left >= -tileSize && left <= width) {
+                                    right = (o.x_Pos - offset) * tileSize + o.scale*tileRatio + tileRatio;
+                                    top = o.y_Pos * tileSize - o.scale*tileRatio + tileRatio;
+                                    bottom = o.y_Pos * tileSize + o.scale*tileRatio + tileRatio;
+                                    rect = new Rect((int) left,
+                                            (int) top,
+                                            ((int)right) + 1,
+                                            ((int) bottom) + 1);
+                                    canvas.drawBitmap(o.type.getImage(), null, rect, paint);
+                                }
                             }
                         }
 

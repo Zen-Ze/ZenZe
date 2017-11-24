@@ -46,10 +46,10 @@ public class PlayerPhysics extends PhysicsComponent {
                 if (o.getTag().equals(GameObject.PLATFORM_TAG)) {
                     if (y_Vel >= 0 &&
                             (col == Collision.CORNER_LEFT || col == Collision.CORNER_RIGHT)) {
-                        if(col == Collision.CORNER_RIGHT){
-                            object.x_Pos += ((Sphere) boundingVolume).radius/5;
+                        if (col == Collision.CORNER_RIGHT) {
+                            object.x_Pos += ((Sphere) boundingVolume).radius / 5;
                         } else {
-                            object.x_Pos -= ((Sphere) boundingVolume).radius/5;
+                            object.x_Pos -= ((Sphere) boundingVolume).radius / 5;
                         }
                     }
                     if (y_Vel >= 0 && col == Collision.TOP) {
@@ -59,12 +59,12 @@ public class PlayerPhysics extends PhysicsComponent {
                         y_Vel = 0;
                         isJumping = false;
                     }
-                    if(col == Collision.LEFT && x_Vel>=0 && !isJumping){
+                    if (col == Collision.LEFT && x_Vel >= 0 && !isJumping) {
                         object.x_Pos = o.x_Pos
                                 - ((AABB) o.physics.boundingVolume).width
                                 - ((Sphere) boundingVolume).radius;
                     }
-                    if(col == Collision.RIGHT && x_Vel<=0 && !isJumping){
+                    if (col == Collision.RIGHT && x_Vel <= 0 && !isJumping) {
                         object.x_Pos = o.x_Pos
                                 + ((AABB) o.physics.boundingVolume).width
                                 + ((Sphere) boundingVolume).radius;
@@ -73,10 +73,16 @@ public class PlayerPhysics extends PhysicsComponent {
             }
         }
         //check for collisions with other game objects
-        for(GameObject o : Game.getInstance().getGameWorld().getEntities()){
-            if(o.getTag().equals(GameObject.ITEM_TAG)){
-                if(intersects(this.boundingVolume, o.physics.boundingVolume) != Collision.NONE) {
-                    o.isAlive = false;
+        for (GameObject o : Game.getInstance().getGameWorld().getEntities()) {
+            if(o.physics != null && o.physics.boundingVolume != null) {
+                if (intersects(this.boundingVolume, o.physics.boundingVolume) != Collision.NONE) {
+                    if (o.getTag().equals(GameObject.ITEM_TAG)) {
+                        o.isAlive = false;
+                    } else if (o.getTag().equals(GameObject.S_ITEM_TAG)) {
+                        o.isAlive = false;
+                    } else if (o.getTag().equals(GameObject.ENEMY_TAG)) {
+                        object.health -= 10;
+                    }
                 }
             }
         }
