@@ -1,13 +1,18 @@
 package com.ucd.comp41690.team21.zenze.game.view;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.TextView;
 
+import com.ucd.comp41690.team21.zenze.R;
 import com.ucd.comp41690.team21.zenze.game.Game;
 import com.ucd.comp41690.team21.zenze.game.GameObject;
 import com.ucd.comp41690.team21.zenze.game.GameWorld;
@@ -23,16 +28,13 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
-    //UI
-    private TextView text;
-
     //dimensions
     private final int numTilesH;
     private final int numTilesV;
     private final int numTilesAcross;
     private final int width;
     private final int height;
-    private final int tileSize;
+    private final float tileSize;
 
     /**
      * Initialise the canvas for the renderer
@@ -43,15 +45,13 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
         super(context);
         surfaceHolder = getHolder();
         paint = new Paint();
-        text = new TextView(context);
-        text.setText("Hello World!");
 
         width = Game.getInstance().getWidth();
         height = Game.getInstance().getHeight();
         numTilesH = world.getNumTilesH();
         numTilesV = world.getNumTilesV();
-        tileSize = height / numTilesH + 1;
-        numTilesAcross = width / tileSize + 2;
+        tileSize = height / (float) numTilesH;
+        numTilesAcross = (int) (width / tileSize) + 2;
     }
 
     @Override
@@ -71,36 +71,35 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
                         //set camera position
                         float offset = world.getCamera().x_Pos - (numTilesAcross / 2);
 
+                        //Draw the tile map
+                        for (GameObject o : world.getMap()) {
+                            //represent as black rectangles
+                            paint.setStyle(Paint.Style.FILL);
+                            paint.setColor(Color.BLACK);
+                            canvas.drawRect(
+                                    (o.x_Pos - offset) * tileSize,
+                                    o.y_Pos * tileSize,
+                                    (o.x_Pos - offset) * tileSize + tileSize,
+                                    o.y_Pos * tileSize + tileSize,
+                                    paint
+                            );
+                        }
                         //Draw each entity in the game world
+                        float x, y;
                         for (GameObject o : world.getEntities()) {
-                            switch (o.getTag()) {
-                                //represent Player as white circle
-                                case GameObject.PLAYER_TAG:
-                                    float x = (o.x_Pos - offset) * tileSize + tileSize / 2;
-                                    float y = o.y_Pos * tileSize + tileSize / 2;
-                                    paint.setStyle(Paint.Style.FILL);
-                                    paint.setColor(Color.WHITE);
-                                    canvas.drawCircle(x, y, tileSize / 2 * o.scale, paint);
-                                    break;
-                                //represent Plattforms as black boxes
-                                case GameObject.PLATTFORM_TAG:
-                                    paint.setStyle(Paint.Style.FILL);
-                                    paint.setColor(Color.BLACK);
-                                    canvas.drawRect(
-                                            (o.x_Pos - offset) * tileSize,
-                                            o.y_Pos * tileSize,
-                                            (o.x_Pos - offset) * tileSize + tileSize,
-                                            o.y_Pos * tileSize + tileSize,
-                                            paint
-                                    );
-                                    break;
+                            if(o.type != null) {
+                                x = (o.x_Pos - offset) * tileSize + tileSize / 2;
+                                y = o.y_Pos * tileSize + tileSize / 2;
+                                paint.setStyle(Paint.Style.FILL);
+                                paint.setColor(o.type.getColour());
+                                canvas.drawCircle(x, y, tileSize / 2 * o.scale, paint);
                             }
                         }
-
-                        paint.setColor(Color.WHITE);
-                        paint.setTextSize(75);
-                        canvas.drawText(Game.getInstance().log, 100,200,paint);
                     }
+
+                    paint.setColor(Color.WHITE);
+                    paint.setTextSize(75);
+                    canvas.drawText(Game.getInstance().log, 100, 200, paint);
                 }
             } finally {
                 if (canvas != null) {
@@ -109,6 +108,7 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
                 }
             }
         }
+
     }
 
     @Override

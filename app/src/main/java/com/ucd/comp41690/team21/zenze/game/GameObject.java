@@ -12,8 +12,12 @@ import com.ucd.comp41690.team21.zenze.game.components.Type;
 public class GameObject {
     //Tags to identify different game Objects
     public static final String PLAYER_TAG = "Player";
-    public static final String PLATTFORM_TAG = "Plattform";
+    public static final String PLATFORM_TAG = "Platform";
+    public static final String M_PLATFORM_TAG = "PlatformMiddle";
     public static final String CAMERA_TAG = "Camera";
+    public static final String ITEM_TAG = "Item";
+    public static final String S_ITEM_TAG = "SpecialItem";
+    public static final String ENEMY_TAG = "Enemy";
 
     //Components
     public InputComponent inputHandler;
