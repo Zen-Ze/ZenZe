@@ -39,8 +39,8 @@ public class Game implements Runnable, Subject<InputEvent> {
         this.inputObserverList = new LinkedList<>();
 
         this.gameWorld = new GameWorld(context, status);
-        this.gameView = new SimpleRenderer(context, gameWorld);
-        //this.gameView = new GraphicsRenderer(context, gameWorld);
+        //this.gameView = new SimpleRenderer(context, gameWorld);
+        this.gameView = new GraphicsRenderer(context, gameWorld);
         this.gameThread = null;
         this.log = "";
     }
@@ -61,7 +61,6 @@ public class Game implements Runnable, Subject<InputEvent> {
             prevUpdate = System.currentTimeMillis();
             elapsedTime = prevUpdate-beginTime;
             sleepTime = elapsedTime>100?17:MS_PER_UPDATE-elapsedTime;
-            log = "Sleep: " + sleepTime + ", delta: " + deltaTime;
             try {
                 Thread.sleep(sleepTime);
             } catch (Exception e) {}

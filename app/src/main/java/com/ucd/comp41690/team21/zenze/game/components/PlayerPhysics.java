@@ -34,7 +34,7 @@ public class PlayerPhysics extends PhysicsComponent {
         super.handlePhysics(object, elapsedTime);
         //update position
         if (isJumping) {
-            leapFrogIntegration(object, elapsedTime, 0.4f);
+            leapFrogIntegration(object, elapsedTime, 0.5f);
         } else {
             leapFrogIntegration(object, elapsedTime, 1);
         }
