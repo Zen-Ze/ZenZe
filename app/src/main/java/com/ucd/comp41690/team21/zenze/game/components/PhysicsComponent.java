@@ -45,9 +45,30 @@ public class PhysicsComponent {
      * @return true if the two of them intersect
      */
     public Collision intersects(Sphere sphere, AABB rect){
+
         //compute the distance between the two centers
         float x_distance = Math.abs(sphere.x_Pos - rect.x_Pos);
         float y_distance = Math.abs(sphere.y_Pos - rect.y_Pos);
+        float old_xDistance = Math.abs(sphere.old_xPos - rect.x_Pos);
+        float old_yDistance = Math.abs(sphere.old_yPos - rect.y_Pos);
+
+        //check for collision between frames
+        if(rect.getTop()>=sphere.old_yPos && rect.getTop()<=sphere.y_Pos
+                && x_distance<=rect.width && old_xDistance<=rect.width){
+            return Collision.TOP;
+        }
+        if(rect.getBottom()>=sphere.old_yPos && rect.getBottom()<=sphere.y_Pos
+                && x_distance<=rect.width && old_xDistance<=rect.width){
+            return Collision.BOTTOM;
+        }
+        if(rect.getLeft()>=sphere.old_xPos && rect.getLeft()<=sphere.x_Pos
+                && y_distance<=rect.height && old_yDistance<=rect.height){
+            return Collision.LEFT;
+        }
+        if(rect.getRight()>=sphere.old_xPos && rect.getRight()<=sphere.x_Pos
+                && y_distance<=rect.height && old_yDistance<=rect.height){
+            return Collision.RIGHT;
+        }
 
         //If distance greater than volumes they do not intersect
         if(x_distance > (sphere.radius + rect.width)){
@@ -57,18 +78,18 @@ public class PhysicsComponent {
             return Collision.NONE;
         }
         //Sphere inside rectangle
-        if(x_distance <= (sphere.radius + rect.width) && y_distance<=rect.height){
-            if(sphere.x_Pos < rect.x_Pos){
-                return Collision.LEFT;
-            } else {
-                return Collision.RIGHT;
-            }
-        }
         if(y_distance <= (sphere.radius + rect.height) && x_distance <= rect.width){
             if(sphere.y_Pos < rect.y_Pos){
                 return Collision.TOP;
             } else {
                 return Collision.BOTTOM;
+            }
+        }
+        if(x_distance <= (sphere.radius + rect.width) && y_distance<=rect.height){
+            if(sphere.x_Pos < rect.x_Pos){
+                return Collision.LEFT;
+            } else {
+                return Collision.RIGHT;
             }
         }
         //corner case
@@ -104,12 +125,19 @@ public class PhysicsComponent {
         public float x_Pos;
         public float y_Pos;
 
+        public float old_xPos;
+        public float old_yPos;
+
         public BoundingVolume(float x_Pos, float y_Pos){
             this.x_Pos = x_Pos;
             this.y_Pos = y_Pos;
+            this.old_xPos = x_Pos;
+            this.old_yPos = y_Pos;
         }
 
         public void update(GameObject o){
+            this.old_xPos = this.x_Pos;
+            this.old_yPos = this.y_Pos;
             this.x_Pos = o.x_Pos;
             this.y_Pos = o.y_Pos;
         }
@@ -138,6 +166,18 @@ public class PhysicsComponent {
             super(x_Pos, y_Pos);
             this.width = dimension;
             this.height = dimension;
+        }
+        public float getTop(){
+            return this.y_Pos-height;
+        }
+        public float getBottom(){
+            return this.y_Pos+height;
+        }
+        public float getLeft(){
+            return this.x_Pos-width;
+        }
+        public float getRight(){
+            return this.x_Pos+width;
         }
     }
 

@@ -59,7 +59,7 @@ public class Game implements Runnable, Subject<InputEvent> {
             prevUpdate = System.currentTimeMillis();
 
             try {
-                Thread.sleep(MS_PER_UPDATE);
+                Thread.sleep(17);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
