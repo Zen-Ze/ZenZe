@@ -32,7 +32,6 @@ public class PlayerPhysics extends PhysicsComponent {
     @Override
     public void handlePhysics(GameObject object, double elapsedTime) {
         super.handlePhysics(object, elapsedTime);
-        Game.getInstance().log = elapsedTime + "";
         //update position
         if (isJumping) {
             leapFrogIntegration(object, elapsedTime, 0.4f);
@@ -51,23 +50,44 @@ public class PlayerPhysics extends PhysicsComponent {
                         } else {
                             object.x_Pos -= ((Sphere) boundingVolume).radius / 5;
                         }
-                    }
-                    if (y_Vel >= 0 && col == Collision.TOP) {
+                    } else if (y_Vel >= 0 && col == Collision.TOP) {
                         object.y_Pos = o.y_Pos
                                 - ((AABB) o.physics.boundingVolume).height
                                 - ((Sphere) boundingVolume).radius;
                         y_Vel = 0;
                         isJumping = false;
-                    }
-                    if (col == Collision.LEFT && x_Vel >= 0 && !isJumping) {
+                    } else if (col == Collision.LEFT && x_Vel >= 0 && !isJumping) {
                         object.x_Pos = o.x_Pos
                                 - ((AABB) o.physics.boundingVolume).width
                                 - ((Sphere) boundingVolume).radius;
-                    }
-                    if (col == Collision.RIGHT && x_Vel <= 0 && !isJumping) {
+                    } else if (col == Collision.RIGHT && x_Vel <= 0 && !isJumping) {
                         object.x_Pos = o.x_Pos
                                 + ((AABB) o.physics.boundingVolume).width
                                 + ((Sphere) boundingVolume).radius;
+                    }
+                }else if(o.getTag().equals(GameObject.M_PLATFORM_TAG)){
+                    if(col == Collision.TOP){
+                        object.y_Pos = o.y_Pos
+                                - ((AABB) o.physics.boundingVolume).height
+                                - ((Sphere) boundingVolume).radius;
+                        y_Vel = 0;
+                        isJumping = false;
+                    } else if(col == Collision.BOTTOM){
+                        object.y_Pos = o.y_Pos
+                                + ((AABB) o.physics.boundingVolume).height
+                                + ((Sphere) boundingVolume).radius;
+                        y_Vel = 0;
+                        isJumping = false;
+                    } else if (col == Collision.LEFT){
+                        object.x_Pos = o.x_Pos
+                                - ((AABB) o.physics.boundingVolume).width
+                                - ((Sphere) boundingVolume).radius;
+                        y_Vel = y_Vel>0?y_Vel:0;
+                    } else if (col == Collision.RIGHT){
+                        object.x_Pos = o.x_Pos
+                                + ((AABB) o.physics.boundingVolume).width
+                                + ((Sphere) boundingVolume).radius;
+                        y_Vel = y_Vel>0?y_Vel:0;
                     }
                 }
             }
@@ -89,16 +109,20 @@ public class PlayerPhysics extends PhysicsComponent {
         //keep player inside the visible space
         if (object.y_Pos > ground) {
             object.y_Pos = ground;
+            y_Vel = 0;
             isJumping = false;
         }
         if (object.y_Pos < 0) {
             object.y_Pos = 0;
+            y_Vel = 0;
         }
         if (object.x_Pos < 0) {
             object.x_Pos = 0;
+            y_Vel = y_Vel>0?y_Vel:0;
         }
         if (object.x_Pos > rightBorder) {
             object.x_Pos = rightBorder;
+            y_Vel = y_Vel>0?y_Vel:0;
         }
     }
 

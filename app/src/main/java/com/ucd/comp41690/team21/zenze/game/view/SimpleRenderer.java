@@ -50,8 +50,8 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
         height = Game.getInstance().getHeight();
         numTilesH = world.getNumTilesH();
         numTilesV = world.getNumTilesV();
-        tileSize = height / (float)numTilesH;
-        numTilesAcross = (int)(width / tileSize) + 2;
+        tileSize = height / (float) numTilesH;
+        numTilesAcross = (int) (width / tileSize) + 2;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
                         float offset = world.getCamera().x_Pos - (numTilesAcross / 2);
 
                         //Draw the tile map
-                        for (GameObject o : world.getMap()){
+                        for (GameObject o : world.getMap()) {
                             //represent as black rectangles
                             paint.setStyle(Paint.Style.FILL);
                             paint.setColor(Color.BLACK);
@@ -85,38 +85,21 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
                             );
                         }
                         //Draw each entity in the game world
-                        float x,y;
+                        float x, y;
                         for (GameObject o : world.getEntities()) {
-                            switch (o.getTag()) {
-                                //represent Player as white circle
-                                case GameObject.PLAYER_TAG:
-                                    x = (o.x_Pos - offset) * tileSize + tileSize / 2;
-                                    y = o.y_Pos * tileSize + tileSize / 2;
-                                    paint.setStyle(Paint.Style.FILL);
-                                    paint.setColor(Color.WHITE);
-                                    canvas.drawCircle(x, y, tileSize / 2 * o.scale, paint);
-                                    break;
-                                case GameObject.ITEM_TAG:
-                                    x = (o.x_Pos - offset) * tileSize + tileSize / 2;
-                                    y = o.y_Pos * tileSize + tileSize / 2;
-                                    paint.setStyle(Paint.Style.FILL);
-                                    paint.setColor(Color.YELLOW);
-                                    canvas.drawCircle(x, y, tileSize / 2 * o.scale, paint);
-                                    break;
-                                case GameObject.ENEMY_TAG:
-                                    x = (o.x_Pos - offset) * tileSize + tileSize / 2;
-                                    y = o.y_Pos * tileSize + tileSize / 2;
-                                    paint.setStyle(Paint.Style.FILL);
-                                    paint.setColor(Color.RED);
-                                    canvas.drawCircle(x, y, tileSize / 2 * o.scale, paint);
-                                    break;
+                            if(o.type != null) {
+                                x = (o.x_Pos - offset) * tileSize + tileSize / 2;
+                                y = o.y_Pos * tileSize + tileSize / 2;
+                                paint.setStyle(Paint.Style.FILL);
+                                paint.setColor(o.type.getColour());
+                                canvas.drawCircle(x, y, tileSize / 2 * o.scale, paint);
                             }
                         }
-
-                        paint.setColor(Color.WHITE);
-                        paint.setTextSize(75);
-                        canvas.drawText(Game.getInstance().log, 100,200,paint);
                     }
+
+                    paint.setColor(Color.WHITE);
+                    paint.setTextSize(75);
+                    canvas.drawText(Game.getInstance().log, 100, 200, paint);
                 }
             } finally {
                 if (canvas != null) {
@@ -125,6 +108,7 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
                 }
             }
         }
+
     }
 
     @Override

@@ -79,14 +79,14 @@ public class PhysicsComponent {
         }
         //Sphere inside rectangle
         if(y_distance <= (sphere.radius + rect.height) && x_distance <= rect.width){
-            if(sphere.y_Pos < rect.y_Pos){
+            if(sphere.y_Pos <= rect.y_Pos){
                 return Collision.TOP;
             } else {
                 return Collision.BOTTOM;
             }
         }
         if(x_distance <= (sphere.radius + rect.width) && y_distance<=rect.height){
-            if(sphere.x_Pos < rect.x_Pos){
+            if(sphere.x_Pos <= rect.x_Pos){
                 return Collision.LEFT;
             } else {
                 return Collision.RIGHT;
