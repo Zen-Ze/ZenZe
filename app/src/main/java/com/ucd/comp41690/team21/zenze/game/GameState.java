@@ -13,12 +13,17 @@ public class GameState {
     private int background;
     private Bitmap backgroundImage;
     private Bitmap enemyImage;
+    private Bitmap attackImage;
+    private Bitmap specialAttackImage;
     private WeatherStatus status;
 
-    public GameState(int background, Bitmap backgroundImage, Bitmap enemyImage, WeatherStatus status){
+    public GameState(int background, Bitmap backgroundImage, Bitmap enemyImage,
+                     Bitmap attackImage, Bitmap specialAttackImage, WeatherStatus status) {
         this.background = background;
         this.backgroundImage = backgroundImage;
         this.enemyImage = enemyImage;
+        this.attackImage = attackImage;
+        this.specialAttackImage = specialAttackImage;
         this.status = status;
     }
 
@@ -32,6 +37,15 @@ public class GameState {
 
     public Bitmap getEnemyImage() {
         return enemyImage;
+    }
+
+
+    public Bitmap getAttackImage() {
+        return attackImage;
+    }
+
+    public Bitmap getSpecialAttackImage() {
+        return specialAttackImage;
     }
 
     public WeatherStatus getStatus() {

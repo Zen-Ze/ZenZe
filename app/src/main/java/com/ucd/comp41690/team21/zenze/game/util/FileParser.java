@@ -10,11 +10,11 @@ import com.ucd.comp41690.team21.zenze.game.Game;
 import com.ucd.comp41690.team21.zenze.game.GameObject;
 import com.ucd.comp41690.team21.zenze.game.GameState;
 import com.ucd.comp41690.team21.zenze.game.GameWorld;
+import com.ucd.comp41690.team21.zenze.game.components.AttackPhyiscs;
 import com.ucd.comp41690.team21.zenze.game.components.CameraAI;
 import com.ucd.comp41690.team21.zenze.game.components.EnemyAI;
 import com.ucd.comp41690.team21.zenze.game.components.EnemyPhyiscs;
 import com.ucd.comp41690.team21.zenze.game.components.PhysicsComponent;
-import com.ucd.comp41690.team21.zenze.game.components.PlatformPhysics;
 import com.ucd.comp41690.team21.zenze.game.components.PlayerInputHandler;
 import com.ucd.comp41690.team21.zenze.game.components.PlayerPhysics;
 import com.ucd.comp41690.team21.zenze.R;
@@ -39,6 +39,7 @@ public class FileParser {
     private static float playerJumpTime = 0;
     private static float playerScale = 0;
     private static int playerHealth = 0;
+    private static int playerDamage = 0;
 
     //Camera stats
     private static int cameraMovementWindow = 0;
@@ -47,6 +48,7 @@ public class FileParser {
     //Enemy stats
     private static float enemySize = 0;
     private static int enemyHealth = 0;
+    private static int enemyDamage = 0;
 
     //Item stats
     private static float itemSize = 0;
@@ -58,9 +60,19 @@ public class FileParser {
     private static int numTilesH = 0;
     private static float platformSize = 0;
 
+    //Attack Stats
+    private static int attackNormalHealth = 0;
+    private static float attackNormalSpeed = 0;
+    private static float attackNormalScale = 0;
+    private static int attackNormalDamage = 0;
+    private static int attackSpecialHealth = 0;
+    private static float attackSpecialSpeed = 0;
+    private static float attackSpecialScale = 0;
+    private static int attackSpecialDamage = 0;
+
     //Images
     private static Bitmap tileImage, tileMiddleImage, backgroundImage, playerImage, enemyImage,
-            itemImage, specialItemImage, enemyAttackImage, attackImage;
+            itemImage, specialItemImage, attackSpecialImage, attackNormalImage;
 
     /**
      * Initialises the game from the game config file
@@ -89,6 +101,7 @@ public class FileParser {
             playerJumpTime = (float) gameConfig.getDouble("Player_JumpTime");
             playerScale = (float) gameConfig.getDouble("Player_Scale");
             playerHealth = gameConfig.getInt("Player_Health");
+            playerDamage = gameConfig.getInt("Player_Damage");
             //camera
             cameraMovementWindow = gameConfig.getInt("Camera_MovementWindow");
             cameraMinSpeed = gameConfig.getInt("Camera_MinSpeed");
@@ -100,6 +113,17 @@ public class FileParser {
             //Enemies
             enemyHealth = gameConfig.getInt("Enemy_Health");
             enemySize = (float) gameConfig.getDouble("Enemy_Scale");
+            enemyDamage = gameConfig.getInt("Enemy_Damage");
+            //Attacks
+            attackNormalHealth = gameConfig.getInt("AttackNormal_Health");
+            attackNormalScale = (float) gameConfig.getDouble("AttackNormal_Scale");
+            attackNormalSpeed = (float) gameConfig.getDouble("AttackNormal_Speed");
+            attackNormalDamage = gameConfig.getInt("AttackNormal_Damage");
+
+            attackSpecialHealth = gameConfig.getInt("AttackSpecial_Health");
+            attackSpecialScale = (float) gameConfig.getDouble("AttackSpecial_Scale");
+            attackSpecialSpeed = (float) gameConfig.getDouble("AttackSpecial_Speed");
+            attackSpecialDamage = gameConfig.getInt("AttackSpecial_Damage");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -113,36 +137,36 @@ public class FileParser {
                 backgroundImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.bg_sunny);
                 enemyImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy_sunny);
                 specialItemImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_sunny);
-                enemyAttackImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_sunny);
-                attackImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_normal);
-                return new GameState(Color.RED, backgroundImage, enemyImage, status);
+                attackSpecialImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_sunny);
+                attackNormalImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_normal);
+                return new GameState(Color.RED, backgroundImage, enemyImage, attackNormalImage, attackSpecialImage, status);
             case RAINY:
                 tileImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_rainy);
                 tileMiddleImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_rainy2);
                 backgroundImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.bg_rainy);
                 enemyImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy_rainy);
                 specialItemImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_rainy);
-                enemyAttackImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_rainy);
-                attackImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_normal);
-                return new GameState(Color.BLUE, backgroundImage, enemyImage, status);
+                attackSpecialImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_rainy);
+                attackNormalImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_normal);
+                return new GameState(Color.BLUE, backgroundImage, enemyImage, attackNormalImage, attackSpecialImage, status);
             case SNOWY:
                 tileImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_snowy);
                 tileMiddleImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_snowy2);
                 backgroundImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.bg_snowy);
                 enemyImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy_snowy);
                 specialItemImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_snowy);
-                enemyAttackImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_snowy);
-                attackImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_normal);
-                return new GameState(Color.LTGRAY, backgroundImage, enemyImage, status);
+                attackSpecialImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_snowy);
+                attackNormalImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_normal);
+                return new GameState(Color.LTGRAY, backgroundImage, enemyImage, attackNormalImage, attackSpecialImage, status);
             default:
                 tileImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_sunny);
                 tileMiddleImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_sunny2);
                 backgroundImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.bg_sunny);
                 enemyImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy_sunny);
                 specialItemImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_sunny);
-                enemyAttackImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_sunny);
-                attackImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_normal);
-                return new GameState(Color.GRAY, backgroundImage, enemyImage, status);
+                attackSpecialImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_sunny);
+                attackNormalImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_normal);
+                return new GameState(Color.GRAY, backgroundImage, enemyImage, attackNormalImage, attackSpecialImage, status);
         }
     }
 
@@ -173,7 +197,7 @@ public class FileParser {
                         PlayerInputHandler playerInputHandler = new PlayerInputHandler();
                         PlayerPhysics playerPhysics = new PlayerPhysics(playerMinJumpHeight,
                                 playerMaxJumpHeight, playerJumpTime, numTilesV, numTilesH, x, y, playerScale);
-                        Type type = new Type(playerHealth, playerSpeed, playerScale, playerImage, Color.WHITE, null, "");
+                        Type type = new Type(playerHealth, playerSpeed, playerScale, playerDamage, playerImage, Color.WHITE, null, "");
                         GameObject player = new GameObject(
                                 playerInputHandler, playerPhysics, type, x, y, GameObject.PLAYER_TAG);
                         world.addObject(player);
@@ -189,41 +213,41 @@ public class FileParser {
                         world.setCamera(simpleCamera);
                         break;
                     case '#': //Platform
-                        PlatformPhysics platformPhysics =
-                                new PlatformPhysics(x, y, platformSize);
-                        Type platformType = new Type(0, 0, platformSize, tileImage, Color.BLACK, world.getState().getStatus(), "");
+                        PhysicsComponent platformPhysics =
+                                new PhysicsComponent(PhysicsComponent.RECTANGULAR, x, y, platformSize);
+                        Type platformType = new Type(0, 0, platformSize, 0, tileImage, Color.BLACK, world.getState().getStatus(), "");
                         GameObject platform = new GameObject(
                                 null, platformPhysics, platformType, x, y, GameObject.PLATFORM_TAG);
                         world.addPlatform(platform);
                         break;
-                    case '*':
-                        PlatformPhysics platformMiddlePhysics =
-                                new PlatformPhysics(x, y, platformSize);
-                        Type platformMiddleType = new Type(0, 0, platformSize, tileMiddleImage, Color.BLACK, world.getState().getStatus(), "");
+                    case '*': //solid platform
+                        PhysicsComponent platformMiddlePhysics =
+                                new PhysicsComponent(PhysicsComponent.RECTANGULAR, x, y, platformSize);
+                        Type platformMiddleType = new Type(0, 0, platformSize, 0, tileMiddleImage, Color.BLACK, world.getState().getStatus(), "");
                         GameObject platformMiddle = new GameObject(
                                 null, platformMiddlePhysics, platformMiddleType, x, y, GameObject.M_PLATFORM_TAG);
                         world.addPlatform(platformMiddle);
                         break;
-                    case 'I':
+                    case 'I': //Item
                         PhysicsComponent itemPhysics =
                                 new PhysicsComponent(PhysicsComponent.SPHERE, x, y, itemSize);
-                        Type itemType = new Type(0, 0, itemSize, itemImage, Color.YELLOW, null, itemString);
+                        Type itemType = new Type(0, 0, itemSize, 0, itemImage, Color.YELLOW, null, itemString);
                         GameObject item = new GameObject(null, itemPhysics, itemType, x, y, GameObject.ITEM_TAG);
                         world.addObject(item);
                         break;
-                    case 'S':
+                    case 'S': //Special Item
                         PhysicsComponent specialItemPhysics =
                                 new PhysicsComponent(PhysicsComponent.SPHERE, x, y, itemSize);
-                        Type specialItemType = new Type(0, 0, specialItemSize, specialItemImage,
+                        Type specialItemType = new Type(0, 0, specialItemSize, 0, specialItemImage,
                                 Color.GREEN, world.getState().getStatus(), itemString);
                         GameObject specialItem = new GameObject(
                                 null, specialItemPhysics, specialItemType, x, y, GameObject.S_ITEM_TAG);
                         world.addObject(specialItem);
                         break;
-                    case 'E':
+                    case 'E': //Enemy
                         EnemyPhyiscs enemyPhysics = new EnemyPhyiscs(x,y,enemySize);
                         EnemyAI enemyAI = new EnemyAI();
-                        Type enemyType = new Type(enemyHealth, 0, enemySize, enemyImage, Color.CYAN,
+                        Type enemyType = new Type(enemyHealth, 0, enemySize, enemyDamage, enemyImage, Color.CYAN,
                                 world.getState().getStatus(), itemString);
                         GameObject enemy = new GameObject(enemyAI, enemyPhysics, enemyType, x, y, GameObject.ENEMY_TAG);
                         world.addObject(enemy);
@@ -234,6 +258,16 @@ public class FileParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Type attackNormalType = new Type(attackNormalHealth, attackNormalSpeed, attackNormalScale,
+                attackNormalDamage, attackNormalImage, Color.MAGENTA, null, "");
+        AttackPhyiscs attackNormalPhysics = new AttackPhyiscs(0,0,attackNormalType);
+        GameObject attackNormal = new GameObject(null, attackNormalPhysics, attackNormalType, 0,0,GameObject.ATTACK_TAG);
+        world.setAttackNormal(attackNormal);
+        Type attackSpecialType = new Type(attackSpecialHealth, attackSpecialSpeed, attackSpecialScale,
+                attackSpecialDamage, attackSpecialImage, Color.RED, null, "");
+        AttackPhyiscs attackSpecialPhysics = new AttackPhyiscs(0,0,attackNormalType);
+        GameObject attackSpecial = new GameObject(null, attackSpecialPhysics, attackSpecialType, 0,0,GameObject.ATTACK_TAG);
+        world.setAttackSpecial(attackSpecial);
     }
 
     public static int getNumTilesH() {

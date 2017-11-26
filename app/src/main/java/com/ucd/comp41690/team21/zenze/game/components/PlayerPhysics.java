@@ -84,7 +84,7 @@ public class PlayerPhysics extends PhysicsComponent {
                             y_Vel = 0;
                         }
                         if (healthTimer <= 0) {
-                            object.health -= 1;
+                            object.health -= o.type.getDamage();
                             if(object.health==0){
                                 ((GameActivity)(Game.getInstance().context)).onGameOver();
                             }
@@ -134,6 +134,7 @@ public class PlayerPhysics extends PhysicsComponent {
             object.y_Pos = ground;
             y_Vel = 0;
             isJumping = false;
+            ((GameActivity)(Game.getInstance().context)).onGameOver();
         }
         if (object.y_Pos < 1) {
             object.y_Pos = 1;

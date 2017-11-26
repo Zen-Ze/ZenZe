@@ -18,6 +18,7 @@ public class GameObject {
     public static final String ITEM_TAG = "Item";
     public static final String S_ITEM_TAG = "SpecialItem";
     public static final String ENEMY_TAG = "Enemy";
+    public static final String ATTACK_TAG = "Attack";
 
     //Components
     public InputComponent inputHandler;
@@ -55,8 +56,8 @@ public class GameObject {
             scale = 1;
             health = 100;
         }else {
-            this.scale = type.scale;
-            this.health = type.health;
+            this.scale = type.getScale();
+            this.health = type.getHealth();
         }
         this.tag = tag;
         this.isAlive = true;
@@ -72,6 +73,9 @@ public class GameObject {
         }
         if(physics!=null) {
             physics.handlePhysics(this, elapsedTime);
+        }
+        if(health<0){
+            isAlive = false;
         }
     }
 

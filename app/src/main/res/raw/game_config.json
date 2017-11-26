@@ -5,6 +5,7 @@
   "Player_JumpTime" : 0.7,
   "Player_Scale" : 1,
   "Player_Health" : 3,
+  "Player_Damage" : 1,
 
   "Camera_MovementWindow" : 2,
   "Camera_MinSpeed" : 0.0,
@@ -14,6 +15,17 @@
 
   "Enemy_Health" : 3,
   "Enemy_Scale" : 1,
+  "Enemy_Damage" : 1,
 
-  "Platform_Scale" : 1
+  "Platform_Scale" : 1,
+
+  "AttackNormal_Health" : 300,
+  "AttackNormal_Speed" : 10,
+  "AttackNormal_Scale" : 0.5,
+  "AttackNormal_Damage" : 1,
+
+  "AttackSpecial_Health" : 300,
+  "AttackSpecial_Speed" : 15,
+  "AttackSpecial_Scale" : 0.75,
+  "AttackSpecial_Damage" : 2
 }

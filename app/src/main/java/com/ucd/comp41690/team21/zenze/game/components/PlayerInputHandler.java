@@ -1,5 +1,6 @@
 package com.ucd.comp41690.team21.zenze.game.components;
 
+import com.ucd.comp41690.team21.zenze.game.commands.Attack;
 import com.ucd.comp41690.team21.zenze.game.commands.Jump;
 import com.ucd.comp41690.team21.zenze.game.commands.MoveHorizontal;
 import com.ucd.comp41690.team21.zenze.game.Game;
@@ -19,6 +20,7 @@ public class PlayerInputHandler implements InputComponent, Observer<InputEvent> 
     private MoveHorizontal moveLeft;
     private MoveHorizontal moveRight;
     private Jump jumpUp;
+    private Attack attack;
 
     public PlayerInputHandler() {
         Game.getInstance().addObserver(this);
@@ -26,6 +28,7 @@ public class PlayerInputHandler implements InputComponent, Observer<InputEvent> 
         moveLeft = new MoveHorizontal(MoveHorizontal.DIRECTION_LEFT);
         moveRight = new MoveHorizontal(MoveHorizontal.DIRECTION_RIGHT);
         jumpUp = new Jump();
+        attack = new Attack();
 
         inputEvent = InputEvent.NULL;
         moving = false;
@@ -49,6 +52,9 @@ public class PlayerInputHandler implements InputComponent, Observer<InputEvent> 
                     break;
                 case TOUCH_DOWN_LEFT:
                     jumpUp.execute(object);
+                    break;
+                case TOUCH_DOWN_RIGHT:
+                    attack.execute(object);
                     break;
                 case TOUCH_UP:
                     jumpUp.exit(object);
