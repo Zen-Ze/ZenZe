@@ -1,8 +1,8 @@
 {
-  "Player_Speed" : 6,
+  "Player_Speed" : 7,
   "Player_MaxJumpHeight" : 4,
   "Player_MinJumpHeight" : 1,
-  "Player_JumpTime" : 0.75,
+  "Player_JumpTime" : 0.7,
   "Player_Scale" : 1,
   "Player_Health" : 3,
 
