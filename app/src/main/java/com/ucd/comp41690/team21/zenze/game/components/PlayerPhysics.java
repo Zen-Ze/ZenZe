@@ -86,7 +86,6 @@ public class PlayerPhysics extends PhysicsComponent {
                 }
             }
         }
-        Game.getInstance().log = healthTimer + "";
         if (healthTimer > 0) {
             healthTimer--;
         }

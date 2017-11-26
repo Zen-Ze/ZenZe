@@ -47,7 +47,7 @@ public class PlayerInputHandler implements InputComponent, Observer<InputEvent> 
                     moveRight.exit(object);
                     moving = false;
                     break;
-                case TOUCH_DOWN:
+                case TOUCH_DOWN_LEFT:
                     jumpUp.execute(object);
                     break;
                 case TOUCH_UP:
@@ -60,7 +60,7 @@ public class PlayerInputHandler implements InputComponent, Observer<InputEvent> 
     public void onNotify(InputEvent event) {
         if(event == InputEvent.TILT_NONE && moving){
             this.inputEvent = event;
-        } else if (event == InputEvent.TOUCH_DOWN || event == InputEvent.TOUCH_UP || !moving){
+        } else if (event == InputEvent.TOUCH_DOWN_LEFT || event == InputEvent.TOUCH_UP || !moving){
             this.inputEvent = event;
         }
     }

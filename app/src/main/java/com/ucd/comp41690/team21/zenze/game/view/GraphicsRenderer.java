@@ -60,6 +60,7 @@ public class GraphicsRenderer extends SurfaceView implements Renderer {
         numTilesAcross = (int) (width / tileSize) + 2;
 
         //Initialise UI
+        Game.getInstance().UIHeight = (int)tileSize;
         UIBitmaps = new Bitmap[7];
         UIBitmaps[0] = world.getPlayer().type.getImage();
         UIBitmaps[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.heart);

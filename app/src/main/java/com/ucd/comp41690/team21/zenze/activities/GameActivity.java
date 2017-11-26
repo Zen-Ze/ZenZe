@@ -2,6 +2,7 @@ package com.ucd.comp41690.team21.zenze.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.hardware.Sensor;
@@ -82,7 +83,15 @@ public class GameActivity extends Activity implements SensorEventListener {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-                game.onInputEvent(InputEvent.TOUCH_DOWN);
+                if(event.getY()!=0){Game.getInstance().log = event.getY()+"";}
+                if(event.getY()<Game.getInstance().UIHeight){
+                    Intent statsIntent = new Intent(GameActivity.this, MainMenuActivity.class);
+                    startActivity(statsIntent);
+                } else if (event.getX()<=Game.getInstance().getWidth()/2) {
+                    game.onInputEvent(InputEvent.TOUCH_DOWN_LEFT);
+                } else if (event.getX()>Game.getInstance().getWidth()/2){
+                    game.onInputEvent(InputEvent.TOUCH_DOWN_RIGHT);
+                }
             break;
             case MotionEvent.ACTION_UP:
                 game.onInputEvent(InputEvent.TOUCH_UP);

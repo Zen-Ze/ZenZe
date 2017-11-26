@@ -52,6 +52,8 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
         numTilesV = world.getNumTilesV();
         tileSize = height / (float) numTilesH;
         numTilesAcross = (int) (width / tileSize) + 2;
+
+        Game.getInstance().UIHeight = (int)tileSize;
     }
 
     @Override

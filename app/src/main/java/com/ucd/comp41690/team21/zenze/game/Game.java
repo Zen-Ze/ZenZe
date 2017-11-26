@@ -29,6 +29,7 @@ public class Game implements Runnable, Subject<InputEvent> {
     private static Game instance;
     private int gameWidth;
     private int gameHeight;
+    public int UIHeight;
     public String log;
 
     public int normalItemCount = 0;
