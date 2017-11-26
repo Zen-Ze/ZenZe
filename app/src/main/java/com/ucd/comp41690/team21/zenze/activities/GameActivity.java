@@ -1,6 +1,7 @@
 package com.ucd.comp41690.team21.zenze.activities;
 
 import android.app.Activity;
+import android.support.v4.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -10,6 +11,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -17,16 +19,24 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
+import com.ucd.comp41690.team21.zenze.fragments.GameOverDialogFragment;
+import com.ucd.comp41690.team21.zenze.fragments.InfoDialogFragment;
 import com.ucd.comp41690.team21.zenze.game.Game;
+import com.ucd.comp41690.team21.zenze.game.components.Type;
 import com.ucd.comp41690.team21.zenze.game.util.InputEvent;
 
 /**
  * the main game screen
  */
-public class GameActivity extends Activity implements SensorEventListener {
+public class GameActivity extends FragmentActivity implements SensorEventListener,
+        InfoDialogFragment.InfoDialogListener, GameOverDialogFragment.GameOverDialogListener{
     private final static float ROTATION_ANGLE = 0.15f;
 
     private Game game;
+    private int width;
+    private int height;
+    private WeatherStatus status;
+    private boolean graphicsRenderer;
 
     private SensorManager mSensorManager;
     private Sensor accelerometer;
@@ -50,17 +60,17 @@ public class GameActivity extends Activity implements SensorEventListener {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        int width = Math.max(size.x, size.y);
-        int height = Math.min(size.x, size.y);
+        width = Math.max(size.x, size.y);
+        height = Math.min(size.x, size.y);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
         //create a new game
-        WeatherStatus gameState = (WeatherStatus) (getIntent().getExtras().get("Game State"));
-        boolean graphicsRenderer = getIntent().getBooleanExtra("Graphics Renderer", false);
-        game = new Game(this, width, height, gameState, graphicsRenderer);
+        status = (WeatherStatus) (getIntent().getExtras().get("Game State"));
+        graphicsRenderer = getIntent().getBooleanExtra("Graphics Renderer", false);
+        game = new Game(this, width, height, status, graphicsRenderer);
         setContentView(game.getView());
     }
 
@@ -83,7 +93,6 @@ public class GameActivity extends Activity implements SensorEventListener {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-                if(event.getY()!=0){Game.getInstance().log = event.getY()+"";}
                 if(event.getY()<Game.getInstance().UIHeight){
                     Intent statsIntent = new Intent(GameActivity.this, MainMenuActivity.class);
                     startActivity(statsIntent);
@@ -127,5 +136,49 @@ public class GameActivity extends Activity implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    public void onItemFound(Type type){
+        DialogFragment dialog = new InfoDialogFragment();
+        Bundle info = new Bundle();
+        info.putString("Info", type.getInfo());
+        info.putParcelable("Image", type.getImage());
+        dialog.setArguments(info);
+        dialog.show(getSupportFragmentManager(),"info");
+        game.pause();
+    }
+
+    public void onGameOver(){
+        DialogFragment dialog = new GameOverDialogFragment();
+        dialog.show(getSupportFragmentManager(),"gameOver");
+        game.pause();
+    }
+
+    @Override
+    public void onInfoDialogPositiveClick(DialogFragment dialog) {
+        game.resume();
+        Intent infoIntent = new Intent(GameActivity.this, MainMenuActivity.class);
+        startActivity(infoIntent);
+    }
+
+    @Override
+    public void onInfoDialogNegativeClick(DialogFragment dialog) {
+        game.resume();
+    }
+
+    @Override
+    public void onGameOverDialogPositiveClick(DialogFragment dialog) {
+        //retry
+        game = new Game(this, width, height, status, graphicsRenderer);
+        setContentView(game.getView());
+        game.resume();
+    }
+
+    @Override
+    public void onGameOverDialogNegativeClick(DialogFragment dialog) {
+        //back to main menu
+        game.resume();
+        Intent infoIntent = new Intent(GameActivity.this, MainMenuActivity.class);
+        startActivity(infoIntent);
     }
 }

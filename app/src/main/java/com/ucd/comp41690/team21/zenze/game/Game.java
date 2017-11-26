@@ -1,6 +1,7 @@
 package com.ucd.comp41690.team21.zenze.game;
 
 import android.content.Context;
+import android.os.Looper;
 import android.util.Log;
 import android.view.SurfaceView;
 
@@ -27,6 +28,7 @@ public class Game implements Runnable, Subject<InputEvent> {
     private Thread gameThread;
 
     private static Game instance;
+    public Context context;
     private int gameWidth;
     private int gameHeight;
     public int UIHeight;
@@ -42,6 +44,7 @@ public class Game implements Runnable, Subject<InputEvent> {
 
     public Game(Context context, int width, int height, WeatherStatus status, boolean graphicsRenderer) {
         Game.instance = this;
+        this.context = context;
         this.gameWidth = width;
         this.gameHeight = height;
         this.inputObserverList = new LinkedList<>();
@@ -60,6 +63,7 @@ public class Game implements Runnable, Subject<InputEvent> {
 
     @Override
     public void run() {
+        Looper.prepare();
         long sleepTime = 0;
         long beginTime = 0;
         long elapsedTime = 0;
@@ -73,7 +77,7 @@ public class Game implements Runnable, Subject<InputEvent> {
             gameView.render(gameWorld);
             prevUpdate = System.currentTimeMillis();
             elapsedTime = prevUpdate - beginTime;
-            sleepTime = elapsedTime > 100 ? 17 : MS_PER_UPDATE - elapsedTime;
+            sleepTime = elapsedTime > MS_PER_UPDATE ? 17 : MS_PER_UPDATE - elapsedTime;
             try {
                 Thread.sleep(sleepTime);
             } catch (Exception e) {
@@ -83,13 +87,15 @@ public class Game implements Runnable, Subject<InputEvent> {
 
     public void pause() {
         running = false;
-        while (true) {
-            try {
-                gameThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        if(gameThread!=null) {
+            while (true) {
+                try {
+                    gameThread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                break;
             }
-            break;
         }
         gameThread = null;
     }
@@ -102,6 +108,10 @@ public class Game implements Runnable, Subject<InputEvent> {
 
     public SurfaceView getView() {
         return gameView.getView();
+    }
+
+    public void setRunning(boolean running){
+        this.running = running;
     }
 
     public int getWidth() {

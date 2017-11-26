@@ -14,14 +14,16 @@ public class Type {
     private WeatherStatus state;
     private Bitmap image;
     private int colour;
+    private String info;
 
-    public Type(int health, float speed, float scale, Bitmap image, int colour, WeatherStatus state){
+    public Type(int health, float speed, float scale, Bitmap image, int colour, WeatherStatus state, String info){
         this.health = health;
         this.speed = speed;
         this.scale = scale;
         this.image = image;
         this.colour = colour;
         this.state = state;
+        this.info = info;
     }
 
     public Bitmap getImage(){
@@ -31,5 +33,9 @@ public class Type {
 
     public WeatherStatus getState(){
         return state;
+    }
+
+    public String getInfo(){
+        return info;
     }
 }

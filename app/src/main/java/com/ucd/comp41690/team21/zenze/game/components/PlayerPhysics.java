@@ -1,5 +1,8 @@
 package com.ucd.comp41690.team21.zenze.game.components;
 
+import android.widget.Toast;
+
+import com.ucd.comp41690.team21.zenze.activities.GameActivity;
 import com.ucd.comp41690.team21.zenze.game.Game;
 import com.ucd.comp41690.team21.zenze.game.GameObject;
 
@@ -49,6 +52,7 @@ public class PlayerPhysics extends PhysicsComponent {
                     if (o.getTag().equals(GameObject.ITEM_TAG)) {
                         o.isAlive = false;
                         Game.getInstance().normalItemCount++;
+                        ((GameActivity)(Game.getInstance().context)).onItemFound(o.type);
                     } else if (o.getTag().equals(GameObject.S_ITEM_TAG)) {
                         o.isAlive = false;
                         switch (Game.getInstance().getGameWorld().getState().getStatus()) {
@@ -62,6 +66,7 @@ public class PlayerPhysics extends PhysicsComponent {
                                 Game.getInstance().sunnyItemCount++;
                                 break;
                         }
+                        ((GameActivity)(Game.getInstance().context)).onItemFound(o.type);
                     } else if (o.getTag().equals(GameObject.ENEMY_TAG)) {
                         float[] newPos = getCollisionPoint(
                                 (Sphere) this.boundingVolume, (Sphere) o.physics.boundingVolume);
@@ -80,6 +85,9 @@ public class PlayerPhysics extends PhysicsComponent {
                         }
                         if (healthTimer <= 0) {
                             object.health -= 1;
+                            if(object.health==0){
+                                ((GameActivity)(Game.getInstance().context)).onGameOver();
+                            }
                             healthTimer = 75;
                         }
                     }

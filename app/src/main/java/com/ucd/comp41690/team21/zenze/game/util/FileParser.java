@@ -51,6 +51,7 @@ public class FileParser {
     //Item stats
     private static float itemSize = 0;
     private static float specialItemSize = 0;
+    private static String itemString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, tellus quis varius euismod...";
 
     //Tile Map stats
     private static int numTilesV = 0;
@@ -172,7 +173,7 @@ public class FileParser {
                         PlayerInputHandler playerInputHandler = new PlayerInputHandler();
                         PlayerPhysics playerPhysics = new PlayerPhysics(playerMinJumpHeight,
                                 playerMaxJumpHeight, playerJumpTime, numTilesV, numTilesH, x, y, playerScale);
-                        Type type = new Type(playerHealth, playerSpeed, playerScale, playerImage, Color.WHITE, null);
+                        Type type = new Type(playerHealth, playerSpeed, playerScale, playerImage, Color.WHITE, null, "");
                         GameObject player = new GameObject(
                                 playerInputHandler, playerPhysics, type, x, y, GameObject.PLAYER_TAG);
                         world.addObject(player);
@@ -190,7 +191,7 @@ public class FileParser {
                     case '#': //Platform
                         PlatformPhysics platformPhysics =
                                 new PlatformPhysics(x, y, platformSize);
-                        Type platformType = new Type(0, 0, platformSize, tileImage, Color.BLACK, world.getState().getStatus());
+                        Type platformType = new Type(0, 0, platformSize, tileImage, Color.BLACK, world.getState().getStatus(), "");
                         GameObject platform = new GameObject(
                                 null, platformPhysics, platformType, x, y, GameObject.PLATFORM_TAG);
                         world.addPlatform(platform);
@@ -198,7 +199,7 @@ public class FileParser {
                     case '*':
                         PlatformPhysics platformMiddlePhysics =
                                 new PlatformPhysics(x, y, platformSize);
-                        Type platformMiddleType = new Type(0, 0, platformSize, tileMiddleImage, Color.BLACK, world.getState().getStatus());
+                        Type platformMiddleType = new Type(0, 0, platformSize, tileMiddleImage, Color.BLACK, world.getState().getStatus(), "");
                         GameObject platformMiddle = new GameObject(
                                 null, platformMiddlePhysics, platformMiddleType, x, y, GameObject.M_PLATFORM_TAG);
                         world.addPlatform(platformMiddle);
@@ -206,14 +207,15 @@ public class FileParser {
                     case 'I':
                         PhysicsComponent itemPhysics =
                                 new PhysicsComponent(PhysicsComponent.SPHERE, x, y, itemSize);
-                        Type itemType = new Type(0, 0, itemSize, itemImage, Color.YELLOW, null);
+                        Type itemType = new Type(0, 0, itemSize, itemImage, Color.YELLOW, null, itemString);
                         GameObject item = new GameObject(null, itemPhysics, itemType, x, y, GameObject.ITEM_TAG);
                         world.addObject(item);
                         break;
                     case 'S':
                         PhysicsComponent specialItemPhysics =
                                 new PhysicsComponent(PhysicsComponent.SPHERE, x, y, itemSize);
-                        Type specialItemType = new Type(0, 0, specialItemSize, specialItemImage, Color.GREEN, world.getState().getStatus());
+                        Type specialItemType = new Type(0, 0, specialItemSize, specialItemImage,
+                                Color.GREEN, world.getState().getStatus(), itemString);
                         GameObject specialItem = new GameObject(
                                 null, specialItemPhysics, specialItemType, x, y, GameObject.S_ITEM_TAG);
                         world.addObject(specialItem);
@@ -221,7 +223,8 @@ public class FileParser {
                     case 'E':
                         EnemyPhyiscs enemyPhysics = new EnemyPhyiscs(x,y,enemySize);
                         EnemyAI enemyAI = new EnemyAI();
-                        Type enemyType = new Type(enemyHealth, 0, enemySize, enemyImage, Color.CYAN, world.getState().getStatus());
+                        Type enemyType = new Type(enemyHealth, 0, enemySize, enemyImage, Color.CYAN,
+                                world.getState().getStatus(), itemString);
                         GameObject enemy = new GameObject(enemyAI, enemyPhysics, enemyType, x, y, GameObject.ENEMY_TAG);
                         world.addObject(enemy);
                         break;
