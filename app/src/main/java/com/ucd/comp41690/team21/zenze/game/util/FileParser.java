@@ -13,7 +13,7 @@ import com.ucd.comp41690.team21.zenze.game.GameWorld;
 import com.ucd.comp41690.team21.zenze.game.components.AttackPhyiscs;
 import com.ucd.comp41690.team21.zenze.game.components.CameraAI;
 import com.ucd.comp41690.team21.zenze.game.components.EnemyAI;
-import com.ucd.comp41690.team21.zenze.game.components.EnemyPhyiscs;
+import com.ucd.comp41690.team21.zenze.game.components.EnemyPhysics;
 import com.ucd.comp41690.team21.zenze.game.components.PhysicsComponent;
 import com.ucd.comp41690.team21.zenze.game.components.PlayerInputHandler;
 import com.ucd.comp41690.team21.zenze.game.components.PlayerPhysics;
@@ -245,7 +245,7 @@ public class FileParser {
                         world.addObject(specialItem);
                         break;
                     case 'E': //Enemy
-                        EnemyPhyiscs enemyPhysics = new EnemyPhyiscs(x,y,enemySize);
+                        EnemyPhysics enemyPhysics = new EnemyPhysics(x,y,enemySize);
                         EnemyAI enemyAI = new EnemyAI();
                         Type enemyType = new Type(enemyHealth, 0, enemySize, enemyDamage, enemyImage, Color.CYAN,
                                 world.getState().getStatus(), itemString);

@@ -176,7 +176,7 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
         }
 
         gameIntent.putExtra("Game State", WeatherService.getWeatherStatus(location, getApplicationContext()));
-        gameIntent.putExtra("Graphics Renderer", true);
+        gameIntent.putExtra("Graphics Renderer", false);
         startActivity(gameIntent);
     }
 

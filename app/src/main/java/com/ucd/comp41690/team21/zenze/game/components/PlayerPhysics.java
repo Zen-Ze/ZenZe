@@ -67,6 +67,20 @@ public class PlayerPhysics extends PhysicsComponent {
                                 break;
                         }
                         ((GameActivity)(Game.getInstance().context)).onItemFound(o.type);
+                    } else if (o.getTag().equals(GameObject.A_ITEM_TAG)) {
+                        o.isAlive = false;
+                        switch (Game.getInstance().getGameWorld().getState().getStatus()) {
+                            case SNOWY:
+                                Game.getInstance().snowyAttackCount++;
+                                break;
+                            case RAINY:
+                                Game.getInstance().rainyAttackCount++;
+                                break;
+                            case SUNNY:
+                                Game.getInstance().sunnyAttackCount++;
+                                break;
+                        }
+                        ((GameActivity)(Game.getInstance().context)).onItemFound(o.type);
                     } else if (o.getTag().equals(GameObject.ENEMY_TAG)) {
                         float[] newPos = getCollisionPoint(
                                 (Sphere) this.boundingVolume, (Sphere) o.physics.boundingVolume);

@@ -17,6 +17,7 @@ public class GameObject {
     public static final String CAMERA_TAG = "Camera";
     public static final String ITEM_TAG = "Item";
     public static final String S_ITEM_TAG = "SpecialItem";
+    public static final String A_ITEM_TAG = "AttackItem";
     public static final String ENEMY_TAG = "Enemy";
     public static final String ATTACK_TAG = "Attack";
 

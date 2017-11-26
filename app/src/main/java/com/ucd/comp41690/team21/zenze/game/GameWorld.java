@@ -48,9 +48,10 @@ public class GameWorld {
             }
         }
         for(GameObject o : newEntities){
-            entities.add(o);
+            entities.add(0,o);
         }
         newEntities.clear();
+        Game.getInstance().log = entities.size()+"";
     }
 
     public void addObject(GameObject obj){

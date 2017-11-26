@@ -15,6 +15,7 @@ public class AttackPhyiscs extends PhysicsComponent {
 
     @Override
     public void handlePhysics(GameObject object, double elapsedTime) {
+        super.handlePhysics(object,elapsedTime);
         leapFrogIntegration(object, elapsedTime, 1);
         object.health--;
     }
