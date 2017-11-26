@@ -172,7 +172,7 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
         Location location = null;
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+            location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         }
 
         gameIntent.putExtra("Game State", WeatherService.getWeatherStatus(location, getApplicationContext()));
