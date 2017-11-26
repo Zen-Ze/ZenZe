@@ -1,11 +1,9 @@
 package com.ucd.comp41690.team21.zenze.game;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 import com.ucd.comp41690.team21.zenze.game.components.AttackPhyiscs;
-import com.ucd.comp41690.team21.zenze.game.components.PhysicsComponent;
 import com.ucd.comp41690.team21.zenze.game.components.Type;
 import com.ucd.comp41690.team21.zenze.game.util.FileParser;
 
@@ -33,7 +31,8 @@ public class GameWorld {
         entities = new LinkedList<>();
         tileMap = new LinkedList<>();
         newEntities = new LinkedList<>();
-        state = FileParser.init(context, status);
+        state = FileParser.initFromJSON(context, status);
+        FileParser.initFromDB(context);
         FileParser.loadWorld(context, this);
         numTilesH = FileParser.getNumTilesH();
         numTilesV = FileParser.getNumTilesV();

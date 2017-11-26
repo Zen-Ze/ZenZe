@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
+import com.ucd.comp41690.team21.zenze.backend.database.helpers.DBHelper;
+import com.ucd.comp41690.team21.zenze.backend.database.models.Player;
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 import com.ucd.comp41690.team21.zenze.game.Game;
 import com.ucd.comp41690.team21.zenze.game.GameObject;
@@ -79,7 +81,7 @@ public class FileParser {
      *
      * @param context the android context to get access to the resource files
      */
-    public static GameState init(Context context, WeatherStatus status) {
+    public static GameState initFromJSON(Context context, WeatherStatus status) {
         InputStream in = context.getResources().openRawResource(R.raw.game_config);
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         StringBuilder sb = new StringBuilder();
@@ -168,6 +170,12 @@ public class FileParser {
                 attackNormalImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_normal);
                 return new GameState(Color.GRAY, backgroundImage, enemyImage, attackNormalImage, attackSpecialImage, status);
         }
+    }
+
+    public static void initFromDB(Context context){
+        DBHelper dbHelper = new DBHelper(context);
+        //Player player = dbHelper.getPlayer(0);
+        //float lastPos_x = player.getLastCoordX();
     }
 
     /**
