@@ -58,7 +58,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 
         //create a new game
         WeatherStatus gameState = (WeatherStatus) (getIntent().getExtras().get("Game State"));
-        game = new Game(this, width, height, gameState);
+        boolean graphicsRenderer = getIntent().getBooleanExtra("Graphics Renderer", false);
+        game = new Game(this, width, height, gameState, graphicsRenderer);
         setContentView(game.getView());
     }
 

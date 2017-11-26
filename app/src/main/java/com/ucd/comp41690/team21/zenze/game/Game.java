@@ -32,15 +32,20 @@ public class Game implements Runnable, Subject<InputEvent> {
     private int gameHeight;
     public String log;
 
-    public Game(Context context, int width, int height, WeatherStatus status) {
+    public Game(Context context, int width, int height, WeatherStatus status, boolean graphicsRenderer) {
         Game.instance = this;
         this.gameWidth = width;
         this.gameHeight = height;
         this.inputObserverList = new LinkedList<>();
 
         this.gameWorld = new GameWorld(context, status);
-        //this.gameView = new SimpleRenderer(context, gameWorld);
-        this.gameView = new GraphicsRenderer(context, gameWorld);
+
+        if(graphicsRenderer) {
+            this.gameView = new GraphicsRenderer(context, gameWorld);
+        } else{
+            this.gameView = new SimpleRenderer(context, gameWorld);
+        }
+
         this.gameThread = null;
         this.log = "";
     }
