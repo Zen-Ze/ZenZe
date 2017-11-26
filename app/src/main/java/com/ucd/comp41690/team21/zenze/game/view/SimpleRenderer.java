@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -35,6 +36,7 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
     private final int width;
     private final int height;
     private final float tileSize;
+    private final float tileRatio;
 
     /**
      * Initialise the canvas for the renderer
@@ -51,6 +53,7 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
         numTilesH = world.getNumTilesH();
         numTilesV = world.getNumTilesV();
         tileSize = height / (float) numTilesH;
+        tileRatio = tileSize/2;
         numTilesAcross = (int) (width / tileSize) + 2;
 
         Game.getInstance().UIHeight = (int)tileSize;
@@ -99,9 +102,43 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
                         }
                     }
 
+                    //Draw UI
+                    paint.setColor(Color.LTGRAY);
+                    canvas.drawRect(0,0,width+1,tileSize,paint);
+                    paint.setColor(Color.WHITE);
+                    canvas.drawCircle(tileRatio, tileRatio, tileRatio, paint);
+                    //draw hearts
+                    paint.setColor(Color.RED);
+                    for(int i=0; i<world.getPlayer().health;i++){
+                        canvas.drawCircle(tileRatio*3+i*0.75f*tileSize,tileRatio, tileRatio/2, paint);
+                    }
+                    //draw counters
+                    paint.setColor(Color.DKGRAY);
+                    Rect rect = new Rect((int)(tileSize*3.5), (int)(tileRatio/2), (int)(tileSize*4+1), (int)(tileSize*0.75f));
+                    canvas.drawRect(rect, paint);
+                    rect = new Rect((int)(tileSize*5), (int)(tileRatio/2), (int)(tileSize*5.5+1), (int)(tileSize*0.75f));
+                    canvas.drawRect(rect, paint);
+                    rect = new Rect((int)(tileSize*6.5), (int)(tileRatio/2), (int)(tileSize*7+1), (int)(tileSize*0.75f));
+                    canvas.drawRect(rect, paint);
+                    rect = new Rect((int)(tileSize*8), (int)(tileRatio/2), (int)(tileSize*8.5+1), (int)(tileSize*0.75f));
+                    canvas.drawRect(rect, paint);
+
+                    paint.setColor(Color.WHITE);
+                    canvas.drawText(Game.getInstance().normalItemCount+"",
+                            tileSize*4.25f, tileSize*0.66f, paint);
+
+                    canvas.drawText(Game.getInstance().sunnyAttackCount+"",
+                            tileSize*5.75f, tileSize*0.66f, paint);
+
+                    canvas.drawText(Game.getInstance().rainyAttackCount+"",
+                            tileSize*7.25f, tileSize*0.66f, paint);
+
+                    canvas.drawText(Game.getInstance().snowyAttackCount+"",
+                            tileSize*8.75f, tileSize*0.66f, paint);
+                    //draw log
                     paint.setColor(Color.WHITE);
                     paint.setTextSize(75);
-                    canvas.drawText(Game.getInstance().log, 100, 200, paint);
+                    canvas.drawText(Game.getInstance().log, 100, tileSize+tileRatio, paint);
                 }
             } finally {
                 if (canvas != null) {
