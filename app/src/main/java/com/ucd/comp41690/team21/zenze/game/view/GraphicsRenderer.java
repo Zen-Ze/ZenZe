@@ -36,6 +36,10 @@ public class GraphicsRenderer extends SurfaceView implements Renderer {
     private final float tileSize;
     private final float tileRatio;
 
+    //UI Elements
+    private Bitmap[] UIBitmaps;
+    private Bitmap heart;
+
     /**
      * Initialise the canvas for the renderer
      *
@@ -50,9 +54,20 @@ public class GraphicsRenderer extends SurfaceView implements Renderer {
         height = Game.getInstance().getHeight();
         numTilesH = world.getNumTilesH();
         numTilesV = world.getNumTilesV();
+
         tileSize = height / (float) numTilesH;
         tileRatio = tileSize / 2;
         numTilesAcross = (int) (width / tileSize) + 2;
+
+        //Initialise UI
+        UIBitmaps = new Bitmap[7];
+        UIBitmaps[0] = world.getPlayer().type.getImage();
+        UIBitmaps[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.heart);
+        UIBitmaps[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_normal);
+        UIBitmaps[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_sunny);
+        UIBitmaps[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_rainy);
+        UIBitmaps[5] = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_snowy);
+        UIBitmaps[6] = world.getState().getEnemyImage();
     }
 
     @Override
@@ -67,7 +82,7 @@ public class GraphicsRenderer extends SurfaceView implements Renderer {
                     if ((canvas = surfaceHolder.getSurface().lockHardwareCanvas()) != null) {
                         //set camera position
                         float offset = world.getCamera().x_Pos - (numTilesAcross / 2);
-                        Game.getInstance().log = offset + "";
+
                         //Background
                         Bitmap background = world.getState().getBackgroundImage();
                         /*float bgRight = background.getWidth() / 2 + (offset * 100);
@@ -119,9 +134,44 @@ public class GraphicsRenderer extends SurfaceView implements Renderer {
                             }
                         }
 
+                        //Draw UI
+                        paint.setColor(Color.LTGRAY);
+                        //canvas.drawRect(0,0,width+1,tileSize,paint);
+                        rect = new Rect(0, 0, (int) tileSize+ 1, (int) tileSize + 1);
+                        canvas.drawBitmap(UIBitmaps[0], null, rect, paint);
+                        //draw hearts
+                        top = tileSize/4;
+                        bottom = tileRatio+top;
+                        left = tileSize+top;
+                        right = tileSize*2 - top;
+                        for(int i=0; i<world.getPlayer().health;i++){
+                            rect = new Rect((int)left, (int)top, (int) right, (int) bottom);
+                            canvas.drawBitmap(UIBitmaps[1], null, rect, paint);
+                            left += bottom;
+                            right += bottom;
+                        }
+                        //draw counters
+                        paint.setColor(Color.BLACK);
+                        rect = new Rect((int)(tileSize*3.5), (int)top, (int)(tileSize*4+1), (int)bottom);
+                        canvas.drawBitmap(UIBitmaps[2], null, rect, paint);
+                        canvas.drawText(Game.getInstance().normalItemCount+"",
+                                tileSize*4.25f, tileSize*0.66f, paint);
+                        rect = new Rect((int)(tileSize*5), (int)top, (int)(tileSize*5.5+1), (int)bottom);
+                        canvas.drawBitmap(UIBitmaps[3], null, rect, paint);
+                        canvas.drawText(Game.getInstance().sunnyAttackCount+"",
+                                tileSize*5.75f, tileSize*0.66f, paint);
+                        rect = new Rect((int)(tileSize*6.5), (int)top, (int)(tileSize*7+1), (int)bottom);
+                        canvas.drawBitmap(UIBitmaps[4], null, rect, paint);
+                        canvas.drawText(Game.getInstance().rainyAttackCount+"",
+                                tileSize*7.25f, tileSize*0.66f, paint);
+                        rect = new Rect((int)(tileSize*8), (int)top, (int)(tileSize*8.5+1), (int)bottom);
+                        canvas.drawBitmap(UIBitmaps[5], null, rect, paint);
+                        canvas.drawText(Game.getInstance().snowyAttackCount+"",
+                                tileSize*8.75f, tileSize*0.66f, paint);
+                        //draw log
                         paint.setColor(Color.WHITE);
                         paint.setTextSize(75);
-                        canvas.drawText(Game.getInstance().log, 100, 200, paint);
+                        canvas.drawText(Game.getInstance().log, 100, tileSize+tileRatio, paint);
                     }
                 }
             } finally {

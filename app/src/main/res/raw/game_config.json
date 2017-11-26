@@ -4,6 +4,7 @@
   "Player_MinJumpHeight" : 1,
   "Player_JumpTime" : 0.75,
   "Player_Scale" : 1,
+  "Player_Health" : 3,
 
   "Camera_MovementWindow" : 2,
   "Camera_MinSpeed" : 0.0,
@@ -11,7 +12,7 @@
   "Item_Scale" : 0.5,
   "SpecialItem_Scale" : 0.75,
 
-  "Enemy_Health" : 100,
+  "Enemy_Health" : 3,
   "Enemy_Scale" : 1,
 
   "Platform_Scale" : 1

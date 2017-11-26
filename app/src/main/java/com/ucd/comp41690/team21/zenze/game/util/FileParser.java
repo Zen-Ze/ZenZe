@@ -87,6 +87,7 @@ public class FileParser {
             playerMinJumpHeight = gameConfig.getInt("Player_MinJumpHeight");
             playerJumpTime = (float) gameConfig.getDouble("Player_JumpTime");
             playerScale = (float) gameConfig.getDouble("Player_Scale");
+            playerHealth = gameConfig.getInt("Player_Health");
             //camera
             cameraMovementWindow = gameConfig.getInt("Camera_MovementWindow");
             cameraMinSpeed = gameConfig.getInt("Camera_MinSpeed");
@@ -113,7 +114,7 @@ public class FileParser {
                 specialItemImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_sunny);
                 enemyAttackImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_sunny);
                 attackImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_normal);
-                return new GameState(Color.RED, backgroundImage, status);
+                return new GameState(Color.RED, backgroundImage, enemyImage, status);
             case RAINY:
                 tileImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_rainy);
                 tileMiddleImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_rainy2);
@@ -122,7 +123,7 @@ public class FileParser {
                 specialItemImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_rainy);
                 enemyAttackImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_rainy);
                 attackImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_normal);
-                return new GameState(Color.BLUE, backgroundImage, status);
+                return new GameState(Color.BLUE, backgroundImage, enemyImage, status);
             case SNOWY:
                 tileImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_snowy);
                 tileMiddleImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_snowy2);
@@ -131,7 +132,7 @@ public class FileParser {
                 specialItemImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_snowy);
                 enemyAttackImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_snowy);
                 attackImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_normal);
-                return new GameState(Color.LTGRAY, backgroundImage, status);
+                return new GameState(Color.LTGRAY, backgroundImage, enemyImage, status);
             default:
                 tileImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_sunny);
                 tileMiddleImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_sunny2);
@@ -140,7 +141,7 @@ public class FileParser {
                 specialItemImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_sunny);
                 enemyAttackImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_sunny);
                 attackImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_normal);
-                return new GameState(Color.GRAY, backgroundImage, status);
+                return new GameState(Color.GRAY, backgroundImage, enemyImage, status);
         }
     }
 
@@ -171,7 +172,7 @@ public class FileParser {
                         PlayerInputHandler playerInputHandler = new PlayerInputHandler();
                         PlayerPhysics playerPhysics = new PlayerPhysics(playerMinJumpHeight,
                                 playerMaxJumpHeight, playerJumpTime, numTilesV, numTilesH, x, y, playerScale);
-                        Type type = new Type(playerHealth, playerSpeed, playerScale, playerImage, Color.WHITE);
+                        Type type = new Type(playerHealth, playerSpeed, playerScale, playerImage, Color.WHITE, null);
                         GameObject player = new GameObject(
                                 playerInputHandler, playerPhysics, type, x, y, GameObject.PLAYER_TAG);
                         world.addObject(player);
@@ -189,7 +190,7 @@ public class FileParser {
                     case '#': //Platform
                         PlatformPhysics platformPhysics =
                                 new PlatformPhysics(x, y, platformSize);
-                        Type platformType = new Type(0, 0, platformSize, tileImage, Color.BLACK);
+                        Type platformType = new Type(0, 0, platformSize, tileImage, Color.BLACK, world.getState().getStatus());
                         GameObject platform = new GameObject(
                                 null, platformPhysics, platformType, x, y, GameObject.PLATFORM_TAG);
                         world.addPlatform(platform);
@@ -197,7 +198,7 @@ public class FileParser {
                     case '*':
                         PlatformPhysics platformMiddlePhysics =
                                 new PlatformPhysics(x, y, platformSize);
-                        Type platformMiddleType = new Type(0, 0, platformSize, tileMiddleImage, Color.BLACK);
+                        Type platformMiddleType = new Type(0, 0, platformSize, tileMiddleImage, Color.BLACK, world.getState().getStatus());
                         GameObject platformMiddle = new GameObject(
                                 null, platformMiddlePhysics, platformMiddleType, x, y, GameObject.M_PLATFORM_TAG);
                         world.addPlatform(platformMiddle);
@@ -205,14 +206,14 @@ public class FileParser {
                     case 'I':
                         PhysicsComponent itemPhysics =
                                 new PhysicsComponent(PhysicsComponent.SPHERE, x, y, itemSize);
-                        Type itemType = new Type(0, 0, itemSize, itemImage, Color.YELLOW);
+                        Type itemType = new Type(0, 0, itemSize, itemImage, Color.YELLOW, null);
                         GameObject item = new GameObject(null, itemPhysics, itemType, x, y, GameObject.ITEM_TAG);
                         world.addObject(item);
                         break;
                     case 'S':
                         PhysicsComponent specialItemPhysics =
                                 new PhysicsComponent(PhysicsComponent.SPHERE, x, y, itemSize);
-                        Type specialItemType = new Type(0, 0, specialItemSize, specialItemImage, Color.GREEN);
+                        Type specialItemType = new Type(0, 0, specialItemSize, specialItemImage, Color.GREEN, world.getState().getStatus());
                         GameObject specialItem = new GameObject(
                                 null, specialItemPhysics, specialItemType, x, y, GameObject.S_ITEM_TAG);
                         world.addObject(specialItem);
@@ -220,7 +221,7 @@ public class FileParser {
                     case 'E':
                         EnemyPhyiscs enemyPhysics = new EnemyPhyiscs(x,y,enemySize);
                         EnemyAI enemyAI = new EnemyAI();
-                        Type enemyType = new Type(enemyHealth, 0, enemySize, enemyImage, Color.CYAN);
+                        Type enemyType = new Type(enemyHealth, 0, enemySize, enemyImage, Color.CYAN, world.getState().getStatus());
                         GameObject enemy = new GameObject(enemyAI, enemyPhysics, enemyType, x, y, GameObject.ENEMY_TAG);
                         world.addObject(enemy);
                         break;

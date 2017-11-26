@@ -11,6 +11,8 @@ public class PlayerPhysics extends PhysicsComponent {
     private final float earlyJumpVelocity;
     public boolean isJumping;
 
+    private int healthTimer = 0;
+
     public PlayerPhysics(int minJumpHeight, int maxJumpHeight, float jumpTime,
                          float rightBorder, float ground, float x_Pos, float y_Pos, float scale) {
         super(PhysicsComponent.SPHERE, x_Pos, y_Pos, scale);
@@ -37,6 +39,56 @@ public class PlayerPhysics extends PhysicsComponent {
             leapFrogIntegration(object, elapsedTime, 0.5f);
         } else {
             leapFrogIntegration(object, elapsedTime, 1);
+        }
+
+        //check for collisions with other game objects
+        for (GameObject o : Game.getInstance().getGameWorld().getEntities()) {
+            if (o.physics != null && o.physics.boundingVolume != null) {
+                Collision col = intersects(this.boundingVolume, o.physics.boundingVolume);
+                if (col != Collision.NONE) {
+                    if (o.getTag().equals(GameObject.ITEM_TAG)) {
+                        o.isAlive = false;
+                        Game.getInstance().normalItemCount++;
+                    } else if (o.getTag().equals(GameObject.S_ITEM_TAG)) {
+                        o.isAlive = false;
+                        switch (Game.getInstance().getGameWorld().getState().getStatus()) {
+                            case SNOWY:
+                                Game.getInstance().snowyItemCount++;
+                                break;
+                            case RAINY:
+                                Game.getInstance().rainyItemCount++;
+                                break;
+                            case SUNNY:
+                                Game.getInstance().sunnyItemCount++;
+                                break;
+                        }
+                    } else if (o.getTag().equals(GameObject.ENEMY_TAG)) {
+                        float[] newPos = getCollisionPoint(
+                                (Sphere) this.boundingVolume, (Sphere) o.physics.boundingVolume);
+                        if ((col == Collision.LEFT && x_Vel > 0) || (col == Collision.RIGHT && x_Vel < 0)) {
+                            object.x_Pos = newPos[0];
+                            object.y_Pos = newPos[1];
+                        } else if (col == Collision.TOP && y_Vel >= 0) {
+                            object.x_Pos = newPos[0];
+                            object.y_Pos = newPos[1];
+                            isJumping = false;
+                            y_Vel = 0;
+                        } else if (col == Collision.BOTTOM && y_Vel <= 0) {
+                            object.x_Pos = newPos[0];
+                            object.y_Pos = newPos[1];
+                            y_Vel = 0;
+                        }
+                        if (healthTimer <= 0) {
+                            object.health -= 1;
+                            healthTimer = 75;
+                        }
+                    }
+                }
+            }
+        }
+        Game.getInstance().log = healthTimer + "";
+        if (healthTimer > 0) {
+            healthTimer--;
         }
         //check for collisions with map
         for (GameObject o : Game.getInstance().getGameWorld().getMap()) {
@@ -65,44 +117,8 @@ public class PlayerPhysics extends PhysicsComponent {
                                 + ((AABB) o.physics.boundingVolume).width
                                 + ((Sphere) boundingVolume).radius;
                     }
-                }else if(o.getTag().equals(GameObject.M_PLATFORM_TAG)){
-                    if(col == Collision.TOP){
-                        object.y_Pos = o.y_Pos
-                                - ((AABB) o.physics.boundingVolume).height
-                                - ((Sphere) boundingVolume).radius;
-                        y_Vel = 0;
-                        isJumping = false;
-                    } else if(col == Collision.BOTTOM){
-                        object.y_Pos = o.y_Pos
-                                + ((AABB) o.physics.boundingVolume).height
-                                + ((Sphere) boundingVolume).radius;
-                        y_Vel = 0;
-                        isJumping = false;
-                    } else if (col == Collision.LEFT){
-                        object.x_Pos = o.x_Pos
-                                - ((AABB) o.physics.boundingVolume).width
-                                - ((Sphere) boundingVolume).radius;
-                        y_Vel = y_Vel>0?y_Vel:0;
-                    } else if (col == Collision.RIGHT){
-                        object.x_Pos = o.x_Pos
-                                + ((AABB) o.physics.boundingVolume).width
-                                + ((Sphere) boundingVolume).radius;
-                        y_Vel = y_Vel>0?y_Vel:0;
-                    }
-                }
-            }
-        }
-        //check for collisions with other game objects
-        for (GameObject o : Game.getInstance().getGameWorld().getEntities()) {
-            if(o.physics != null && o.physics.boundingVolume != null) {
-                if (intersects(this.boundingVolume, o.physics.boundingVolume) != Collision.NONE) {
-                    if (o.getTag().equals(GameObject.ITEM_TAG)) {
-                        o.isAlive = false;
-                    } else if (o.getTag().equals(GameObject.S_ITEM_TAG)) {
-                        o.isAlive = false;
-                    } else if (o.getTag().equals(GameObject.ENEMY_TAG)) {
-                        object.health -= 10;
-                    }
+                } else if (o.getTag().equals(GameObject.M_PLATFORM_TAG)) {
+                    resolveSolidCollision(col, object, o);
                 }
             }
         }
@@ -112,17 +128,17 @@ public class PlayerPhysics extends PhysicsComponent {
             y_Vel = 0;
             isJumping = false;
         }
-        if (object.y_Pos < 0) {
-            object.y_Pos = 0;
+        if (object.y_Pos < 1) {
+            object.y_Pos = 1;
             y_Vel = 0;
         }
         if (object.x_Pos < 0) {
             object.x_Pos = 0;
-            y_Vel = y_Vel>0?y_Vel:0;
+            y_Vel = y_Vel > 0 ? y_Vel : 0;
         }
         if (object.x_Pos > rightBorder) {
             object.x_Pos = rightBorder;
-            y_Vel = y_Vel>0?y_Vel:0;
+            y_Vel = y_Vel > 0 ? y_Vel : 0;
         }
     }
 

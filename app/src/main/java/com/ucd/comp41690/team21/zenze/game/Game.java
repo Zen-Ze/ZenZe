@@ -18,7 +18,6 @@ import java.util.List;
 public class Game implements Runnable, Subject<InputEvent> {
     //controlls for frame rate
     private static final int MS_PER_UPDATE = 20;//30FPS
-    private static final int MAX_FRAME_SKIPS = 5;
 
     private Renderer gameView;
     private GameWorld gameWorld;
@@ -32,6 +31,14 @@ public class Game implements Runnable, Subject<InputEvent> {
     private int gameHeight;
     public String log;
 
+    public int normalItemCount = 0;
+    public int sunnyItemCount = 0;
+    public int snowyItemCount = 0;
+    public int rainyItemCount = 0;
+    public int sunnyAttackCount = 0;
+    public int rainyAttackCount = 0;
+    public int snowyAttackCount = 0;
+
     public Game(Context context, int width, int height, WeatherStatus status, boolean graphicsRenderer) {
         Game.instance = this;
         this.gameWidth = width;
@@ -40,9 +47,9 @@ public class Game implements Runnable, Subject<InputEvent> {
 
         this.gameWorld = new GameWorld(context, status);
 
-        if(graphicsRenderer) {
+        if (graphicsRenderer) {
             this.gameView = new GraphicsRenderer(context, gameWorld);
-        } else{
+        } else {
             this.gameView = new SimpleRenderer(context, gameWorld);
         }
 
@@ -60,15 +67,16 @@ public class Game implements Runnable, Subject<InputEvent> {
 
         while (running) {
             beginTime = System.currentTimeMillis();
-            deltaTime = elapsedTime>100?((beginTime-prevUpdate)/100d):((beginTime-prevUpdate)/1000d);
+            deltaTime = elapsedTime > 100 ? ((beginTime - prevUpdate) / 100d) : ((beginTime - prevUpdate) / 1000d);
             gameWorld.update(deltaTime);
             gameView.render(gameWorld);
             prevUpdate = System.currentTimeMillis();
-            elapsedTime = prevUpdate-beginTime;
-            sleepTime = elapsedTime>100?17:MS_PER_UPDATE-elapsedTime;
+            elapsedTime = prevUpdate - beginTime;
+            sleepTime = elapsedTime > 100 ? 17 : MS_PER_UPDATE - elapsedTime;
             try {
                 Thread.sleep(sleepTime);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
         }
     }
 
