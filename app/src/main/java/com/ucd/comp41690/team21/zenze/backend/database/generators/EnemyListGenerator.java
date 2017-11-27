@@ -8,8 +8,7 @@ import com.ucd.comp41690.team21.zenze.backend.database.misc.EnemyListInfo;
 
 public class EnemyListGenerator {
     public static final String CREATE_ENEMY_LIST = "CREATE TABLE " + EnemyListInfo.EnemyListEntry.TABLE_NAME + " ("
-            + EnemyListInfo.EnemyListEntry._ID + " INTEGER AUTOINCREMENT,"
-            + "PRIMARY KEY (" + EnemyListInfo.EnemyListEntry._ID +"))";
+            + EnemyListInfo.EnemyListEntry._ID + " INTEGER PRIMARY KEY NOT NULL);";
 
     public static final String DELETE_ENEMY_LIST = "DROP TABLE IF EXISTS " + EnemyListInfo.EnemyListEntry.TABLE_NAME;
 }

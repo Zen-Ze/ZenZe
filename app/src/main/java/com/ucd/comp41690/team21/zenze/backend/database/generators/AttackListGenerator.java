@@ -9,8 +9,7 @@ import com.ucd.comp41690.team21.zenze.backend.database.misc.AttackListInfo;
 public class AttackListGenerator {
     
     public static final String CREATE_ATTACK_LIST = "CREATE TABLE " + AttackListInfo.AttackListEntry.TABLE_NAME + " ("
-            + AttackListInfo.AttackListEntry._ID + " INTEGER AUTOINCREMENT,"
-            + "PRIMARY KEY (" + AttackListInfo.AttackListEntry._ID +"))";
+            + AttackListInfo.AttackListEntry._ID + " INTEGER PRIMARY KEY NOT NULL);";
     
     public static final String DELETE_ATTACK_LIST = "DROP TABLE IF EXISTS " + AttackListInfo.AttackListEntry.TABLE_NAME;
     
