@@ -173,7 +173,7 @@ public class FileParser {
     }
 
     public static void initFromDB(Context context){
-        DBHelper dbHelper = new DBHelper(context);
+        //DBHelper dbHelper = new DBHelper(context);
         //Player player = dbHelper.getPlayer(0);
         //float lastPos_x = player.getLastCoordX();
     }
