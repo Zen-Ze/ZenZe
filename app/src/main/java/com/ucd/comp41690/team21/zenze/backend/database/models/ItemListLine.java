@@ -1,10 +1,25 @@
 package com.ucd.comp41690.team21.zenze.backend.database.models;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+
 /**
  * Created by timothee on 18/10/17.
  */
 
-public class ItemListLine extends BaseModel {
+@Entity(tableName = "ItemListLine", foreignKeys = {
+        @ForeignKey(entity = ItemList.class,
+                parentColumns = "id",
+                childColumns = "ItemListId"),
+        @ForeignKey(entity = Item.class,
+                parentColumns = "id",
+                childColumns = "ItemId")
+}
+)
+public class ItemListLine {
 
     /**
      * ItemListLine
@@ -18,12 +33,22 @@ public class ItemListLine extends BaseModel {
      * +-----------------------------------------+------------------+-----------------+
      */
 
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
+    @ColumnInfo(name = "Amount")
     private int amount;
+
+    @ColumnInfo(name = "ItemId")
     private int itemId;
+
+    @ColumnInfo(name = "ItemListId")
     private int itemListId;
 
-    public ItemListLine(int id, int amount, int itemId, int itemListId) {
-        super(id);
+    public ItemListLine() {}
+
+    @Ignore
+    public ItemListLine(int amount, int itemId, int itemListId) {
         this.amount = amount;
         this.itemId = itemId;
         this.itemListId = itemListId;
@@ -51,5 +76,13 @@ public class ItemListLine extends BaseModel {
 
     public int getItemListId() {
         return itemListId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -2,6 +2,7 @@ package com.ucd.comp41690.team21.zenze.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -38,6 +39,11 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.ucd.comp41690.team21.zenze.R;
+import com.ucd.comp41690.team21.zenze.backend.database.AppDatabase;
+import com.ucd.comp41690.team21.zenze.backend.database.models.AttackList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.EnemyList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.ItemList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.Player;
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherService;
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 
@@ -59,6 +65,25 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
+//        // THE FOLLOWING CODE IS AN EXAMPLE OF HOW THE DB WORKS FOR ANNALENA
+//        AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
+//
+//        database.attackListDao().insertAll(new AttackList());
+//        database.enemyListDao().insertAll(new EnemyList());
+//        database.itemListDao().insertAll( new ItemList());
+//
+//        // YOU NEED THESE FIRST
+//        EnemyList el = database.enemyListDao().getAll().get(0);
+//        AttackList al = database.attackListDao().getAll().get(0);
+//        ItemList il = database.itemListDao().getAll().get(0);
+//
+//        // YOU CAN THEN CREATE A PLAYER
+//        Player p = new Player(5,2,8,"toto",3,il.getId(),al.getId(), el.getId());
+//        database.playerDao().insertAll(p);
+//
+//        // in the end, remove the instance bc it's huge
+//        database = null;
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
