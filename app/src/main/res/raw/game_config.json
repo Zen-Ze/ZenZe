@@ -19,13 +19,13 @@
 
   "Platform_Scale" : 1,
 
-  "AttackNormal_Health" : 300,
-  "AttackNormal_Speed" : 10,
+  "AttackNormal_Health" : 200,
+  "AttackNormal_Speed" : 7,
   "AttackNormal_Scale" : 0.5,
   "AttackNormal_Damage" : 1,
 
-  "AttackSpecial_Health" : 300,
-  "AttackSpecial_Speed" : 15,
+  "AttackSpecial_Health" : 200,
+  "AttackSpecial_Speed" : 10,
   "AttackSpecial_Scale" : 0.75,
   "AttackSpecial_Damage" : 2
 }

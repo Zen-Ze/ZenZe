@@ -10,7 +10,7 @@ import com.ucd.comp41690.team21.zenze.game.Game;
 import com.ucd.comp41690.team21.zenze.game.GameObject;
 import com.ucd.comp41690.team21.zenze.game.GameState;
 import com.ucd.comp41690.team21.zenze.game.GameWorld;
-import com.ucd.comp41690.team21.zenze.game.components.AttackPhyiscs;
+import com.ucd.comp41690.team21.zenze.game.components.AttackPhysics;
 import com.ucd.comp41690.team21.zenze.game.components.CameraAI;
 import com.ucd.comp41690.team21.zenze.game.components.EnemyAI;
 import com.ucd.comp41690.team21.zenze.game.components.EnemyPhysics;
@@ -266,12 +266,12 @@ public class FileParser {
         }
         Type attackNormalType = new Type(attackNormalHealth, attackNormalSpeed, attackNormalScale,
                 attackNormalDamage, attackNormalImage, Color.MAGENTA, null, "");
-        AttackPhyiscs attackNormalPhysics = new AttackPhyiscs(0,0,attackNormalType);
+        AttackPhysics attackNormalPhysics = new AttackPhysics(0,0,attackNormalType);
         GameObject attackNormal = new GameObject(null, attackNormalPhysics, attackNormalType, 0,0,GameObject.ATTACK_TAG);
         world.setAttackNormal(attackNormal);
         Type attackSpecialType = new Type(attackSpecialHealth, attackSpecialSpeed, attackSpecialScale,
                 attackSpecialDamage, attackSpecialImage, Color.RED, null, "");
-        AttackPhyiscs attackSpecialPhysics = new AttackPhyiscs(0,0,attackNormalType);
+        AttackPhysics attackSpecialPhysics = new AttackPhysics(0,0,attackNormalType);
         GameObject attackSpecial = new GameObject(null, attackSpecialPhysics, attackSpecialType, 0,0,GameObject.ATTACK_TAG);
         world.setAttackSpecial(attackSpecial);
     }

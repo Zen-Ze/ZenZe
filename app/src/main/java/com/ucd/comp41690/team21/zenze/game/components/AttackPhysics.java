@@ -6,11 +6,11 @@ import com.ucd.comp41690.team21.zenze.game.GameObject;
  * Created by annalena on 26.11.17.
  */
 
-public class AttackPhyiscs extends PhysicsComponent {
+public class AttackPhysics extends PhysicsComponent {
 
-    public AttackPhyiscs(float x, float y, Type type) {
+    public AttackPhysics(float x, float y, Type type) {
         super(PhysicsComponent.RECTANGULAR, x, y, type.getScale());
-        acceleration = type.getSpeed();
+        x_Vel = type.getSpeed();
     }
 
     @Override

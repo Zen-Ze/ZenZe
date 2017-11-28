@@ -3,7 +3,7 @@ package com.ucd.comp41690.team21.zenze.game;
 import android.content.Context;
 
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
-import com.ucd.comp41690.team21.zenze.game.components.AttackPhyiscs;
+import com.ucd.comp41690.team21.zenze.game.components.AttackPhysics;
 import com.ucd.comp41690.team21.zenze.game.components.Type;
 import com.ucd.comp41690.team21.zenze.game.util.FileParser;
 
@@ -122,7 +122,7 @@ public class GameWorld {
                 attack.type.getScale(), attack.type.getDamage(),
                 attack.type.getImage(), attack.type.getColour(),
                 attack.type.getState(), attack.type.getInfo());
-        AttackPhyiscs attackPhysics = new AttackPhyiscs(xPos, yPos, attackType);
+        AttackPhysics attackPhysics = new AttackPhysics(xPos, yPos, attackType);
         return new GameObject(null, attackPhysics, attackType, xPos, yPos, GameObject.ATTACK_TAG);
     }
 

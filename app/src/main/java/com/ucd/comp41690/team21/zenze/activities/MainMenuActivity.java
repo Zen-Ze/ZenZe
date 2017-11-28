@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,9 +34,7 @@ import java.util.List;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.ucd.comp41690.team21.zenze.R;
 import com.ucd.comp41690.team21.zenze.backend.database.AppDatabase;
 import com.ucd.comp41690.team21.zenze.backend.database.models.AttackList;
@@ -45,7 +42,6 @@ import com.ucd.comp41690.team21.zenze.backend.database.models.EnemyList;
 import com.ucd.comp41690.team21.zenze.backend.database.models.ItemList;
 import com.ucd.comp41690.team21.zenze.backend.database.models.Player;
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherService;
-import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 
 /**
  * Main Activity that launches on start
@@ -67,23 +63,23 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
         setContentView(R.layout.activity_main_menu);
 
 //        // THE FOLLOWING CODE IS AN EXAMPLE OF HOW THE DB WORKS FOR ANNALENA
-//        AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
+        AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
 //
-//        database.attackListDao().insertAll(new AttackList());
-//        database.enemyListDao().insertAll(new EnemyList());
-//        database.itemListDao().insertAll( new ItemList());
+        database.attackListDao().insertAll(new AttackList());
+        database.enemyListDao().insertAll(new EnemyList());
+        database.itemListDao().insertAll( new ItemList());
 //
 //        // YOU NEED THESE FIRST
-//        EnemyList el = database.enemyListDao().getAll().get(0);
-//        AttackList al = database.attackListDao().getAll().get(0);
-//        ItemList il = database.itemListDao().getAll().get(0);
+        EnemyList el = database.enemyListDao().getAll().get(0);
+        AttackList al = database.attackListDao().getAll().get(0);
+        ItemList il = database.itemListDao().getAll().get(0);
 //
 //        // YOU CAN THEN CREATE A PLAYER
-//        Player p = new Player(5,2,8,"toto",3,il.getId(),al.getId(), el.getId());
-//        database.playerDao().insertAll(p);
+        Player p = new Player(5,2,8,"toto",3,il.getId(),al.getId(), el.getId());
+        database.playerDao().insertAll(p);
 //
 //        // in the end, remove the instance bc it's huge
-//        database = null;
+        database = null;
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -201,7 +197,7 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
         }
 
         gameIntent.putExtra("Game State", WeatherService.getWeatherStatus(location, getApplicationContext()));
-        gameIntent.putExtra("Graphics Renderer", false);
+        gameIntent.putExtra("Graphics Renderer", true);
         startActivity(gameIntent);
     }
 
