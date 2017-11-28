@@ -21,7 +21,7 @@ public class Attack implements Command {
     public void exit(GameObject actor) {
         Type dropDownType = new Type(0,0,0.75f,0,
                 Game.getInstance().getGameWorld().getState().getSpecialAttackImage(), Color.DKGRAY,
-                Game.getInstance().getGameWorld().getState().getStatus(), "attack item");
+                Game.getInstance().getGameWorld().getState().getStatus(), new String[]{"attack","shortInfoShortInfo", "Lorem ipsum dolor sit amet something"});
         PhysicsComponent dropDownPhysics = new PhysicsComponent(PhysicsComponent.SPHERE, actor.x_Pos, actor.y_Pos, dropDownType.getScale());
         GameObject dropDown = new GameObject(null, dropDownPhysics, dropDownType, actor.x_Pos, actor.y_Pos, GameObject.A_ITEM_TAG);
         Game.getInstance().getGameWorld().addNewObject(dropDown);

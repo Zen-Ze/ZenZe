@@ -1,6 +1,7 @@
 package com.ucd.comp41690.team21.zenze.activities;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.support.v4.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -29,7 +30,7 @@ import com.ucd.comp41690.team21.zenze.game.util.InputEvent;
  * the main game screen
  */
 public class GameActivity extends FragmentActivity implements SensorEventListener,
-        InfoDialogFragment.InfoDialogListener, GameOverDialogFragment.GameOverDialogListener{
+        InfoDialogFragment.InfoDialogListener, GameOverDialogFragment.GameOverDialogListener {
     private final static float ROTATION_ANGLE = 0.15f;
 
     private Game game;
@@ -37,6 +38,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
     private int height;
     private WeatherStatus status;
     private boolean graphicsRenderer;
+    private Type itemType;
 
     private SensorManager mSensorManager;
     private Sensor accelerometer;
@@ -93,18 +95,18 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-                if(event.getY()<Game.getInstance().UIHeight){
-                    Intent statsIntent = new Intent(GameActivity.this, MainMenuActivity.class);
+                if (event.getY() < Game.getInstance().UIHeight) {
+                    Intent statsIntent = new Intent(GameActivity.this, StatsActivity.class);
                     startActivity(statsIntent);
-                } else if (event.getX()<=Game.getInstance().getWidth()/2) {
+                } else if (event.getX() <= Game.getInstance().getWidth() / 2) {
                     game.onInputEvent(InputEvent.TOUCH_DOWN_LEFT);
-                } else if (event.getX()>Game.getInstance().getWidth()/2){
+                } else if (event.getX() > Game.getInstance().getWidth() / 2) {
                     game.onInputEvent(InputEvent.TOUCH_DOWN_RIGHT);
                 }
-            break;
+                break;
             case MotionEvent.ACTION_UP:
                 game.onInputEvent(InputEvent.TOUCH_UP);
-            break;
+                break;
             default:
                 game.onInputEvent(InputEvent.NULL);
         }
@@ -124,9 +126,9 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         mSensorManager.getRotationMatrix(mRotationMatrix, null, mAccelerometerReading, mMagnetometerReading);
         mSensorManager.getOrientation(mRotationMatrix, mOrientationAngles);
 
-        if(mOrientationAngles[1]>ROTATION_ANGLE){
+        if (mOrientationAngles[1] > ROTATION_ANGLE) {
             game.onInputEvent(InputEvent.TILT_LEFT);
-        } else if (mOrientationAngles[1]<-ROTATION_ANGLE){
+        } else if (mOrientationAngles[1] < -ROTATION_ANGLE) {
             game.onInputEvent(InputEvent.TILT_RIGHT);
         } else {
             game.onInputEvent(InputEvent.TILT_NONE);
@@ -138,26 +140,38 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
 
     }
 
-    public void onItemFound(Type type){
-        DialogFragment dialog = new InfoDialogFragment();
+    public void onItemFound(Type type) {
+        itemType = type;
+
         Bundle info = new Bundle();
-        info.putString("Info", type.getInfo());
+        info.putString("Name", type.getName());
+        info.putString("Info", type.getShortInfo());
         info.putParcelable("Image", type.getImage());
+
+        DialogFragment dialog = new InfoDialogFragment();
         dialog.setArguments(info);
-        dialog.show(getSupportFragmentManager(),"info");
+        dialog.show(getSupportFragmentManager(), "info");
+
         game.pause();
     }
 
-    public void onGameOver(){
+    public void onGameOver() {
         DialogFragment dialog = new GameOverDialogFragment();
-        dialog.show(getSupportFragmentManager(),"gameOver");
+        dialog.show(getSupportFragmentManager(), "gameOver");
         game.pause();
     }
 
     @Override
     public void onInfoDialogPositiveClick(DialogFragment dialog) {
-        game.resume();
-        Intent infoIntent = new Intent(GameActivity.this, MainMenuActivity.class);
+        Intent infoIntent = new Intent(GameActivity.this, InfoActivity.class);
+        Bundle info = new Bundle();
+        if(itemType!=null) {
+            info.putString("Name", itemType.getName());
+            info.putString("Info", itemType.getShortInfo());
+            info.putParcelable("Image", itemType.getImage());
+            infoIntent.putExtras(info);
+        } else{
+        }
         startActivity(infoIntent);
     }
 
@@ -178,7 +192,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
     public void onGameOverDialogNegativeClick(DialogFragment dialog) {
         //back to main menu
         game.resume();
-        Intent infoIntent = new Intent(GameActivity.this, MainMenuActivity.class);
-        startActivity(infoIntent);
+        Intent menuIntent = new Intent(GameActivity.this, MainMenuActivity.class);
+        startActivity(menuIntent);
     }
 }

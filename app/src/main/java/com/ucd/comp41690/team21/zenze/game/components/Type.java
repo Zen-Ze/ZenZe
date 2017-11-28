@@ -15,7 +15,7 @@ public class Type {
     private WeatherStatus state;
     private Bitmap image;
     private int colour;
-    private String info;
+    private String[] info;
 
     /**
      *
@@ -28,7 +28,7 @@ public class Type {
      * @param info
      */
     public Type(int health, float speed, float scale, float damage, Bitmap image,
-                int colour, WeatherStatus state, String info){
+                int colour, WeatherStatus state, String[] info){
         this.health = health;
         this.speed = speed;
         this.scale = scale;
@@ -48,9 +48,17 @@ public class Type {
         return state;
     }
 
-    public String getInfo(){
-        return info;
+    public String[] getInfo() {return info;}
+    public String getName(){
+        return info[0];
     }
+    public String getShortInfo(){
+        return info[1];
+    }
+    public String getFullInfo(){
+        return info[2];
+    }
+
     public int getHealth() {
         return health;
     }

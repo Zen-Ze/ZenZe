@@ -53,7 +53,9 @@ public class FileParser {
     //Item stats
     private static float itemSize = 0;
     private static float specialItemSize = 0;
-    private static String itemString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, tellus quis varius euismod...";
+    private static String itemName = "ItemName";
+    private static String itemShortInfo = "ShortInfoShortInfoShortInfoShortInfoShortInfo";
+    private static String itemFullInfo = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, tellus quis varius euismod...";
 
     //Tile Map stats
     private static int numTilesV = 0;
@@ -203,7 +205,7 @@ public class FileParser {
                         PlayerInputHandler playerInputHandler = new PlayerInputHandler();
                         PlayerPhysics playerPhysics = new PlayerPhysics(playerMinJumpHeight,
                                 playerMaxJumpHeight, playerJumpTime, numTilesV, numTilesH, x, y, playerScale);
-                        Type type = new Type(playerHealth, playerSpeed, playerScale, playerDamage, playerImage, Color.WHITE, null, "");
+                        Type type = new Type(playerHealth, playerSpeed, playerScale, playerDamage, playerImage, Color.WHITE, null, new String[]{});
                         GameObject player = new GameObject(
                                 playerInputHandler, playerPhysics, type, x, y, GameObject.PLAYER_TAG);
                         world.addObject(player);
@@ -221,7 +223,7 @@ public class FileParser {
                     case '#': //Platform
                         PhysicsComponent platformPhysics =
                                 new PhysicsComponent(PhysicsComponent.RECTANGULAR, x, y, platformSize);
-                        Type platformType = new Type(0, 0, platformSize, 0, tileImage, Color.BLACK, world.getState().getStatus(), "");
+                        Type platformType = new Type(0, 0, platformSize, 0, tileImage, Color.BLACK, world.getState().getStatus(), new String[]{});
                         GameObject platform = new GameObject(
                                 null, platformPhysics, platformType, x, y, GameObject.PLATFORM_TAG);
                         world.addPlatform(platform);
@@ -229,7 +231,7 @@ public class FileParser {
                     case '*': //solid platform
                         PhysicsComponent platformMiddlePhysics =
                                 new PhysicsComponent(PhysicsComponent.RECTANGULAR, x, y, platformSize);
-                        Type platformMiddleType = new Type(0, 0, platformSize, 0, tileMiddleImage, Color.BLACK, world.getState().getStatus(), "");
+                        Type platformMiddleType = new Type(0, 0, platformSize, 0, tileMiddleImage, Color.BLACK, world.getState().getStatus(), new String[]{});
                         GameObject platformMiddle = new GameObject(
                                 null, platformMiddlePhysics, platformMiddleType, x, y, GameObject.M_PLATFORM_TAG);
                         world.addPlatform(platformMiddle);
@@ -237,7 +239,7 @@ public class FileParser {
                     case 'I': //Item
                         PhysicsComponent itemPhysics =
                                 new PhysicsComponent(PhysicsComponent.SPHERE, x, y, itemSize);
-                        Type itemType = new Type(0, 0, itemSize, 0, itemImage, Color.YELLOW, null, itemString);
+                        Type itemType = new Type(0, 0, itemSize, 0, itemImage, Color.YELLOW, null, new String[]{itemName, itemShortInfo, itemFullInfo});
                         GameObject item = new GameObject(null, itemPhysics, itemType, x, y, GameObject.ITEM_TAG);
                         world.addObject(item);
                         break;
@@ -245,7 +247,7 @@ public class FileParser {
                         PhysicsComponent specialItemPhysics =
                                 new PhysicsComponent(PhysicsComponent.SPHERE, x, y, itemSize);
                         Type specialItemType = new Type(0, 0, specialItemSize, 0, specialItemImage,
-                                Color.GREEN, world.getState().getStatus(), itemString);
+                                Color.GREEN, world.getState().getStatus(), new String[]{itemName, itemShortInfo, itemFullInfo});
                         GameObject specialItem = new GameObject(
                                 null, specialItemPhysics, specialItemType, x, y, GameObject.S_ITEM_TAG);
                         world.addObject(specialItem);
@@ -254,7 +256,7 @@ public class FileParser {
                         EnemyPhysics enemyPhysics = new EnemyPhysics(x,y,enemySize);
                         EnemyAI enemyAI = new EnemyAI();
                         Type enemyType = new Type(enemyHealth, 0, enemySize, enemyDamage, enemyImage, Color.CYAN,
-                                world.getState().getStatus(), itemString);
+                                world.getState().getStatus(), new String[]{itemName, itemShortInfo, itemFullInfo});
                         GameObject enemy = new GameObject(enemyAI, enemyPhysics, enemyType, x, y, GameObject.ENEMY_TAG);
                         world.addObject(enemy);
                         break;
@@ -265,12 +267,12 @@ public class FileParser {
             e.printStackTrace();
         }
         Type attackNormalType = new Type(attackNormalHealth, attackNormalSpeed, attackNormalScale,
-                attackNormalDamage, attackNormalImage, Color.MAGENTA, null, "");
+                attackNormalDamage, attackNormalImage, Color.MAGENTA, null, new String[]{});
         AttackPhysics attackNormalPhysics = new AttackPhysics(0,0,attackNormalType);
         GameObject attackNormal = new GameObject(null, attackNormalPhysics, attackNormalType, 0,0,GameObject.ATTACK_TAG);
         world.setAttackNormal(attackNormal);
         Type attackSpecialType = new Type(attackSpecialHealth, attackSpecialSpeed, attackSpecialScale,
-                attackSpecialDamage, attackSpecialImage, Color.RED, null, "");
+                attackSpecialDamage, attackSpecialImage, Color.RED, null, new String[]{});
         AttackPhysics attackSpecialPhysics = new AttackPhysics(0,0,attackNormalType);
         GameObject attackSpecial = new GameObject(null, attackSpecialPhysics, attackSpecialType, 0,0,GameObject.ATTACK_TAG);
         world.setAttackSpecial(attackSpecial);
