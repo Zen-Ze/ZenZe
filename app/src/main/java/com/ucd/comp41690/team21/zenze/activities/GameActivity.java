@@ -80,7 +80,9 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
     protected void onPause() {
         super.onPause();
         mSensorManager.unregisterListener(this);
-        game.pause();
+        if(game.isRunning()) {
+            game.pause();
+        }
     }
 
     @Override
@@ -168,10 +170,12 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         if(itemType!=null) {
             info.putString("Name", itemType.getName());
             info.putString("Info", itemType.getShortInfo());
-            info.putParcelable("Image", itemType.getImage());
-            infoIntent.putExtras(info);
+            //info.putParcelable("Image", itemType.getImage());
         } else{
+            info.putString("Name", "Item Name");
+            info.putString("Info", "Display short info here");
         }
+        infoIntent.putExtras(info);
         startActivity(infoIntent);
     }
 
@@ -191,7 +195,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
     @Override
     public void onGameOverDialogNegativeClick(DialogFragment dialog) {
         //back to main menu
-        game.resume();
+        //game.resume();
         Intent menuIntent = new Intent(GameActivity.this, MainMenuActivity.class);
         startActivity(menuIntent);
     }

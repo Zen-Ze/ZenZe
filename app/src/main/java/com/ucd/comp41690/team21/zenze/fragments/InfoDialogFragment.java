@@ -20,6 +20,7 @@ public class InfoDialogFragment extends DialogFragment {
         void onInfoDialogNegativeClick(DialogFragment dialog);
     }
     InfoDialogListener mListener;
+    private String name;
     private String infoText;
     private Bitmap image;
 
@@ -28,6 +29,7 @@ public class InfoDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
+            name = args.getString("Name");
             infoText = args.getString("Info");
             image = args.getParcelable("Image");
         } else{
@@ -54,10 +56,12 @@ public class InfoDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.fragment_info, null);
+        TextView nameView = view.findViewById(R.id.info_Name);
         ImageView imageView = view.findViewById(R.id.info_ImageView);
         TextView textView = view.findViewById(R.id.info_TextView);
         imageView.setImageBitmap(image);
         textView.setText(infoText);
+        nameView.setText(name);
 
         builder.setPositiveButton(R.string.infoDialog_Continue, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

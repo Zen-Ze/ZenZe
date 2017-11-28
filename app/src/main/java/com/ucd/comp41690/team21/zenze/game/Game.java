@@ -86,8 +86,8 @@ public class Game implements Runnable, Subject<InputEvent> {
     }
 
     public void pause() {
-        running = false;
         if(gameThread!=null) {
+            running = false;
             while (true) {
                 try {
                     gameThread.join();
@@ -96,8 +96,8 @@ public class Game implements Runnable, Subject<InputEvent> {
                 }
                 break;
             }
+            gameThread = null;
         }
-        gameThread = null;
     }
 
     public void resume() {
@@ -146,5 +146,9 @@ public class Game implements Runnable, Subject<InputEvent> {
         for (Observer observer : inputObserverList) {
             observer.onNotify(event);
         }
+    }
+
+    public boolean isRunning(){
+        return running;
     }
 }
