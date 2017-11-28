@@ -1,10 +1,16 @@
 package com.ucd.comp41690.team21.zenze.game.util;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
+import com.ucd.comp41690.team21.zenze.backend.database.AppDatabase;
+import com.ucd.comp41690.team21.zenze.backend.database.models.AttackList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.EnemyList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.ItemList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.Player;
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 import com.ucd.comp41690.team21.zenze.game.Game;
 import com.ucd.comp41690.team21.zenze.game.GameObject;
@@ -27,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 
 /**
  * loads the level from a file and creates objects
@@ -173,9 +180,27 @@ public class FileParser {
     }
 
     public static void initFromDB(Context context){
-        //DBHelper dbHelper = new DBHelper(context);
-        //Player player = dbHelper.getPlayer(0);
-        //float lastPos_x = player.getLastCoordX();
+        /*AppDatabase database = Room.databaseBuilder(context, AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
+
+        if(database.playerDao().countPlayers()==0) {
+            database.attackListDao().insertAll(new AttackList());
+            database.enemyListDao().insertAll(new EnemyList());
+            database.itemListDao().insertAll(new ItemList());
+
+            EnemyList el = database.enemyListDao().getAll().get(0);
+            AttackList al = database.attackListDao().getAll().get(0);
+            ItemList il = database.itemListDao().getAll().get(0);
+
+            Player p = new Player(5, 2, 8, "toto", 3, il.getId(), al.getId(), el.getId());
+            database.playerDao().insertAll(p);
+        }else{
+            List<Player> plist = database.playerDao().getAll();
+            for(Player p :plist){
+                System.out.println(p.getLastCoordX() + " " + p.getLastCoordY());
+            }
+        }
+
+        database = null;*/
     }
 
     /**

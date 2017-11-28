@@ -62,24 +62,24 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-//        // THE FOLLOWING CODE IS AN EXAMPLE OF HOW THE DB WORKS FOR ANNALENA
-        AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
-//
-        database.attackListDao().insertAll(new AttackList());
-        database.enemyListDao().insertAll(new EnemyList());
-        database.itemListDao().insertAll( new ItemList());
-//
-//        // YOU NEED THESE FIRST
-        EnemyList el = database.enemyListDao().getAll().get(0);
-        AttackList al = database.attackListDao().getAll().get(0);
-        ItemList il = database.itemListDao().getAll().get(0);
-//
-//        // YOU CAN THEN CREATE A PLAYER
-        Player p = new Player(5,2,8,"toto",3,il.getId(),al.getId(), el.getId());
-        database.playerDao().insertAll(p);
-//
-//        // in the end, remove the instance bc it's huge
-        database = null;
+////        // THE FOLLOWING CODE IS AN EXAMPLE OF HOW THE DB WORKS FOR ANNALENA
+//        AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
+////
+//        database.attackListDao().insertAll(new AttackList());
+//        database.enemyListDao().insertAll(new EnemyList());
+//        database.itemListDao().insertAll( new ItemList());
+////
+////        // YOU NEED THESE FIRST
+//        EnemyList el = database.enemyListDao().getAll().get(0);
+//        AttackList al = database.attackListDao().getAll().get(0);
+//        ItemList il = database.itemListDao().getAll().get(0);
+////
+////        // YOU CAN THEN CREATE A PLAYER
+//        Player p = new Player(5,2,8,"toto",3,il.getId(),al.getId(), el.getId());
+//        database.playerDao().insertAll(p);
+////
+////        // in the end, remove the instance bc it's huge
+//        database = null;
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
