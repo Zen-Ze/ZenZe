@@ -1,6 +1,7 @@
 package com.ucd.comp41690.team21.zenze.game.commands;
 
 import com.ucd.comp41690.team21.zenze.game.GameObject;
+import com.ucd.comp41690.team21.zenze.game.components.PlayerPhysics;
 
 /**
  * Created by annalena on 21.10.17.
@@ -9,13 +10,16 @@ import com.ucd.comp41690.team21.zenze.game.GameObject;
 public class Jump implements Command {
     @Override
     public void execute(GameObject actor) {
-        actor.physics.setVelocityY(-10.666666f);
+        if(!((PlayerPhysics) actor.physics).isJumping) {
+            actor.physics.y_Vel = ((PlayerPhysics) actor.physics).getJumpVelocity();
+            ((PlayerPhysics) actor.physics).isJumping = true;
+        }
     }
 
     @Override
     public void exit(GameObject actor) {
-        if(actor.physics.getVelocityY()<-5.333333){
-            actor.physics.setVelocityY(-5.333333f);
+        if(actor.physics.y_Vel < ((PlayerPhysics)actor.physics).getEarlyJumpVelocity()){
+            actor.physics.y_Vel = ((PlayerPhysics)actor.physics).getEarlyJumpVelocity();
         }
     }
 

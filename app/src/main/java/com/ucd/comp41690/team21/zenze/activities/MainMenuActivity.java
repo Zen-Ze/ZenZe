@@ -1,21 +1,53 @@
 package com.ucd.comp41690.team21.zenze.activities;
 
+import android.Manifest;
 import android.app.Activity;
+
+import android.arch.persistence.room.Room;
+import android.content.Context;
+
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Base64;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.List;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.ucd.comp41690.team21.zenze.R;
+import com.ucd.comp41690.team21.zenze.backend.database.AppDatabase;
+import com.ucd.comp41690.team21.zenze.backend.database.models.AttackList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.EnemyList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.ItemList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.Player;
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherService;
 
 /**
  * Main Activity that launches on start
  * contains the game's Main Menu
  */
+
 public class MainMenuActivity extends Activity {
+  
 
     private final String graphicsOption = "GRAPHICS_OPTION";
     private final String weatherOption = "WEATHER_OPTION";
@@ -25,9 +57,32 @@ public class MainMenuActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         SharedPreferences pref = getApplicationContext().getSharedPreferences( "ZenzePref", MODE_PRIVATE );
+      
+////        // THE FOLLOWING CODE IS AN EXAMPLE OF HOW THE DB WORKS FOR ANNALENA
+//        AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
+////
+//        database.attackListDao().insertAll(new AttackList());
+//        database.enemyListDao().insertAll(new EnemyList());
+//        database.itemListDao().insertAll( new ItemList());
+////
+////        // YOU NEED THESE FIRST
+//        EnemyList el = database.enemyListDao().getAll().get(0);
+//        AttackList al = database.attackListDao().getAll().get(0);
+//        ItemList il = database.itemListDao().getAll().get(0);
+////
+////        // YOU CAN THEN CREATE A PLAYER
+//        Player p = new Player(5,2,8,"toto",3,il.getId(),al.getId(), el.getId());
+//        database.playerDao().insertAll(p);
+////
+////        // in the end, remove the instance bc it's huge
+//        database = null;
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_ACCESS_COARSE_LOCATION);
+        }
 
         super.onCreate( savedInstanceState );
-
         setContentView( R.layout.activity_main_menu );
         // Buttons for this activity
         final Button helpButton = findViewById( R.id.help_button );
@@ -40,6 +95,12 @@ public class MainMenuActivity extends Activity {
                 startGame( v );
             }
         } );
+
+     
+
+
+
+
 
         // Start help
         helpButton.setOnClickListener( new View.OnClickListener() {
@@ -61,7 +122,6 @@ public class MainMenuActivity extends Activity {
         weather = String.valueOf( pref.getBoolean( graphicsOption, true ) );
         Log.i( "weather_setting", gfx );
         Log.i( "graphics_setting", weather );
-
     }
 
     /**
@@ -69,14 +129,20 @@ public class MainMenuActivity extends Activity {
      *
      * @param v
      */
-
-    // Intent to start game activity
+     
     public void startGame(View v) {
-        Intent gameIntent = new Intent( MainMenuActivity.this, GameActivity.class );
-        // TODO: Get Location from GPS, and change null to a Location
-        gameIntent.putExtra( "Game State", WeatherService.getWeatherStatus( null, getApplicationContext() ) );
-        startActivity( gameIntent );
-    }
+        Intent gameIntent = new Intent(MainMenuActivity.this, GameActivity.class);
+
+        Location location = null;
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        }
+
+        gameIntent.putExtra("Game State", WeatherService.getWeatherStatus(location, getApplicationContext()));
+        gameIntent.putExtra("Graphics Renderer", true);
+        startActivity(gameIntent);
+        }
 
     // Intent to start help activity
     public void startHelp(View v) {
@@ -90,5 +156,41 @@ public class MainMenuActivity extends Activity {
     public void startSetting(View v) {
         Intent settingIntent = new Intent( MainMenuActivity.this, Setting.class );
         startActivity( settingIntent );
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (googleApiClient != null) {
+            googleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_ACCESS_COARSE_LOCATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                    Toast.makeText(this, "This application requires your location!", Toast.LENGTH_SHORT).show();
+                }
+
+                break;
+        }
     }
 }

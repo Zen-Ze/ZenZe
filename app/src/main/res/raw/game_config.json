@@ -1,34 +1,31 @@
 {
-  "Player" : {
-    "Health" : 100,
-    "Speed" : 8,
-    "Damage" : 10,
-    "Scale" : 1,
-    "Image" : "name_of_file_in_drawable",
-    "Tag" : "Player"
-  },
-  "Minion" : {
-    "Health" : 100,
-    "Speed" : 0.5,
-    "Damage" : 10,
-    "Scale" : 1,
-    "Image" : "name_of_file_in_drawable",
-    "Tag" : "Normal"
-  },
-  "EndBoss" : {
-    "Health" : 200,
-    "Speed" : 0.1,
-    "Damage" : 20,
-    "Scale" : 2,
-    "Image" : "name_of_file_in_drawable",
-    "Tag" : "Normal"
-  },
-  "Anger" : {
-    "Parent" : "Minion",
-    "Damage" : 12,
-    "Image" : "name_of_file_in_drawable",
-    "Tag" : "Sunny"
-  },
-  "Camera_MovementWindow" : "2",
-  "Camera_MinSpeed" : "0.0"
+  "Player_Speed" : 7,
+  "Player_MaxJumpHeight" : 4,
+  "Player_MinJumpHeight" : 1,
+  "Player_JumpTime" : 0.7,
+  "Player_Scale" : 1,
+  "Player_Health" : 3,
+  "Player_Damage" : 1,
+
+  "Camera_MovementWindow" : 2,
+  "Camera_MinSpeed" : 0.0,
+
+  "Item_Scale" : 0.5,
+  "SpecialItem_Scale" : 0.75,
+
+  "Enemy_Health" : 3,
+  "Enemy_Scale" : 1,
+  "Enemy_Damage" : 1,
+
+  "Platform_Scale" : 1,
+
+  "AttackNormal_Health" : 200,
+  "AttackNormal_Speed" : 7,
+  "AttackNormal_Scale" : 0.5,
+  "AttackNormal_Damage" : 1,
+
+  "AttackSpecial_Health" : 200,
+  "AttackSpecial_Speed" : 10,
+  "AttackSpecial_Scale" : 0.75,
+  "AttackSpecial_Damage" : 2
 }

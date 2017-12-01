@@ -1,12 +1,18 @@
 package com.ucd.comp41690.team21.zenze.backend.database.models;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 
 /**
  * Created by timothee on 18/10/17.
  */
 
-public class Item extends BaseModel {
+@Entity(tableName = "item")
+public class Item {
 
     /**
      * Item
@@ -21,21 +27,34 @@ public class Item extends BaseModel {
      * +-----------------------------------------+------------------+-----------------+
      */
 
-    private String name;
-    private String desc;
-    private String imgPath;
-    private WeatherStatus weatherStatus;
+    @PrimaryKey(autoGenerate = true)
+    private int id;
 
-    public Item(int id, String name, String desc, String imgPath, WeatherStatus weatherStatus) {
-        super(id);
+    @ColumnInfo(name = "Name")
+    private String name;
+
+    @ColumnInfo(name = "Description")
+    private String desc;
+
+    @ColumnInfo(name = "SpritePath")
+    private String imgPath;
+
+    @ColumnInfo(name = "WeatherStatus")
+    private int weatherStatus;
+
+    public Item() { }
+
+    @Ignore
+    public Item(String name, String desc, String imgPath, WeatherStatus weatherStatus) {
         this.name = name;
         this.desc = desc;
         this.imgPath = imgPath;
-        this.weatherStatus = weatherStatus;
+        this.weatherStatus = weatherStatus.getValue();
     }
 
-    public Item(int id, String name, String imgPath, WeatherStatus weatherStatus) {
-        this(id, name, null, imgPath, weatherStatus);
+    @Ignore
+    public Item(String name, String imgPath, WeatherStatus weatherStatus) {
+        this(name, null, imgPath, weatherStatus);
     }
 
     public void setDesc(String desc) {
@@ -50,7 +69,7 @@ public class Item extends BaseModel {
         this.name = name;
     }
 
-    public void setWeatherStatus(WeatherStatus weatherStatus) {
+    public void setWeatherStatus(int weatherStatus) {
         this.weatherStatus = weatherStatus;
     }
 
@@ -66,7 +85,15 @@ public class Item extends BaseModel {
         return name;
     }
 
-    public WeatherStatus getWeatherStatus() {
+    public int getWeatherStatus() {
         return weatherStatus;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
