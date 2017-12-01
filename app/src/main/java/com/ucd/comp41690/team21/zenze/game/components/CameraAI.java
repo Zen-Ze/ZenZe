@@ -9,29 +9,28 @@ import com.ucd.comp41690.team21.zenze.game.GameObject;
  * moves the camera horizontally according to players position and level borders
  */
 public class CameraAI implements InputComponent {
-    private final float movementWindow;
-    private final GameObject focus;
-    private final float viewFrustum;
-    private final float minSpeed;
-    private final float maxSpeed;
-    private final int rightBorder;
+    private float movementWindow;
+    private GameObject focus;
+    private float viewFrustum;
+    private float minSpeed;
+    private float maxSpeed;
 
-    public CameraAI(int movementWindow, GameObject focus, float viewFrustum, float minSpeed, float maxSpeed, int rightBorder) {
+    public CameraAI(int movementWindow, GameObject focus, float viewFrustum, float minSpeed, float maxSpeed) {
         this.movementWindow = movementWindow;
         this.focus = focus;
         this.viewFrustum = viewFrustum;
         this.minSpeed = minSpeed;
         this.maxSpeed = maxSpeed;
-        this.rightBorder = rightBorder;
     }
 
     @Override
     public void handleInput(GameObject object) {
+        int numTilesV = Game.getInstance().getGameWorld().getNumTilesV();
         //lock borders of level
         if (focus.x_Pos <= viewFrustum && object.x_Pos <= viewFrustum) {
             object.x_Pos = viewFrustum;
-        } else if (focus.x_Pos >= rightBorder - viewFrustum && object.x_Pos >= rightBorder - viewFrustum) {
-            object.x_Pos = rightBorder - viewFrustum;
+        } else if (focus.x_Pos >= numTilesV - viewFrustum && object.x_Pos >= numTilesV - viewFrustum) {
+            object.x_Pos = numTilesV - viewFrustum;
         } else {
             float distance = object.x_Pos - focus.x_Pos;
             float diff = Math.abs(movementWindow-Math.abs(distance));

@@ -6,8 +6,7 @@ package com.ucd.comp41690.team21.zenze.game.util;
 
 public enum InputEvent {
     NULL,
-    TOUCH_DOWN_LEFT,
-    TOUCH_DOWN_RIGHT,
+    TOUCH_DOWN,
     TOUCH_UP,
     TILT_LEFT,
     TILT_RIGHT,

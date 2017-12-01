@@ -1,18 +1,12 @@
 package com.ucd.comp41690.team21.zenze.backend.database.models;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
-
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 
 /**
  * Created by timothee on 06/11/17.
  */
 
-@Entity(tableName = "attack")
-public class Attack {
+public class Attack extends BaseModel {
 
     /**
      * Attack
@@ -25,35 +19,22 @@ public class Attack {
      * | Scale                                   |  INTEGER         |                 |
      * | Description                             |  TEXT            |                 |
      * | GraphicsPath                            |  TEXT            |                 |
+     * | AttackState                             |  INTEGER         |                 |
      * | WeatherStatus                           |  INTEGER         |                 |
      * +-----------------------------------------+------------------+-----------------+
      */
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
-
-    @ColumnInfo(name = "Name")
+    private boolean attackState;
     private String name;
-
-    @ColumnInfo(name = "Damage")
     private int damage;
-
-    @ColumnInfo(name = "GraphicsPath")
     private String graphicsPath;
-
-    @ColumnInfo(name = "Scale")
     private int scale;
-
-    @ColumnInfo(name = "Description")
     private String desc;
+    private WeatherStatus weatherStatus;
 
-    @ColumnInfo(name = "WeatherStatus")
-    private int weatherStatus;
-
-    public Attack() {}
-
-    @Ignore
-    public Attack(String name, int damage, String graphicsPath, int scale, String desc, int weatherStatus) {
+    public Attack(int id, boolean attackState, String name, int damage, String graphicsPath, int scale, String desc, WeatherStatus weatherStatus) {
+        super(id);
+        this.attackState = attackState;
         this.name = name;
         this.damage = damage;
         this.graphicsPath = graphicsPath;
@@ -82,7 +63,7 @@ public class Attack {
         return name;
     }
 
-    public int getWeatherStatus() {
+    public WeatherStatus getWeatherStatus() {
         return weatherStatus;
     }
 
@@ -98,6 +79,10 @@ public class Attack {
         this.damage = damage;
     }
 
+    public void setAttackState(boolean attackState) {
+        this.attackState = attackState;
+    }
+
     public void setDesc(String desc) {
         this.desc = desc;
     }
@@ -106,15 +91,7 @@ public class Attack {
         this.name = name;
     }
 
-    public void setWeatherStatus(int weatherStatus) {
+    public void setWeatherStatus(WeatherStatus weatherStatus) {
         this.weatherStatus = weatherStatus;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }

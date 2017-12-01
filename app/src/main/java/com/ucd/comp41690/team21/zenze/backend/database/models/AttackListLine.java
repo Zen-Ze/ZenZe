@@ -1,25 +1,10 @@
 package com.ucd.comp41690.team21.zenze.backend.database.models;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
-
 /**
  * Created by timothee on 06/11/17.
  */
 
-@Entity(tableName = "AttackListLine", foreignKeys = {
-        @ForeignKey(entity = AttackList.class,
-                parentColumns = "id",
-                childColumns = "AttackListId"),
-        @ForeignKey(entity = Attack.class,
-            parentColumns = "id",
-            childColumns = "AttackId")
-        }
-)
-public class AttackListLine {
+public class AttackListLine extends BaseModel {
 
     /**
      * ItemListLine
@@ -33,22 +18,12 @@ public class AttackListLine {
      * +-----------------------------------------+------------------+-----------------+
      */
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
-
-    @ColumnInfo(name = "Amount")
     private int amount;
-
-    @ColumnInfo(name = "AttackId")
     private int attackId;
-
-    @ColumnInfo(name = "AttackListId")
     private int attackListId;
 
-    public AttackListLine() {}
-
-    @Ignore
-    public AttackListLine(int amount, int attackId, int attackListId) {
+    public AttackListLine(int id, int amount, int attackId, int attackListId) {
+        super(id);
         this.amount = amount;
         this.attackId = attackId;
         this.attackListId = attackListId;
@@ -76,13 +51,5 @@ public class AttackListLine {
 
     public void setAttackListId(int attackListId) {
         this.attackListId = attackListId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }

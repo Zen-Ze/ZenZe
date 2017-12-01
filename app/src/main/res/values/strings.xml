@@ -3,16 +3,6 @@
     <string name="start_game">Start Game</string>
     <string name="facebook_app_id">165971933990795</string>
 
-    <!---In game dialogs-->
-    <string name="infoDialog_Title">You found something new!</string>
-    <string name="infoDialog_Return">Back to Game</string>
-    <string name="infoDialog_Continue">More Info</string>
-    <string name="gameOverDialog_Title">Game Over!</string>
-    <string name="gameOverDialog_Text">You lost... Better luck next time.</string>
-    <string name="gameOverDialog_Return">Main Menu</string>
-    <string name="gameOverDialog_Continue">Retry</string>
-
-
     <!---Main Menu strings-->
     <string name="mm_start">Start</string>
     <string name="mm_Help">Help</string>

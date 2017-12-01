@@ -1,10 +1,9 @@
 package com.ucd.comp41690.team21.zenze.game;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
-import com.ucd.comp41690.team21.zenze.game.components.AttackPhysics;
-import com.ucd.comp41690.team21.zenze.game.components.Type;
 import com.ucd.comp41690.team21.zenze.game.util.FileParser;
 
 import java.util.Iterator;
@@ -16,12 +15,8 @@ import java.util.List;
  */
 public class GameWorld {
     private List<GameObject> entities;
-    private List<GameObject> tileMap;
-    private List<GameObject> newEntities;
     private GameObject player;
     private GameObject camera;
-    private GameObject attackNormal;
-    private GameObject attackSpecial;
     private GameState state;
 
     private int numTilesH;
@@ -29,13 +24,11 @@ public class GameWorld {
 
     public GameWorld(Context context, WeatherStatus status){
         entities = new LinkedList<>();
-        tileMap = new LinkedList<>();
-        newEntities = new LinkedList<>();
-        state = FileParser.initFromJSON(context, status);
-        FileParser.initFromDB(context);
+        FileParser.init(context);
         FileParser.loadWorld(context, this);
         numTilesH = FileParser.getNumTilesH();
         numTilesV = FileParser.getNumTilesV();
+        state = FileParser.loadState(status);
     }
 
     public void update(double elapsedTime){
@@ -46,25 +39,15 @@ public class GameWorld {
                 it.remove();
             }
         }
-        for(GameObject o : newEntities){
-            entities.add(0,o);
-        }
-        newEntities.clear();
-        Game.getInstance().log = entities.size()+"";
     }
 
     public void addObject(GameObject obj){
         entities.add(obj);
     }
-    public void addNewObject(GameObject obj) {newEntities.add(obj);}
-    public void addPlatform(GameObject obj){
-        tileMap.add(obj);
-    }
 
     public List<GameObject> getEntities(){
         return entities;
     }
-    public List<GameObject> getMap(){return tileMap;}
 
     public int getNumTilesH() {
         return numTilesH;
@@ -92,46 +75,5 @@ public class GameWorld {
 
     public GameState getState() {
         return state;
-    }
-
-    public GameObject getAttack(){
-        switch(state.getStatus()){
-            case RAINY:
-                if(Game.getInstance().sunnyAttackCount != 0){
-                    return cloneAttack(attackSpecial);
-                }
-                break;
-            case SUNNY:
-                if(Game.getInstance().snowyAttackCount != 0){
-                    return cloneAttack(attackSpecial);
-                }
-                break;
-            case SNOWY:
-                if(Game.getInstance().rainyAttackCount != 0){
-                    return cloneAttack(attackSpecial);
-                }
-                break;
-        }
-        return cloneAttack(attackNormal);
-    }
-
-    private GameObject cloneAttack(GameObject attack){
-        float xPos = player.x_Pos+player.scale/2;
-        float yPos = player.y_Pos;
-        Type attackType = new Type(attack.type.getHealth(), attack.type.getSpeed(),
-                attack.type.getScale(), attack.type.getDamage(),
-                attack.type.getImage(), attack.type.getColour(),
-                attack.type.getState(), attack.type.getInfo());
-        AttackPhysics attackPhysics = new AttackPhysics(xPos, yPos, attackType);
-        return new GameObject(null, attackPhysics, attackType, xPos, yPos, GameObject.ATTACK_TAG);
-    }
-
-
-    public void setAttackNormal(GameObject attackNormal) {
-        this.attackNormal = attackNormal;
-    }
-
-    public void setAttackSpecial(GameObject attackSpecial) {
-        this.attackSpecial = attackSpecial;
     }
 }

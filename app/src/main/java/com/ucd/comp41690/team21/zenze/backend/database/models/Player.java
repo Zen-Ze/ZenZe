@@ -1,27 +1,10 @@
 package com.ucd.comp41690.team21.zenze.backend.database.models;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
-
 /**
  * Created by timothee on 18/10/17.
  */
 
-@Entity(foreignKeys = {
-        @ForeignKey(entity = AttackList.class,
-            parentColumns = "id",
-            childColumns = "AttackListId"),
-        @ForeignKey(entity = EnemyList.class,
-                parentColumns = "id",
-                childColumns = "EnemyListId"),
-        @ForeignKey(entity = ItemList.class,
-            parentColumns = "id",
-            childColumns = "ItemListId")
-        }, tableName = "player")
-public class Player {
+public class Player extends BaseModel {
 
     /**
      * Player
@@ -40,38 +23,17 @@ public class Player {
      * +-----------------------------------------+------------------+-----------------+
      */
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
-
-    @ColumnInfo(name = "LastCoordX")
     private int lastCoordX;
-
-    @ColumnInfo(name = "LastCoordY")
     private int lastCoordY;
-
-    @ColumnInfo(name = "SavedHealth")
     private int savedHealth;
-
-    @ColumnInfo(name = "Username")
     private String username;
-
-    @ColumnInfo(name = "CurrentLevel")
     private int currentLevel;
-
-    @ColumnInfo(name = "ItemListId")
     private int itemListId;
-
-    @ColumnInfo(name = "AttackListId")
     private int attackListId;
-
-    @ColumnInfo(name = "EnemyListId")
     private int enemyListId;
 
-    public Player() {}
-
-    @Ignore
-    public Player(int lastCoordX, int lastCoordY, int savedHealth, String username, int currentLevel, int itemListId, int attackListId, int enemyListId) {
-//        this.id = id;
+    public Player(int id, int lastCoordX, int lastCoordY, int savedHealth, String username, int currentLevel, int itemListId, int attackListId, int enemyListId) {
+        super(id);
         this.lastCoordX = lastCoordX;
         this.lastCoordY = lastCoordY;
         this.savedHealth = savedHealth;
@@ -81,8 +43,6 @@ public class Player {
         this.attackListId = attackListId;
         this.enemyListId = enemyListId;
     }
-//
-//    public Player(int id) {this.id = id;}
 
     public void setLastCoordX(int lastCoordX) {
         this.lastCoordX = lastCoordX;
@@ -131,13 +91,5 @@ public class Player {
     public int getAttackListId() { return attackListId; }
 
     public int getEnemyListId() { return enemyListId; }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 }
 
