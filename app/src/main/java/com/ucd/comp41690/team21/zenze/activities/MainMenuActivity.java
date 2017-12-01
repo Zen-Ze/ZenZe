@@ -2,15 +2,13 @@ package com.ucd.comp41690.team21.zenze.activities;
 
 import android.Manifest;
 import android.app.Activity;
-
 import android.arch.persistence.room.Room;
 import android.content.Context;
-
-
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -20,15 +18,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
-
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -43,21 +45,23 @@ import com.ucd.comp41690.team21.zenze.backend.weather.WeatherService;
 
 /**
  * Main Activity that launches on start
- * contains the game's Main Menu
+ * contains the game Menu
  */
+public class MainMenuActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-public class MainMenuActivity extends Activity {
-  
+    private static final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
+    private GoogleApiClient googleApiClient;
 
-    private final String graphicsOption = "GRAPHICS_OPTION";
-    private final String weatherOption = "WEATHER_OPTION";
-    String gfx;
-    String weather;
+    private CallbackManager callbackManager;
+    private AccessTokenTracker accessTokenTracker;
+    private AccessToken accessToken;
+    private final static String TAG = MainMenuActivity.class.getName().toString();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        SharedPreferences pref = getApplicationContext().getSharedPreferences( "ZenzePref", MODE_PRIVATE );
-      
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main_menu);
+
 ////        // THE FOLLOWING CODE IS AN EXAMPLE OF HOW THE DB WORKS FOR ANNALENA
 //        AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
 ////
@@ -82,54 +86,107 @@ public class MainMenuActivity extends Activity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_ACCESS_COARSE_LOCATION);
         }
 
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_main_menu );
-        // Buttons for this activity
-        final Button helpButton = findViewById( R.id.help_button );
-        final Button startButton = findViewById( R.id.start_button );
-        final Button settingsButton = findViewById( R.id.setting_button );
-
-        // Start game
-        startButton.setOnClickListener( new View.OnClickListener() {
-            public void onClick(View v) {
-                startGame( v );
+        //Initialize FB SDK
+        FacebookSdk.sdkInitialize(getApplicationContext(), new FacebookSdk.InitializeCallback() {
+            @Override
+            public void onInitialized() {
+                //AccessToken is for us to check whether we have previously logged in into
+                //this app, and this information is save in shared preferences and sets it during SDK initialization
+                accessToken = AccessToken.getCurrentAccessToken();
+                if (accessToken == null) {
+                    Log.d(TAG, "not log in yet");
+                } else {
+                    Log.d(TAG, "Logged in");
+                    Intent main = new Intent(MainMenuActivity.this, ShareActivity.class);
+                    startActivity(main);
+                }
             }
-        } );
+        });
 
-     
+        googleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
 
+        setContentView(R.layout.activity_main_menu);
 
+        //register a callback to respond to a login result,
+        callbackManager = CallbackManager.Factory.create();
 
-
-
-        // Start help
-        helpButton.setOnClickListener( new View.OnClickListener() {
-            public void onClick(View v) {
-                startHelp( v );
+        //register access token to check whether user logged in before
+        accessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldToken, AccessToken newToken) {
+                accessToken = newToken;
             }
-        } );
+        };
 
-        // Start settings
-        settingsButton.setOnClickListener( new View.OnClickListener() {
-            public void onClick(View v) {
-                startSetting( v );
+        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
+        // Callback registration
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                //Once authorized from facebook will directly go to MainActivity
+                accessToken = loginResult.getAccessToken();
+                Intent main = new Intent(MainMenuActivity.this, ShareActivity.class);
+                startActivity(main);
             }
-        } );
+
+            @Override
+            public void onCancel() {
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+            }
+        });
+
+        //Set permission to use in this app
+        List<String> permissionNeeds = Arrays.asList("user_friends", "email", "user_birthday");
+        loginButton.setReadPermissions(permissionNeeds);
+
+        accessTokenTracker.startTracking();
+
+//Generate Hash Key
+        showHashKey(this);
+    }
 
 
-        // testing
-        gfx = pref.getString( weatherOption, "null" );
-        weather = String.valueOf( pref.getBoolean( graphicsOption, true ) );
-        Log.i( "weather_setting", gfx );
-        Log.i( "graphics_setting", weather );
+    public static void showHashKey(Context context) {
+        try {
+            PackageInfo info = context.getPackageManager().getPackageInfo(
+                    "com.Zenze.www", PackageManager.GET_SIGNATURES); //Your            package name here
+            for (android.content.pm.Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.i("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+        } catch (NoSuchAlgorithmException e) {
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int responseCode, Intent intent) {
+        super.onActivityResult(requestCode, responseCode, intent);
+        //Facebook login
+        callbackManager.onActivityResult(requestCode, responseCode, intent);
+
+    }
+
+    @Override
+    protected void onPause() {
+
+        super.onPause();
+    }
+
+    protected void onStop() {
+        googleApiClient.disconnect();
+        super.onStop();
+        accessTokenTracker.stopTracking();
     }
 
     /**
      * is called when start-button is clicked
-     *
      * @param v
      */
-     
     public void startGame(View v) {
         Intent gameIntent = new Intent(MainMenuActivity.this, GameActivity.class);
 
@@ -142,20 +199,6 @@ public class MainMenuActivity extends Activity {
         gameIntent.putExtra("Game State", WeatherService.getWeatherStatus(location, getApplicationContext()));
         gameIntent.putExtra("Graphics Renderer", true);
         startActivity(gameIntent);
-        }
-
-    // Intent to start help activity
-    public void startHelp(View v) {
-        Intent helpIntent = new Intent( MainMenuActivity.this, Help.class );
-        helpIntent.putExtra( "graphics_settings", gfx );
-        helpIntent.putExtra( "weather_settings", weather );
-        startActivity( helpIntent );
-    }
-
-    // Intent to start setting activity
-    public void startSetting(View v) {
-        Intent settingIntent = new Intent( MainMenuActivity.this, Setting.class );
-        startActivity( settingIntent );
     }
 
     @Override
