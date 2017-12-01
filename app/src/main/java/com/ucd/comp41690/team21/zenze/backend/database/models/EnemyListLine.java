@@ -1,10 +1,25 @@
 package com.ucd.comp41690.team21.zenze.backend.database.models;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+
 /**
  * Created by timothee on 06/11/17.
  */
 
-public class EnemyListLine extends BaseModel {
+@Entity(tableName = "EnemyListLine", foreignKeys = {
+        @ForeignKey(entity = EnemyList.class,
+                parentColumns = "id",
+                childColumns = "EnemyListId"),
+        @ForeignKey(entity = Enemy.class,
+                parentColumns = "id",
+                childColumns = "EnemyId")
+}
+)
+public class EnemyListLine {
 
     /**
      * ItemListLine
@@ -18,12 +33,22 @@ public class EnemyListLine extends BaseModel {
      * +-----------------------------------------+------------------+-----------------+
      */
 
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
+    @ColumnInfo(name = "Amount")
     private int amount;
+
+    @ColumnInfo(name = "EnemyId")
     private int enemyId;
+
+    @ColumnInfo(name = "EnemyListId")
     private int enemyListId;
 
-    public EnemyListLine(int id, int amount, int enemyId, int enemyListId) {
-        super(id);
+    public EnemyListLine() {}
+
+    @Ignore
+    public EnemyListLine(int amount, int enemyId, int enemyListId) {
         this.amount = amount;
         this.enemyId = enemyId;
         this.enemyListId = enemyListId;
@@ -51,5 +76,13 @@ public class EnemyListLine extends BaseModel {
 
     public void setEnemyListId(int enemyListId) {
         this.enemyListId = enemyListId;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 }

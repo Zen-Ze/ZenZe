@@ -42,6 +42,8 @@
             android:exported="true" />
 
         <activity android:name=".activities.ShareActivity" />
+        <activity android:name=".activities.StatsActivity" />
+        <activity android:name=".activities.InfoActivity"></activity>
         <activity
             android:name=".activities.Setting"
             android:label="@string/title_activity_settings"

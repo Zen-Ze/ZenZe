@@ -12,8 +12,14 @@ import com.ucd.comp41690.team21.zenze.game.components.Type;
 public class GameObject {
     //Tags to identify different game Objects
     public static final String PLAYER_TAG = "Player";
-    public static final String PLATTFORM_TAG = "Plattform";
+    public static final String PLATFORM_TAG = "Platform";
+    public static final String M_PLATFORM_TAG = "PlatformMiddle";
     public static final String CAMERA_TAG = "Camera";
+    public static final String ITEM_TAG = "Item";
+    public static final String S_ITEM_TAG = "SpecialItem";
+    public static final String A_ITEM_TAG = "AttackItem";
+    public static final String ENEMY_TAG = "Enemy";
+    public static final String ATTACK_TAG = "Attack";
 
     //Components
     public InputComponent inputHandler;
@@ -51,8 +57,8 @@ public class GameObject {
             scale = 1;
             health = 100;
         }else {
-            this.scale = type.scale;
-            this.health = type.health;
+            this.scale = type.getScale();
+            this.health = type.getHealth();
         }
         this.tag = tag;
         this.isAlive = true;
@@ -68,6 +74,9 @@ public class GameObject {
         }
         if(physics!=null) {
             physics.handlePhysics(this, elapsedTime);
+        }
+        if(health<0){
+            isAlive = false;
         }
     }
 
