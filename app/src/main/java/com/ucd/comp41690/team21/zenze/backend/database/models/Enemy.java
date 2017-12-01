@@ -1,10 +1,5 @@
 package com.ucd.comp41690.team21.zenze.backend.database.models;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
-
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherService;
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 
@@ -12,8 +7,7 @@ import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
  * Created by timothee on 06/11/17.
  */
 
-@Entity(tableName = "enemy")
-public class Enemy {
+public class Enemy extends BaseModel {
 
     /**
      * Enemy
@@ -31,34 +25,16 @@ public class Enemy {
      * +-----------------------------------------+------------------+-----------------+
      */
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
-
-    @ColumnInfo(name = "Name")
     private String name;
-
-    @ColumnInfo(name = "Damage")
     private int damage;
-
-    @ColumnInfo(name = "Speed")
     private int speed;
-
-    @ColumnInfo(name = "GraphicsPath")
     private String graphicsPath;
-
-    @ColumnInfo(name = "Description")
     private String desc;
-
-    @ColumnInfo(name = "Scale")
     private int scale;
+    private WeatherStatus weatherStatus;
 
-    @ColumnInfo(name = "WeatherStatus")
-    private int weatherStatus;
-
-    public Enemy() {}
-
-    @Ignore
-    public Enemy(String name, int damage, int speed, String graphicsPath, String desc, int scale, int weatherStatus) {
+    public Enemy(int id, String name, int damage, int speed, String graphicsPath, String desc, int scale, WeatherStatus weatherStatus) {
+        super(id);
         this.name = name;
         this.damage = damage;
         this.speed = speed;
@@ -90,7 +66,7 @@ public class Enemy {
         return graphicsPath;
     }
 
-    public int getWeatherStatus() {
+    public WeatherStatus getWeatherStatus() {
         return weatherStatus;
     }
 
@@ -106,15 +82,7 @@ public class Enemy {
 
     public void setSpeed(int speed) { this.speed = speed; }
 
-    public void setWeatherStatus(int weatherStatus) {
+    public void setWeatherStatus(WeatherStatus weatherStatus) {
         this.weatherStatus = weatherStatus;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }
