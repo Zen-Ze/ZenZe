@@ -65,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="750dp"
             android:contentDescription="@string/help_description"
-            android:src="@drawable/rotated" />
+            android:src="@drawable/item_bg" />
 
     </LinearLayout>
     </ScrollView>

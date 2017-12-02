@@ -2,31 +2,19 @@ package com.ucd.comp41690.team21.zenze.activities;
 
 import android.Manifest;
 import android.app.Activity;
-
-import android.arch.persistence.room.Room;
-import android.content.Context;
-
-
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.List;
-
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
 
@@ -46,8 +34,9 @@ import com.ucd.comp41690.team21.zenze.backend.weather.WeatherService;
  * contains the game's Main Menu
  */
 
-public class MainMenuActivity extends Activity {
-  
+public class MainMenuActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    private static final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
+    private GoogleApiClient googleApiClient;
 
     private final String graphicsOption = "GRAPHICS_OPTION";
     private final String weatherOption = "WEATHER_OPTION";
@@ -58,24 +47,25 @@ public class MainMenuActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         SharedPreferences pref = getApplicationContext().getSharedPreferences( "ZenzePref", MODE_PRIVATE );
       
-////        // THE FOLLOWING CODE IS AN EXAMPLE OF HOW THE DB WORKS FOR ANNALENA
-//        AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
-////
-//        database.attackListDao().insertAll(new AttackList());
-//        database.enemyListDao().insertAll(new EnemyList());
-//        database.itemListDao().insertAll( new ItemList());
-////
-////        // YOU NEED THESE FIRST
-//        EnemyList el = database.enemyListDao().getAll().get(0);
-//        AttackList al = database.attackListDao().getAll().get(0);
-//        ItemList il = database.itemListDao().getAll().get(0);
-////
-////        // YOU CAN THEN CREATE A PLAYER
-//        Player p = new Player(5,2,8,"toto",3,il.getId(),al.getId(), el.getId());
-//        database.playerDao().insertAll(p);
-////
-////        // in the end, remove the instance bc it's huge
-//        database = null;
+/*       // THE FOLLOWING CODE IS AN EXAMPLE OF HOW THE DB WORKS FOR ANNALENA
+*        AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
+*
+*      database.attackListDao().insertAll(new AttackList());
+*      database.enemyListDao().insertAll(new EnemyList());
+*      database.itemListDao().insertAll( new ItemList());
+*
+*        // YOU NEED THESE FIRST
+*      EnemyList el = database.enemyListDao().getAll().get(0);
+*      AttackList al = database.attackListDao().getAll().get(0);
+*      ItemList il = database.itemListDao().getAll().get(0);
+*        // YOU CAN THEN CREATE A PLAYER
+*        Player p = new Player(5,2,8,"toto",3,il.getId(),al.getId(), el.getId());
+*        database.playerDao().insertAll(p);
+*
+*        // in the end, remove the instance bc it's huge
+*       database = null;
+*/
+
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -83,6 +73,8 @@ public class MainMenuActivity extends Activity {
         }
 
         super.onCreate( savedInstanceState );
+        googleApiClient = new GoogleApiClient.Builder(this, this, this ).
+                addApi(LocationServices.API).build();
         setContentView( R.layout.activity_main_menu );
         // Buttons for this activity
         final Button helpButton = findViewById( R.id.help_button );
@@ -95,12 +87,6 @@ public class MainMenuActivity extends Activity {
                 startGame( v );
             }
         } );
-
-     
-
-
-
-
 
         // Start help
         helpButton.setOnClickListener( new View.OnClickListener() {
@@ -170,6 +156,11 @@ public class MainMenuActivity extends Activity {
     public void onConnected(@Nullable Bundle bundle) {
 
     }
+    protected void onStop() {
+        googleApiClient.disconnect();
+        super.onStop();
+    }
+
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -192,5 +183,10 @@ public class MainMenuActivity extends Activity {
 
                 break;
         }
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 }
