@@ -12,6 +12,18 @@
     <string name="gameOverDialog_Return">Main Menu</string>
     <string name="gameOverDialog_Continue">Retry</string>
 
+    <!-- dummy content for item description-->
+    <string name = "dummy_content_item_description">
+        People with anxiety disorders respond to certain objects
+        or situations with fear and dread, as well as with physical
+        signs of anxiety or panic, such as a rapid heartbeat and
+        sweating. An anxiety disorder is diagnosed if the person
+        response is not appropriate for the situation, if the person
+        cannot control the response, or if the anxiety interferes
+        with normal functioning. Anxiety disorders include
+        generalized anxiety disorder, panic disorder, social
+        anxiety disorder, and specific phobias.
+    </string>>
 
     <!---Main Menu strings-->
     <string name="mm_start">Start</string>

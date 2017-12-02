@@ -6,4 +6,5 @@
     <dimen name="tablerow_horizontal_margin">8dp</dimen>
     <dimen name="tablerow_vertical_margin">8dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+
 </resources>

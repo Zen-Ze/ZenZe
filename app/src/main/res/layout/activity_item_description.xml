@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -17,7 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:fontFamily="@font/bangers"
             android:text="@string/textview_help"
             android:textAlignment="center"
             android:textAllCaps="true"
@@ -27,28 +26,33 @@
             android:textStyle="bold"
             android:typeface="monospace" />
 
-        <ImageView
-            android:id="@+id/item_image"
-            android:layout_width="wrap_content"
-            android:layout_height="174dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:contentDescription="@string/help_description"
-            android:src="@drawable/rotated" />
-
-        <TextView
-            android:id="@+id/textview_item_description"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/cyan_dark"
-            android:fontFamily="@font/bangers"
-            android:text="@string/textview_help_basics"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@color/colorAccent"
-            android:textSize="20sp"
-            android:typeface="monospace" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/item_image"
+                android:layout_width="wrap_content"
+                android:layout_height="296dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:contentDescription="@string/help_description"
+                android:src="@drawable/rotated" />
+
+            <TextView
+                android:id="@+id/textview_item_description"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/cyan_dark"
+                android:text="@string/dummy_content_item_description"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                android:typeface="monospace" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -16,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:fontFamily="@font/bangers"
             android:text="@string/textview_help"
             android:textAlignment="center"
             android:textAllCaps="true"
@@ -31,7 +30,6 @@
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
             android:background="@color/cyan_dark"
-            android:fontFamily="@font/bangers"
             android:text="@string/textview_help_basics"
             android:textAlignment="center"
             android:textAllCaps="false"
@@ -50,7 +48,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="34dp"
-            android:fontFamily="@font/bangers"
             android:text="@string/textview_help_item_description"
             android:textAlignment="center"
             android:background="@color/cyan_dark"
