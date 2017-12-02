@@ -42,6 +42,7 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
     private final String weatherOption = "WEATHER_OPTION";
     String gfx;
     String weather;
+    private final static String TAG = MainMenuActivity.class.getName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,6 +102,7 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
                 startSetting( v );
             }
         } );
+        googleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
 
 
         // testing
