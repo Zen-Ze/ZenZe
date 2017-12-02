@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -10,7 +7,6 @@
         android:background="@color/cyan"
         android:orientation="vertical"
         tools:context="com.ucd.comp41690.team21.zenze.activities.Help">
-
 
         <TextView
             android:id="@+id/textview_title_item"
@@ -50,4 +46,3 @@
             android:textSize="15sp"
             android:typeface="monospace" />
     </LinearLayout>
-</ScrollView>
