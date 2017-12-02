@@ -10,16 +10,6 @@ import com.ucd.comp41690.team21.zenze.game.components.Type;
  * the behaviour of the different objects is defined by the components
  */
 public class GameObject {
-    //Tags to identify different game Objects
-    public static final String PLAYER_TAG = "Player";
-    public static final String PLATFORM_TAG = "Platform";
-    public static final String M_PLATFORM_TAG = "PlatformMiddle";
-    public static final String CAMERA_TAG = "Camera";
-    public static final String ITEM_TAG = "Item";
-    public static final String S_ITEM_TAG = "SpecialItem";
-    public static final String A_ITEM_TAG = "AttackItem";
-    public static final String ENEMY_TAG = "Enemy";
-    public static final String ATTACK_TAG = "Attack";
 
     //Components
     public InputComponent inputHandler;
@@ -30,9 +20,6 @@ public class GameObject {
     public float x_Pos;
     public float y_Pos;
     public float scale;
-
-    //Tag to identify objects
-    private String tag;
 
     //Live related stuff
     public int health;
@@ -45,9 +32,8 @@ public class GameObject {
      * @param type Defines the type of the object
      * @param x The position along the x axis
      * @param y The position along the y axis
-     * @param tag An optional tag to easly identify the object
      */
-    public GameObject(InputComponent inputHandler, PhysicsComponent physics, Type type, float x, float y, String tag){
+    public GameObject(InputComponent inputHandler, PhysicsComponent physics, Type type, float x, float y){
         this.physics = physics;
         this.inputHandler = inputHandler;
         this.type = type;
@@ -60,7 +46,6 @@ public class GameObject {
             this.scale = type.getScale();
             this.health = type.getHealth();
         }
-        this.tag = tag;
         this.isAlive = true;
     }
 
@@ -78,9 +63,5 @@ public class GameObject {
         if(health<0){
             isAlive = false;
         }
-    }
-
-    public String getTag() {
-        return tag;
     }
 }

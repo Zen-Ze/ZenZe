@@ -23,7 +23,7 @@ public interface ItemListDao {
     List<ItemList> getAll();
 
     @Query("SELECT * FROM itemlist where id LIKE :id")
-    Player findById(int id);
+    ItemList findById(int id);
 
     @Query("SELECT COUNT(*) from itemlist")
     int countItemLists();

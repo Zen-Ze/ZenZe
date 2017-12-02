@@ -31,8 +31,7 @@ public class GameWorld {
         entities = new LinkedList<>();
         tileMap = new LinkedList<>();
         newEntities = new LinkedList<>();
-        state = FileParser.initFromJSON(context, status);
-        FileParser.initFromDB(context);
+        state = FileParser.init(context, status);
         FileParser.loadWorld(context, this);
         numTilesH = FileParser.getNumTilesH();
         numTilesV = FileParser.getNumTilesV();
@@ -121,9 +120,10 @@ public class GameWorld {
         Type attackType = new Type(attack.type.getHealth(), attack.type.getSpeed(),
                 attack.type.getScale(), attack.type.getDamage(),
                 attack.type.getImage(), attack.type.getColour(),
-                attack.type.getState(), attack.type.getInfo());
+                attack.type.getState(), attack.type.getInfo(),
+                attack.type.getDBId(), attack.type.getTag());
         AttackPhysics attackPhysics = new AttackPhysics(xPos, yPos, attackType);
-        return new GameObject(null, attackPhysics, attackType, xPos, yPos, GameObject.ATTACK_TAG);
+        return new GameObject(null, attackPhysics, attackType, xPos, yPos);
     }
 
 

@@ -23,6 +23,7 @@ public class InfoDialogFragment extends DialogFragment {
     private String name;
     private String infoText;
     private Bitmap image;
+    private String title;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -32,6 +33,7 @@ public class InfoDialogFragment extends DialogFragment {
             name = args.getString("Name");
             infoText = args.getString("Info");
             image = args.getParcelable("Image");
+            title = args.getString("Title");
         } else{
             infoText = "display info here.";
         }
@@ -73,7 +75,7 @@ public class InfoDialogFragment extends DialogFragment {
                         mListener.onInfoDialogNegativeClick(InfoDialogFragment.this);
                     }
                 })
-                .setTitle(R.string.infoDialog_Title)
+                .setTitle(title)
                 .setView(view);
 
         return builder.create();

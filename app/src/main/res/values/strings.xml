@@ -2,7 +2,8 @@
     <string name="app_name">ZenZe</string>
     <string name="start_game">Start Game</string>
     <string name="facebook_app_id">165971933990795</string>
-    <string name="infoDialog_Title">You found something new!</string>
+    <string name="infoDialog_TitleItem">You found something new!</string>
+    <string name="infoDialog_TitleEnemy">You defeated a new Enemy!</string>
     <string name="infoDialog_Return">Back to Game</string>
     <string name="infoDialog_Continue">More Info</string>
     <string name="gameOverDialog_Title">Game Over!</string>

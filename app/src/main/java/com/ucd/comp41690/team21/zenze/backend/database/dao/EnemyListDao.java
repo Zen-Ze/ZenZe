@@ -24,7 +24,7 @@ public interface EnemyListDao {
     List<EnemyList> getAll();
 
     @Query("SELECT * FROM enemylist where id LIKE :id")
-    Player findById(int id);
+    EnemyList findById(int id);
 
     @Query("SELECT COUNT(*) from enemylist")
     int countEnemyLists();

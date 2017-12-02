@@ -49,11 +49,11 @@ public class PlayerPhysics extends PhysicsComponent {
             if (o.physics != null && o.physics.boundingVolume != null) {
                 Collision col = intersects(this.boundingVolume, o.physics.boundingVolume);
                 if (col != Collision.NONE) {
-                    if (o.getTag().equals(GameObject.ITEM_TAG)) {
+                    if (o.type!=null && o.type.getTag().equals(Type.ITEM_TAG)) {
                         o.isAlive = false;
                         Game.getInstance().normalItemCount++;
                         ((GameActivity)(Game.getInstance().context)).onItemFound(o.type);
-                    } else if (o.getTag().equals(GameObject.S_ITEM_TAG)) {
+                    } else if (o.type!=null && o.type.getTag().equals(Type.S_ITEM_TAG)) {
                         o.isAlive = false;
                         switch (Game.getInstance().getGameWorld().getState().getStatus()) {
                             case SNOWY:
@@ -67,7 +67,7 @@ public class PlayerPhysics extends PhysicsComponent {
                                 break;
                         }
                         ((GameActivity)(Game.getInstance().context)).onItemFound(o.type);
-                    } else if (o.getTag().equals(GameObject.A_ITEM_TAG)) {
+                    } else if (o.type!=null && o.type.getTag().equals(Type.A_ITEM_TAG)) {
                         o.isAlive = false;
                         switch (Game.getInstance().getGameWorld().getState().getStatus()) {
                             case SNOWY:
@@ -81,7 +81,7 @@ public class PlayerPhysics extends PhysicsComponent {
                                 break;
                         }
                         ((GameActivity)(Game.getInstance().context)).onItemFound(o.type);
-                    } else if (o.getTag().equals(GameObject.ENEMY_TAG)) {
+                    } else if (o.type!=null && o.type.getTag().equals(Type.ENEMY_TAG)) {
                         float[] newPos = getCollisionPoint(
                                 (Sphere) this.boundingVolume, (Sphere) o.physics.boundingVolume);
                         if ((col == Collision.LEFT && x_Vel > 0) || (col == Collision.RIGHT && x_Vel < 0)) {
@@ -115,7 +115,7 @@ public class PlayerPhysics extends PhysicsComponent {
         for (GameObject o : Game.getInstance().getGameWorld().getMap()) {
             Collision col = intersects(this.boundingVolume, o.physics.boundingVolume);
             if (col != Collision.NONE) {
-                if (o.getTag().equals(GameObject.PLATFORM_TAG)) {
+                if (o.type!=null && o.type.getTag().equals(Type.PLATFORM_TAG)) {
                     if (y_Vel >= 0 &&
                             (col == Collision.CORNER_LEFT || col == Collision.CORNER_RIGHT)) {
                         if (col == Collision.CORNER_RIGHT) {
@@ -138,7 +138,7 @@ public class PlayerPhysics extends PhysicsComponent {
                                 + ((AABB) o.physics.boundingVolume).width
                                 + ((Sphere) boundingVolume).radius;
                     }
-                } else if (o.getTag().equals(GameObject.M_PLATFORM_TAG)) {
+                } else if (o.type!=null && o.type.getTag().equals(Type.M_PLATFORM_TAG)) {
                     resolveSolidCollision(col, object, o);
                 }
             }

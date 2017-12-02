@@ -8,6 +8,17 @@ import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
  * represents specific behaviour and state of game objects
  */
 public class Type {
+
+    //Tags to identify different game Objects
+    public static final String PLAYER_TAG = "Player";
+    public static final String PLATFORM_TAG = "Platform";
+    public static final String M_PLATFORM_TAG = "PlatformMiddle";
+    public static final String ITEM_TAG = "Item";
+    public static final String S_ITEM_TAG = "SpecialItem";
+    public static final String A_ITEM_TAG = "AttackItem";
+    public static final String ENEMY_TAG = "Enemy";
+    public static final String ATTACK_TAG = "Attack";
+
     private int health;
     private float speed;
     private float scale;
@@ -16,6 +27,8 @@ public class Type {
     private Bitmap image;
     private int colour;
     private String[] info;
+    private int DBId;
+    private String tag;
 
     /**
      *
@@ -28,7 +41,7 @@ public class Type {
      * @param info
      */
     public Type(int health, float speed, float scale, float damage, Bitmap image,
-                int colour, WeatherStatus state, String[] info){
+                int colour, WeatherStatus state, String[] info, int DBid, String tag){
         this.health = health;
         this.speed = speed;
         this.scale = scale;
@@ -37,6 +50,8 @@ public class Type {
         this.colour = colour;
         this.state = state;
         this.info = info;
+        this.DBId = DBid;
+        this.tag = tag;
     }
 
     public Bitmap getImage(){
@@ -73,5 +88,13 @@ public class Type {
 
     public float getDamage() {
         return damage;
+    }
+
+    public int getDBId(){
+        return DBId;
+    }
+
+    public String getTag(){
+        return tag;
     }
 }

@@ -7,9 +7,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
 import com.ucd.comp41690.team21.zenze.backend.database.AppDatabase;
+import com.ucd.comp41690.team21.zenze.backend.database.models.Attack;
 import com.ucd.comp41690.team21.zenze.backend.database.models.AttackList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.AttackListLine;
+import com.ucd.comp41690.team21.zenze.backend.database.models.Enemy;
 import com.ucd.comp41690.team21.zenze.backend.database.models.EnemyList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.Item;
 import com.ucd.comp41690.team21.zenze.backend.database.models.ItemList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.ItemListLine;
 import com.ucd.comp41690.team21.zenze.backend.database.models.Player;
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 import com.ucd.comp41690.team21.zenze.game.Game;
@@ -47,6 +52,7 @@ public class FileParser {
     private static float playerScale = 0;
     private static int playerHealth = 0;
     private static int playerDamage = 0;
+    private static int playerX = -1, playerY = -1;
 
     //Camera stats
     private static int cameraMovementWindow = 0;
@@ -60,9 +66,6 @@ public class FileParser {
     //Item stats
     private static float itemSize = 0;
     private static float specialItemSize = 0;
-    private static String itemName = "ItemName";
-    private static String itemShortInfo = "ShortInfoShortInfoShortInfoShortInfoShortInfo";
-    private static String itemFullInfo = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, tellus quis varius euismod...";
 
     //Tile Map stats
     private static int numTilesV = 0;
@@ -74,6 +77,7 @@ public class FileParser {
     private static float attackNormalSpeed = 0;
     private static float attackNormalScale = 0;
     private static int attackNormalDamage = 0;
+
     private static int attackSpecialHealth = 0;
     private static float attackSpecialSpeed = 0;
     private static float attackSpecialScale = 0;
@@ -83,12 +87,126 @@ public class FileParser {
     private static Bitmap tileImage, tileMiddleImage, backgroundImage, playerImage, enemyImage,
             itemImage, specialItemImage, attackSpecialImage, attackNormalImage;
 
+    //attack and item info
+    //item normal/sunny/rainy/snowy then attacks
+    private static String[] infoTexts = new String[11];
+    private static String[] infoNames = new String[11];
+
+    //Weather state
+    private static WeatherStatus weatherStatus;
+
+    //Database Ids
+    public static int DBIdNormalAttack, DBIdSunnyAttack, DBIdRainyAttack, DBIdSnowyAttack,
+            DBIdPlayer, DBIdNormalItem, DBIdSunnyItem, DBIdRainyItem, DBIdSnowyItem, DBIdSunnyEnemy,
+            DBIdRainyEnemy, DBIdSnowyEnemy;
+
+
+    public static GameState init(Context context, WeatherStatus status){
+        weatherStatus = status;
+        AppDatabase database = Room.databaseBuilder(context, AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
+        GameState state = initFromJSON(context);
+
+        if(database.playerDao().countPlayers()==0) {
+            database.attackListDao().insertAll(new AttackList());
+            database.enemyListDao().insertAll(new EnemyList());
+            database.itemListDao().insertAll(new ItemList());
+
+            EnemyList el = database.enemyListDao().getAll().get(0);
+            AttackList al = database.attackListDao().getAll().get(0);
+            ItemList il = database.itemListDao().getAll().get(0);
+
+            Player p = new Player(playerX, playerY, playerHealth, "toto", 1, il.getId(), al.getId(), el.getId());
+            DBIdPlayer = p.getId();
+            database.playerDao().insertAll(p);
+
+            //Add Attacks to Database
+            Attack normalAttack = new Attack(infoNames[7], attackNormalDamage, "attack_normal",
+                    (int)attackNormalScale, infoTexts[7], 3);
+            DBIdNormalAttack = normalAttack.getId();
+            Attack sunnyAttack = new Attack(infoNames[WeatherStatus.SUNNY.getValue()+4], attackNormalDamage, "attack_sunny",
+                    (int)attackNormalScale, infoTexts[WeatherStatus.SUNNY.getValue()+4], WeatherStatus.SUNNY.getValue());
+            DBIdSunnyAttack = sunnyAttack.getId();
+            Attack rainyAttack = new Attack(infoNames[WeatherStatus.RAINY.getValue()+4], attackNormalDamage, "attack_rainy",
+                    (int)attackNormalScale, infoTexts[WeatherStatus.RAINY.getValue()+4], WeatherStatus.RAINY.getValue());
+            DBIdRainyAttack = rainyAttack.getId();
+            Attack snowyAttack = new Attack(infoNames[WeatherStatus.SNOWY.getValue()+4], attackNormalDamage, "attack_snowy",
+                    (int)attackNormalScale, infoTexts[WeatherStatus.SNOWY.getValue()+4], WeatherStatus.SNOWY.getValue());
+            DBIdSnowyAttack = snowyAttack.getId();
+            database.attackDao().insertAll(normalAttack, sunnyAttack, rainyAttack, snowyAttack);
+
+            //Add Items to Database
+            Item normalItem = new Item(infoNames[4], infoTexts[4], "item_normal", weatherStatus);
+            DBIdNormalItem = normalItem.getId();
+            Item sunnyItem = new Item(infoNames[WeatherStatus.SUNNY.getValue()],
+                    infoTexts[WeatherStatus.SUNNY.getValue()], "item_sunny", weatherStatus);
+            DBIdNormalItem = normalItem.getId();
+            Item rainyItem = new Item(infoNames[WeatherStatus.RAINY.getValue()],
+                    infoTexts[WeatherStatus.RAINY.getValue()], "item_rainy", weatherStatus);
+            DBIdNormalItem = normalItem.getId();
+            Item snowyItem = new Item(infoNames[WeatherStatus.SNOWY.getValue()],
+                    infoTexts[WeatherStatus.SNOWY.getValue()], "item_snowy", weatherStatus);
+            DBIdNormalItem = normalItem.getId();
+            database.itemDao().insertAll(normalItem, snowyItem, sunnyItem, rainyItem);
+
+            //Add Enemies to Database
+            Enemy sunnyEnemy = new Enemy(infoNames[WeatherStatus.SUNNY.getValue()+8], enemyDamage, (int)enemySize,
+                    infoTexts[WeatherStatus.SUNNY.getValue()+8], "enemy_sunny", 0, weatherStatus.getValue());
+            DBIdSunnyEnemy = sunnyEnemy.getId();
+            Enemy rainyEnemy = new Enemy(infoNames[WeatherStatus.RAINY.getValue()+8], enemyDamage, (int)enemySize,
+                    infoTexts[WeatherStatus.RAINY.getValue()+8], "enemy_sunny", 0, weatherStatus.getValue());
+            DBIdSunnyEnemy = rainyEnemy.getId();
+            Enemy snowyEnemy = new Enemy(infoNames[WeatherStatus.SNOWY.getValue()+8], enemyDamage, (int)enemySize,
+                    infoTexts[WeatherStatus.SNOWY.getValue()+8], "enemy_sunny", 0, weatherStatus.getValue());
+            DBIdSunnyEnemy = snowyEnemy.getId();
+            database.enemyDao().insertAll(sunnyEnemy, snowyEnemy, rainyEnemy);
+        }else {
+            //eg. load level, load coordinates, set game counters
+            playerX = database.playerDao().getAll().get(0).getLastCoordX();
+            playerY = database.playerDao().getAll().get(0).getLastCoordY();
+            playerHealth = database.playerDao().getAll().get(0).getSavedHealth();
+
+            AttackList al = database.attackListDao().findById(database.playerDao().getAll().get(0).getAttackListId());
+            ItemList il = database.itemListDao().findById(database.playerDao().getAll().get(0).getItemListId());
+
+            List<AttackListLine> attacks = database.attackListLineDao().getByAttackListId(al.getId());
+            for (AttackListLine attack : attacks){
+                if(attack.getAttackId() == DBIdSunnyAttack){
+                    Game.getInstance().sunnyAttackCount = attack.getAmount();
+                }
+                if(attack.getAttackId() == DBIdRainyAttack){
+                    Game.getInstance().rainyAttackCount = attack.getAmount();
+                }
+                if(attack.getAttackId() == DBIdSnowyAttack){
+                    Game.getInstance().snowyAttackCount = attack.getAmount();
+                }
+            }
+            List<ItemListLine> items = database.itemListLineDao().getByItemListId(il.getId());
+            for (ItemListLine item : items){
+                if(item.getItemId() == DBIdSunnyItem){
+                    Game.getInstance().sunnyItemCount = item.getAmount();
+                }
+                if(item.getItemId() == DBIdRainyItem){
+                    Game.getInstance().rainyItemCount = item.getAmount();
+                }
+                if(item.getItemId() == DBIdSnowyItem){
+                    Game.getInstance().snowyItemCount = item.getAmount();
+                }
+                if(item.getItemId() == DBIdNormalItem){
+                    Game.getInstance().normalItemCount = item.getAmount();
+                }
+            }
+        }
+
+        database = null;
+        return state;
+    }
+
     /**
      * Initialises the game from the game config file
      *
      * @param context the android context to get access to the resource files
      */
-    public static GameState initFromJSON(Context context, WeatherStatus status) {
+    public static GameState initFromJSON(Context context) {
         InputStream in = context.getResources().openRawResource(R.raw.game_config);
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         StringBuilder sb = new StringBuilder();
@@ -133,13 +251,42 @@ public class FileParser {
             attackSpecialScale = (float) gameConfig.getDouble("AttackSpecial_Scale");
             attackSpecialSpeed = (float) gameConfig.getDouble("AttackSpecial_Speed");
             attackSpecialDamage = gameConfig.getInt("AttackSpecial_Damage");
+
+            //Infos
+            infoNames[3] = gameConfig.getString("ItemNormal_Name");
+            infoNames[WeatherStatus.SUNNY.getValue()] = gameConfig.getString("ItemSunny_Name");
+            infoNames[WeatherStatus.RAINY.getValue()] = gameConfig.getString("ItemRainy_Name");
+            infoNames[WeatherStatus.SNOWY.getValue()] = gameConfig.getString("ItemSnowy_Name");
+            infoNames[7] = gameConfig.getString("AttackNormal_Name");
+            infoNames[WeatherStatus.SUNNY.getValue()+4] = gameConfig.getString("AttackSunny_Name");
+            infoNames[WeatherStatus.RAINY.getValue()+4] = gameConfig.getString("AttackRainy_Name");
+            infoNames[WeatherStatus.SNOWY.getValue()+4] = gameConfig.getString("AttackSnowy_Name");
+            infoNames[WeatherStatus.SUNNY.getValue()+8] = gameConfig.getString("EnemySunny_Name");
+            infoNames[WeatherStatus.RAINY.getValue()+8] = gameConfig.getString("EnemyRainy_Name");
+            infoNames[WeatherStatus.SNOWY.getValue()+8] = gameConfig.getString("EnemySnowy_Name");
+
+            infoTexts[3] = gameConfig.getString("ItemNormal_Text");
+            infoTexts[WeatherStatus.SUNNY.getValue()] = gameConfig.getString("ItemSunny_Text");
+            infoTexts[WeatherStatus.RAINY.getValue()] = gameConfig.getString("ItemRainy_Text");
+            infoTexts[WeatherStatus.SNOWY.getValue()] = gameConfig.getString("ItemSnowy_Text");
+            infoTexts[7] = gameConfig.getString("AttackNormal_Text");
+            infoTexts[WeatherStatus.SUNNY.getValue()+4] = gameConfig.getString("AttackSunny_Text");
+            infoTexts[WeatherStatus.RAINY.getValue()+4] = gameConfig.getString("AttackRainy_Text");
+            infoTexts[WeatherStatus.SNOWY.getValue()+4] = gameConfig.getString("AttackSnowy_Text");
+            infoTexts[WeatherStatus.SUNNY.getValue()+8] = gameConfig.getString("EnemySunny_Text");
+            infoTexts[WeatherStatus.RAINY.getValue()+8] = gameConfig.getString("EnemyRainy_Text");
+            infoTexts[WeatherStatus.SNOWY.getValue()+8] = gameConfig.getString("EnemySnowy_Text");
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         playerImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.character);
         itemImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_normal);
-        switch (status) {
+        String[] specialAttackInfo = new String[]{
+                infoNames[weatherStatus.getValue()+4],
+                infoTexts[weatherStatus.getValue()+4].substring(0,Math.min(40, infoTexts[weatherStatus.getValue()+4].length()))+"...",
+                infoTexts[weatherStatus.getValue()+4]};
+        switch (weatherStatus) {
             case SUNNY:
                 tileImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_sunny);
                 tileMiddleImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_sunny2);
@@ -148,7 +295,8 @@ public class FileParser {
                 specialItemImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_sunny);
                 attackSpecialImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_sunny);
                 attackNormalImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_normal);
-                return new GameState(Color.RED, backgroundImage, enemyImage, attackNormalImage, attackSpecialImage, status);
+                return new GameState(Color.RED, backgroundImage, enemyImage, attackNormalImage,
+                        attackSpecialImage, specialAttackInfo, weatherStatus);
             case RAINY:
                 tileImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_rainy);
                 tileMiddleImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_rainy2);
@@ -157,7 +305,8 @@ public class FileParser {
                 specialItemImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_rainy);
                 attackSpecialImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_rainy);
                 attackNormalImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_normal);
-                return new GameState(Color.BLUE, backgroundImage, enemyImage, attackNormalImage, attackSpecialImage, status);
+                return new GameState(Color.BLUE, backgroundImage, enemyImage, attackNormalImage,
+                        attackSpecialImage, specialAttackInfo, weatherStatus);
             case SNOWY:
                 tileImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_snowy);
                 tileMiddleImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_snowy2);
@@ -166,7 +315,8 @@ public class FileParser {
                 specialItemImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_snowy);
                 attackSpecialImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_snowy);
                 attackNormalImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_normal);
-                return new GameState(Color.LTGRAY, backgroundImage, enemyImage, attackNormalImage, attackSpecialImage, status);
+                return new GameState(Color.LTGRAY, backgroundImage, enemyImage, attackNormalImage,
+                        attackSpecialImage, specialAttackInfo, weatherStatus);
             default:
                 tileImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_sunny);
                 tileMiddleImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.tile_sunny2);
@@ -175,33 +325,11 @@ public class FileParser {
                 specialItemImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.item_sunny);
                 attackSpecialImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_sunny);
                 attackNormalImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.attack_normal);
-                return new GameState(Color.GRAY, backgroundImage, enemyImage, attackNormalImage, attackSpecialImage, status);
+                return new GameState(Color.GRAY, backgroundImage, enemyImage, attackNormalImage,
+                        attackSpecialImage, specialAttackInfo, weatherStatus);
         }
     }
 
-    public static void initFromDB(Context context){
-        /*AppDatabase database = Room.databaseBuilder(context, AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
-
-        if(database.playerDao().countPlayers()==0) {
-            database.attackListDao().insertAll(new AttackList());
-            database.enemyListDao().insertAll(new EnemyList());
-            database.itemListDao().insertAll(new ItemList());
-
-            EnemyList el = database.enemyListDao().getAll().get(0);
-            AttackList al = database.attackListDao().getAll().get(0);
-            ItemList il = database.itemListDao().getAll().get(0);
-
-            Player p = new Player(5, 2, 8, "toto", 3, il.getId(), al.getId(), el.getId());
-            database.playerDao().insertAll(p);
-        }else{
-            List<Player> plist = database.playerDao().getAll();
-            for(Player p :plist){
-                System.out.println(p.getLastCoordX() + " " + p.getLastCoordY());
-            }
-        }
-
-        database = null;*/
-    }
 
     /**
      * Loads the game world specified in test level
@@ -230,9 +358,16 @@ public class FileParser {
                         PlayerInputHandler playerInputHandler = new PlayerInputHandler();
                         PlayerPhysics playerPhysics = new PlayerPhysics(playerMinJumpHeight,
                                 playerMaxJumpHeight, playerJumpTime, numTilesV, numTilesH, x, y, playerScale);
-                        Type type = new Type(playerHealth, playerSpeed, playerScale, playerDamage, playerImage, Color.WHITE, null, new String[]{});
-                        GameObject player = new GameObject(
-                                playerInputHandler, playerPhysics, type, x, y, GameObject.PLAYER_TAG);
+                        Type type = new Type(playerHealth, playerSpeed, playerScale, playerDamage,
+                                playerImage, Color.WHITE, null, new String[]{}, DBIdPlayer, Type.PLAYER_TAG);
+                        GameObject player;
+                        if(playerX != -1 && playerY != -1) {
+                            player = new GameObject(
+                                    playerInputHandler, playerPhysics, type, playerX, playerY);
+                        } else {
+                            player = new GameObject(
+                                    playerInputHandler, playerPhysics, type, x, y);
+                        }
                         world.addObject(player);
                         world.setPlayer(player);
                         //initialise the camera
@@ -241,48 +376,58 @@ public class FileParser {
                         GameObject simpleCamera = new GameObject(
                                 new CameraAI(cameraMovementWindow, player, viewFrustum,
                                         cameraMinSpeed, 0.5f, numTilesV),
-                                null, null, 0, 0, GameObject.CAMERA_TAG);
+                                null, null, 0, 0);
                         world.addObject(simpleCamera);
                         world.setCamera(simpleCamera);
                         break;
                     case '#': //Platform
                         PhysicsComponent platformPhysics =
                                 new PhysicsComponent(PhysicsComponent.RECTANGULAR, x, y, platformSize);
-                        Type platformType = new Type(0, 0, platformSize, 0, tileImage, Color.BLACK, world.getState().getStatus(), new String[]{});
+                        Type platformType = new Type(0, 0, platformSize, 0, tileImage, Color.BLACK,
+                                weatherStatus, new String[]{}, -1, Type.PLATFORM_TAG);
                         GameObject platform = new GameObject(
-                                null, platformPhysics, platformType, x, y, GameObject.PLATFORM_TAG);
+                                null, platformPhysics, platformType, x, y);
                         world.addPlatform(platform);
                         break;
                     case '*': //solid platform
                         PhysicsComponent platformMiddlePhysics =
                                 new PhysicsComponent(PhysicsComponent.RECTANGULAR, x, y, platformSize);
-                        Type platformMiddleType = new Type(0, 0, platformSize, 0, tileMiddleImage, Color.BLACK, world.getState().getStatus(), new String[]{});
+                        Type platformMiddleType = new Type(0, 0, platformSize, 0, tileMiddleImage,
+                                Color.BLACK, weatherStatus, new String[]{}, -1, Type.M_PLATFORM_TAG);
                         GameObject platformMiddle = new GameObject(
-                                null, platformMiddlePhysics, platformMiddleType, x, y, GameObject.M_PLATFORM_TAG);
+                                null, platformMiddlePhysics, platformMiddleType, x, y);
                         world.addPlatform(platformMiddle);
                         break;
                     case 'I': //Item
                         PhysicsComponent itemPhysics =
                                 new PhysicsComponent(PhysicsComponent.SPHERE, x, y, itemSize);
-                        Type itemType = new Type(0, 0, itemSize, 0, itemImage, Color.YELLOW, null, new String[]{itemName, itemShortInfo, itemFullInfo});
-                        GameObject item = new GameObject(null, itemPhysics, itemType, x, y, GameObject.ITEM_TAG);
+                        Type itemType = new Type(0, 0, itemSize, 0, itemImage, Color.YELLOW, null,
+                                new String[]{infoNames[3], infoTexts[3].substring(0,Math.min(40, infoTexts[3].length())) + "...", infoTexts[3]},
+                                DBIdNormalItem, Type.ITEM_TAG);
+                        GameObject item = new GameObject(null, itemPhysics, itemType, x, y);
                         world.addObject(item);
                         break;
                     case 'S': //Special Item
                         PhysicsComponent specialItemPhysics =
                                 new PhysicsComponent(PhysicsComponent.SPHERE, x, y, itemSize);
                         Type specialItemType = new Type(0, 0, specialItemSize, 0, specialItemImage,
-                                Color.GREEN, world.getState().getStatus(), new String[]{itemName, itemShortInfo, itemFullInfo});
+                                Color.GREEN, weatherStatus,
+                                new String[]{infoNames[weatherStatus.getValue()],
+                                        infoTexts[weatherStatus.getValue()].substring(0,Math.min(40, infoTexts[weatherStatus.getValue()].length())) + "...",
+                                        infoTexts[weatherStatus.getValue()]},
+                                getDBIdSpecialItem(), Type.S_ITEM_TAG);
                         GameObject specialItem = new GameObject(
-                                null, specialItemPhysics, specialItemType, x, y, GameObject.S_ITEM_TAG);
+                                null, specialItemPhysics, specialItemType, x, y);
                         world.addObject(specialItem);
                         break;
                     case 'E': //Enemy
                         EnemyPhysics enemyPhysics = new EnemyPhysics(x,y,enemySize);
                         EnemyAI enemyAI = new EnemyAI();
                         Type enemyType = new Type(enemyHealth, 0, enemySize, enemyDamage, enemyImage, Color.CYAN,
-                                world.getState().getStatus(), new String[]{itemName, itemShortInfo, itemFullInfo});
-                        GameObject enemy = new GameObject(enemyAI, enemyPhysics, enemyType, x, y, GameObject.ENEMY_TAG);
+                                weatherStatus, new String[]{infoNames[weatherStatus.getValue()+8],
+                                infoTexts[weatherStatus.getValue()+8].substring(0,Math.min(40, infoTexts[weatherStatus.getValue()+8].length())) + "...",
+                                infoTexts[weatherStatus.getValue()+8]}, getDBIdEnemy(), Type.ENEMY_TAG);
+                        GameObject enemy = new GameObject(enemyAI, enemyPhysics, enemyType, x, y);
                         world.addObject(enemy);
                         break;
                 }
@@ -292,14 +437,21 @@ public class FileParser {
             e.printStackTrace();
         }
         Type attackNormalType = new Type(attackNormalHealth, attackNormalSpeed, attackNormalScale,
-                attackNormalDamage, attackNormalImage, Color.MAGENTA, null, new String[]{});
+                attackNormalDamage, attackNormalImage, Color.MAGENTA, null,
+                new String[]{infoNames[7],
+                    infoTexts[7].substring(0,Math.min(40, infoTexts[7].length())) + "...",
+                    infoTexts[7]}, DBIdNormalAttack, Type.ATTACK_TAG);
+
         AttackPhysics attackNormalPhysics = new AttackPhysics(0,0,attackNormalType);
-        GameObject attackNormal = new GameObject(null, attackNormalPhysics, attackNormalType, 0,0,GameObject.ATTACK_TAG);
+        GameObject attackNormal = new GameObject(null, attackNormalPhysics, attackNormalType, 0,0);
         world.setAttackNormal(attackNormal);
         Type attackSpecialType = new Type(attackSpecialHealth, attackSpecialSpeed, attackSpecialScale,
-                attackSpecialDamage, attackSpecialImage, Color.RED, null, new String[]{});
+                attackSpecialDamage, attackSpecialImage, Color.RED, null,
+                new String[]{infoNames[weatherStatus.getValue()+4],
+                    infoTexts[weatherStatus.getValue()+4].substring(0,Math.min(40, infoTexts[weatherStatus.getValue()+4].length())) + "...",
+                    infoTexts[weatherStatus.getValue()+4]}, getDBIdSpecialAttack(), Type.ATTACK_TAG);
         AttackPhysics attackSpecialPhysics = new AttackPhysics(0,0,attackNormalType);
-        GameObject attackSpecial = new GameObject(null, attackSpecialPhysics, attackSpecialType, 0,0,GameObject.ATTACK_TAG);
+        GameObject attackSpecial = new GameObject(null, attackSpecialPhysics, attackSpecialType, 0,0);
         world.setAttackSpecial(attackSpecial);
     }
 
@@ -309,5 +461,42 @@ public class FileParser {
 
     public static int getNumTilesV() {
         return numTilesV;
+    }
+
+    public static int getDBIdSpecialAttack(){
+        switch (weatherStatus){
+            case SUNNY:
+                return DBIdSunnyAttack;
+            case RAINY:
+                return DBIdRainyAttack;
+            case SNOWY:
+                return DBIdSnowyAttack;
+            default:
+                return DBIdNormalAttack;
+        }
+    }
+    public static int getDBIdSpecialItem(){
+        switch (weatherStatus){
+            case SUNNY:
+                return DBIdSunnyItem;
+            case RAINY:
+                return DBIdRainyItem;
+            case SNOWY:
+                return DBIdSnowyItem;
+            default:
+                return DBIdNormalItem;
+        }
+    }
+    public static int getDBIdEnemy(){
+        switch (weatherStatus){
+            case SUNNY:
+                return DBIdSunnyEnemy;
+            case RAINY:
+                return DBIdRainyEnemy;
+            case SNOWY:
+                return DBIdSnowyEnemy;
+            default:
+                return DBIdSunnyEnemy;
+        }
     }
 }

@@ -27,5 +27,29 @@
   "AttackSpecial_Health" : 200,
   "AttackSpecial_Speed" : 10,
   "AttackSpecial_Scale" : 0.75,
-  "AttackSpecial_Damage" : 2
+  "AttackSpecial_Damage" : 2,
+
+  "ItemNormal_Name" : "NameItemNormal",
+  "ItemSunny_Name" : "NameItemSunny",
+  "ItemRainy_Name" : "NameItemRainy",
+  "ItemSnowy_Name" : "NameItemSnowy",
+  "AttackNormal_Name" : "NameAttackNormal",
+  "AttackSunny_Name" : "NameAttackSunny",
+  "AttackRainy_Name" : "NameAttackRainy",
+  "AttackSnowy_Name" : "NameAttackSnowy",
+  "EnemySunny_Name" : "NameEnemySunny",
+  "EnemyRainy_Name" : "NameEnemyRainy",
+  "EnemySnowy_Name" : "NameEnemySnowy",
+
+  "ItemNormal_Text" : "TextItemNormal",
+  "ItemSunny_Text" : "TextItemSunny",
+  "ItemRainy_Text" : "TextItemRainy",
+  "ItemSnowy_Text" : "TextItemSnowy",
+  "AttackNormal_Text" : "TextAttackNormal",
+  "AttackSunny_Text" : "TextAttackSunny",
+  "AttackRainy_Text" : "TextAttackRainy",
+  "AttackSnowy_Text" : "TextAttackSnowy",
+  "EnemySunny_Text" : "TextEnemySunny",
+  "EnemyRainy_Text" : "TextEnemyRainy",
+  "EnemySnowy_Text" : "TextEnemySnowy"
 }
