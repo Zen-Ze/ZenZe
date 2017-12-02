@@ -18,12 +18,12 @@ public class MoveHorizontal implements Command {
 
     @Override
     public void execute(GameObject actor) {
-        actor.physics.setVelocityX(actor.type.speed*direction);
+        actor.physics.x_Vel = actor.type.speed*direction;
     }
 
     @Override
     public void exit(GameObject actor) {
-        actor.physics.setVelocityX(0);
+        actor.physics.x_Vel = 0;
     }
 
     @Override

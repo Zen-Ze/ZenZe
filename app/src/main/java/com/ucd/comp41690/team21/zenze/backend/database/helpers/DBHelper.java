@@ -44,6 +44,7 @@ import java.util.List;
 
 /**
  * Created by timothee on 18/10/17.
+ * Based off the following tutorial: https://www.androidhive.info/2011/11/android-sqlite-database-tutorial/
  */
 
 public class DBHelper extends SQLiteOpenHelper {

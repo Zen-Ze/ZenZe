@@ -1,12 +1,14 @@
 package com.ucd.comp41690.team21.zenze.game;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.SurfaceView;
 
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 import com.ucd.comp41690.team21.zenze.game.util.InputEvent;
 import com.ucd.comp41690.team21.zenze.game.util.Observer;
 import com.ucd.comp41690.team21.zenze.game.util.Subject;
+import com.ucd.comp41690.team21.zenze.game.view.GraphicsRenderer;
 import com.ucd.comp41690.team21.zenze.game.view.Renderer;
 import com.ucd.comp41690.team21.zenze.game.view.SimpleRenderer;
 
@@ -15,7 +17,7 @@ import java.util.List;
 
 public class Game implements Runnable, Subject<InputEvent> {
     //controlls for frame rate
-    private static final int MS_PER_UPDATE = 30;//30FPS
+    private static final int MS_PER_UPDATE = 20;//30FPS
     private static final int MAX_FRAME_SKIPS = 5;
 
     private Renderer gameView;
@@ -23,7 +25,7 @@ public class Game implements Runnable, Subject<InputEvent> {
     private List<Observer<InputEvent>> inputObserverList;
 
     volatile boolean running;
-    private Thread gameThread = null;
+    private Thread gameThread;
 
     private static Game instance;
     private int gameWidth;
@@ -35,46 +37,34 @@ public class Game implements Runnable, Subject<InputEvent> {
         this.gameWidth = width;
         this.gameHeight = height;
         this.inputObserverList = new LinkedList<>();
-        this.running = true;
 
         this.gameWorld = new GameWorld(context, status);
         this.gameView = new SimpleRenderer(context, gameWorld);
+        //this.gameView = new GraphicsRenderer(context, gameWorld);
+        this.gameThread = null;
+        this.log = "";
     }
 
     @Override
     public void run() {
         long sleepTime = 0;
-        double beginTime = 0;
-        double elapsedTime = 0;
-        double framesSkipped = 0;
+        long beginTime = 0;
+        long elapsedTime = 0;
+        double deltaTime = 0;
         long prevUpdate = System.currentTimeMillis();
 
         while (running) {
             beginTime = System.currentTimeMillis();
-            framesSkipped = 0;
-
-            double updateTime = System.currentTimeMillis();
-            gameWorld.update((updateTime - prevUpdate) / 1000);
-            prevUpdate = System.currentTimeMillis();
+            deltaTime = elapsedTime>100?((beginTime-prevUpdate)/100d):((beginTime-prevUpdate)/1000d);
+            gameWorld.update(deltaTime);
             gameView.render(gameWorld);
-
-            elapsedTime = System.currentTimeMillis() - beginTime;
-            sleepTime = (long) (MS_PER_UPDATE - elapsedTime);
-
-            if (sleepTime > 0) { //time left, so sleep
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS) {
-                //catch up on updates, leave out rendering step
-                gameWorld.update((System.currentTimeMillis() - prevUpdate) / 1000);
-                prevUpdate = System.currentTimeMillis();
-                sleepTime += MS_PER_UPDATE;
-                framesSkipped++;
-            }
+            prevUpdate = System.currentTimeMillis();
+            elapsedTime = prevUpdate-beginTime;
+            sleepTime = elapsedTime>100?17:MS_PER_UPDATE-elapsedTime;
+            log = "Sleep: " + sleepTime + ", delta: " + deltaTime;
+            try {
+                Thread.sleep(sleepTime);
+            } catch (Exception e) {}
         }
     }
 

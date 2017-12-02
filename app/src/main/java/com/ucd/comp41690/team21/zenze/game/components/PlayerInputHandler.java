@@ -14,6 +14,7 @@ import com.ucd.comp41690.team21.zenze.game.util.Observer;
 public class PlayerInputHandler implements InputComponent, Observer<InputEvent> {
 
     private InputEvent inputEvent;
+    private boolean moving;
 
     private MoveHorizontal moveLeft;
     private MoveHorizontal moveRight;
@@ -27,6 +28,7 @@ public class PlayerInputHandler implements InputComponent, Observer<InputEvent> 
         jumpUp = new Jump();
 
         inputEvent = InputEvent.NULL;
+        moving = false;
     }
 
     @Override
@@ -34,13 +36,16 @@ public class PlayerInputHandler implements InputComponent, Observer<InputEvent> 
             switch (inputEvent) {
                 case TILT_LEFT:
                     moveLeft.execute(object);
+                    moving = true;
                     break;
                 case TILT_RIGHT:
                     moveRight.execute(object);
+                    moving = true;
                     break;
                 case TILT_NONE:
                     moveLeft.exit(object);
                     moveRight.exit(object);
+                    moving = false;
                     break;
                 case TOUCH_DOWN:
                     jumpUp.execute(object);
@@ -53,6 +58,10 @@ public class PlayerInputHandler implements InputComponent, Observer<InputEvent> 
 
     @Override
     public void onNotify(InputEvent event) {
-        this.inputEvent = event;
+        if(event == InputEvent.TILT_NONE && moving){
+            this.inputEvent = event;
+        } else if (event == InputEvent.TOUCH_DOWN || event == InputEvent.TOUCH_UP || !moving){
+            this.inputEvent = event;
+        }
     }
 }
