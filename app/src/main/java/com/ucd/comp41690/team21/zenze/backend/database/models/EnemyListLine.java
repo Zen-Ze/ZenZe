@@ -17,7 +17,7 @@ import android.arch.persistence.room.PrimaryKey;
         @ForeignKey(entity = Enemy.class,
                 parentColumns = "id",
                 childColumns = "EnemyId")
-}
+    }
 )
 public class EnemyListLine {
 
@@ -45,7 +45,8 @@ public class EnemyListLine {
     @ColumnInfo(name = "EnemyListId")
     private int enemyListId;
 
-    public EnemyListLine() {}
+    public EnemyListLine() {
+    }
 
     @Ignore
     public EnemyListLine(int amount, int enemyId, int enemyListId) {

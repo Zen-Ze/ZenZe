@@ -1,8 +1,10 @@
 package com.ucd.comp41690.team21.zenze.game.components;
 
-import com.ucd.comp41690.team21.zenze.game.Game;
 import com.ucd.comp41690.team21.zenze.game.GameObject;
 
+/**
+ * controlls the physical behaviour of the game's objects
+ */
 public class PhysicsComponent {
     public final static int SPHERE = 0;
     public final static int RECTANGULAR = 1;
@@ -13,6 +15,13 @@ public class PhysicsComponent {
     public float acceleration;
     public BoundingVolume boundingVolume;
 
+    /**
+     * creates a new physics component
+     * @param boundingVolume indicates the objects bounding volume, either spherical or rectangular
+     * @param x the x position of the bounding volume, should match the objects one
+     * @param y the y position of the bounding volume, should match the objects one
+     * @param scale the scale of the bounding volume
+     */
     public PhysicsComponent(int boundingVolume, float x, float y, float scale) {
         switch (boundingVolume) {
             case SPHERE:
@@ -26,10 +35,21 @@ public class PhysicsComponent {
         }
     }
 
+    /**
+     * updates an objects bounding volume, position and reactes to collisions
+     * @param object the object to update
+     * @param elapsedTime the elapsed time since the last update
+     */
     public void handlePhysics(GameObject object, double elapsedTime) {
         boundingVolume.update(object);
     }
 
+    /**
+     * updates an objects position using leap frog integration for more stable results than euler
+     * @param object the object whose position should be updated
+     * @param elapsedTime the elapsed time since the last update
+     * @param damping a damping factor that can be used to slow down the object eg. incase of jumping
+     */
     public void leapFrogIntegration(GameObject object, double elapsedTime, float damping) {
         x_Vel += acceleration * elapsedTime;
         y_Vel += gravity * elapsedTime;
@@ -38,6 +58,12 @@ public class PhysicsComponent {
         object.y_Pos += y_Vel * elapsedTime;
     }
 
+    /**
+     * resolves a collision with a solid object and a spherical one
+     * @param col the type of collision to resolve
+     * @param player the object with a spherical bounding volume
+     * @param o the solid object, can be spherical or rectangular
+     */
     public void resolveSolidCollision(Collision col, GameObject player, GameObject o) {
         float playerOffset = ((Sphere) player.physics.boundingVolume).radius;
         float objectHeight = 0, objectWidth = 0;
@@ -84,6 +110,12 @@ public class PhysicsComponent {
         }
     }
 
+    /**
+     * checking for intersection between two bounding volumes
+     * @param a the first bounding volume
+     * @param b the second bounding volume
+     * @return the type of collision
+     */
     public Collision intersects(BoundingVolume a, BoundingVolume b) {
         if (a.getClass().equals(Sphere.class) && b.getClass().equals(AABB.class)) {
             return intersects((Sphere) a, (AABB) b);
@@ -96,9 +128,9 @@ public class PhysicsComponent {
     /**
      * collision detection between a sphere and an axis aligned rectangle
      *
-     * @param sphere
-     * @param rect
-     * @return true if the two of them intersect
+     * @param sphere a spherical bounding volume
+     * @param rect an axis aligned rectangular bounding volume
+     * @return the type of collision between the two volumes
      */
     public Collision intersects(Sphere sphere, AABB rect) {
 
@@ -160,9 +192,17 @@ public class PhysicsComponent {
         return Collision.NONE;
     }
 
+    /**
+     * checks for collsions between two spherical bounding volumes
+     * @param a the first sphere
+     * @param b the second sphere
+     * @return the type of collision between the two volumes
+     */
     public Collision intersects(Sphere a, Sphere b) {
+        //check for intersection based on radius
         if ((Math.pow(b.x_Pos - a.x_Pos, 2) + Math.pow(b.y_Pos - a.y_Pos, 2))
                 <= Math.pow(a.radius + b.radius, 2)) {
+            //return type depending on positions
             if(a.y_Pos<b.y_Pos-b.radius/2) {
                 return Collision.TOP;
             } else if(a.y_Pos>b.y_Pos+b.radius/2) {
@@ -182,6 +222,12 @@ public class PhysicsComponent {
         return Collision.NONE;
     }
 
+    /**
+     * returns the point to which to reset the first object in case of collision
+     * @param a the first colliding sphere which should be moved out of the second object
+     * @param b the second bounding volume which remains in place
+     * @return an array containing x and y coordinates for the new object position
+     */
     public float[] getCollisionPoint(Sphere a, Sphere b){
         //compute vector between centers
         float[] vector = new float[2];
@@ -196,6 +242,9 @@ public class PhysicsComponent {
         return new float[]{col[0]+vector[0]*a.radius, col[1] + vector[1]*a.radius};
     }
 
+    /**
+     * a super class for bounding volumes
+     */
     public abstract class BoundingVolume {
         public float x_Pos;
         public float y_Pos;
@@ -218,6 +267,9 @@ public class PhysicsComponent {
         }
     }
 
+    /**
+     * a spherical bounding volume
+     */
     public class Sphere extends BoundingVolume {
         public float radius;
 
@@ -227,40 +279,75 @@ public class PhysicsComponent {
         }
     }
 
+    /**
+     * a rectangular bounding volume
+     */
     public class AABB extends BoundingVolume {
         //stores width/2 and height/2
         public float width;
         public float height;
 
+        /**
+         * used to initialise a new AABB with arbitrary rectangular shape
+         * @param x_Pos the x position of the bounding volume
+         * @param y_Pos the y position of the bounding volume
+         * @param width half of the width of the rectangle
+         * @param height half of the height of the rectangle
+         */
         public AABB(float x_Pos, float y_Pos, float width, float height) {
             super(x_Pos, y_Pos);
             this.width = width;
             this.height = height;
         }
 
+        /**
+         * used to initialise a new AABB with the shape of a square
+         * @param x_Pos the bounding volumes x position
+         * @param y_Pos the y position of the bounding volume
+         * @param dimension the half of the width and height of the square shape
+         */
         public AABB(float x_Pos, float y_Pos, float dimension) {
             super(x_Pos, y_Pos);
             this.width = dimension;
             this.height = dimension;
         }
 
+        /**
+         * used to get the top coordinate along the y axis of the bounding volume
+         * @return the upper y coordinate of the volume
+         */
         public float getTop() {
             return this.y_Pos - height;
         }
 
+        /**
+         * used to get the bottom coordinate along the y axis of the bounding volume
+         * @return the lower y coordinate of the volume
+         */
         public float getBottom() {
             return this.y_Pos + height;
         }
 
+        /**
+         * used to get the left side coordinate along the x axis of the bounding volume
+         * @return the leftmost x coordinate of the volume
+         */
         public float getLeft() {
             return this.x_Pos - width;
         }
 
+        /**
+         * used to get the right side coordinate along the x axis of the bounding volume
+         * @return the rightmost x coordinate of the volume
+         */
         public float getRight() {
             return this.x_Pos + width;
         }
     }
 
+    /**
+     * reflects the type or position of a collision
+     */
     public enum Collision {
         TOP,
         BOTTOM,

@@ -42,6 +42,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 /**
+ * reads in the games config, fills and reads from the database
  * loads the level from a file and creates objects
  */
 public class FileParser {
@@ -97,11 +98,18 @@ public class FileParser {
     private static WeatherStatus weatherStatus;
 
     //Database Ids
-    public static int DBIdNormalAttack, DBIdSunnyAttack, DBIdRainyAttack, DBIdSnowyAttack,
-            DBIdPlayer, DBIdNormalItem, DBIdSunnyItem, DBIdRainyItem, DBIdSnowyItem, DBIdSunnyEnemy,
-            DBIdRainyEnemy, DBIdSnowyEnemy;
+    public static int DBIdNormalAttack = 0, DBIdSunnyAttack = 1, DBIdRainyAttack = 2, DBIdSnowyAttack = 3,
+            DBIdPlayer = 4, DBIdNormalItem = 5, DBIdSunnyItem = 6, DBIdRainyItem = 7, DBIdSnowyItem=8, DBIdSunnyEnemy=9,
+            DBIdRainyEnemy=10, DBIdSnowyEnemy=11;
 
 
+    /**
+     * used to fill the database and read the game config file
+     * should be called before the level is created
+     * @param context the games context
+     * @param status the weatherstatus according to which the objects are initialised
+     * @return returns a state for the game
+     */
     public static GameState init(Context context, WeatherStatus status){
         weatherStatus = status;
         AppDatabase database = Room.databaseBuilder(context, AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
@@ -112,83 +120,93 @@ public class FileParser {
             //Add Attacks to Database
             Attack normalAttack = new Attack(infoNames[7], attackNormalDamage, "attack_normal",
                     (int)attackNormalScale, infoTexts[7], 3);
-            DBIdNormalAttack = normalAttack.getId();
+            normalAttack.setId(DBIdNormalAttack);
             database.attackDao().insertAll(normalAttack);
             Attack sunnyAttack = new Attack(infoNames[WeatherStatus.SUNNY.getValue()+4], attackNormalDamage, "attack_sunny",
                     (int)attackNormalScale, infoTexts[WeatherStatus.SUNNY.getValue()+4], WeatherStatus.SUNNY.getValue());
-            DBIdSunnyAttack = sunnyAttack.getId();
+            sunnyAttack.setId(DBIdSunnyAttack);
             database.attackDao().insertAll(sunnyAttack);
             Attack rainyAttack = new Attack(infoNames[WeatherStatus.RAINY.getValue()+4], attackNormalDamage, "attack_rainy",
                     (int)attackNormalScale, infoTexts[WeatherStatus.RAINY.getValue()+4], WeatherStatus.RAINY.getValue());
-            DBIdRainyAttack = rainyAttack.getId();
+            rainyAttack.setId(DBIdRainyAttack);
             database.attackDao().insertAll(rainyAttack);
             Attack snowyAttack = new Attack(infoNames[WeatherStatus.SNOWY.getValue()+4], attackNormalDamage, "attack_snowy",
                     (int)attackNormalScale, infoTexts[WeatherStatus.SNOWY.getValue()+4], WeatherStatus.SNOWY.getValue());
-            DBIdSnowyAttack = snowyAttack.getId();
+            snowyAttack.setId(DBIdSnowyAttack);
             database.attackDao().insertAll(snowyAttack);
 
             //Add Items to Database
             Item normalItem = new Item(infoNames[4], infoTexts[4], "item_normal", weatherStatus);
-            DBIdNormalItem = normalItem.getId();
+            normalItem.setId(DBIdNormalItem);
             database.itemDao().insertAll(normalItem);
             Item sunnyItem = new Item(infoNames[WeatherStatus.SUNNY.getValue()],
                     infoTexts[WeatherStatus.SUNNY.getValue()], "item_sunny", weatherStatus);
-            DBIdSunnyItem = sunnyItem.getId();
+            sunnyItem.setId(DBIdSunnyItem);
             database.itemDao().insertAll(sunnyItem);
             Item rainyItem = new Item(infoNames[WeatherStatus.RAINY.getValue()],
                     infoTexts[WeatherStatus.RAINY.getValue()], "item_rainy", weatherStatus);
-            DBIdRainyItem = rainyItem.getId();
+            rainyItem.setId(DBIdRainyItem);
             database.itemDao().insertAll(rainyItem);
             Item snowyItem = new Item(infoNames[WeatherStatus.SNOWY.getValue()],
                     infoTexts[WeatherStatus.SNOWY.getValue()], "item_snowy", weatherStatus);
-            DBIdSnowyItem = snowyItem.getId();
+            snowyItem.setId(DBIdSnowyItem);
             database.itemDao().insertAll(snowyItem);
 
             //Add Enemies to Database
             Enemy sunnyEnemy = new Enemy(infoNames[WeatherStatus.SUNNY.getValue()+8], enemyDamage, (int)enemySize,
                     infoTexts[WeatherStatus.SUNNY.getValue()+8], "enemy_sunny", 0, weatherStatus.getValue());
-            DBIdSunnyEnemy = sunnyEnemy.getId();
+            sunnyEnemy.setId(DBIdSunnyEnemy);
             database.enemyDao().insertAll(sunnyEnemy);
             Enemy rainyEnemy = new Enemy(infoNames[WeatherStatus.RAINY.getValue()+8], enemyDamage, (int)enemySize,
                     infoTexts[WeatherStatus.RAINY.getValue()+8], "enemy_sunny", 0, weatherStatus.getValue());
-            DBIdRainyEnemy = rainyEnemy.getId();
+            rainyEnemy.setId(DBIdRainyEnemy);
             database.enemyDao().insertAll(rainyEnemy);
             Enemy snowyEnemy = new Enemy(infoNames[WeatherStatus.SNOWY.getValue()+8], enemyDamage, (int)enemySize,
                     infoTexts[WeatherStatus.SNOWY.getValue()+8], "enemy_sunny", 0, weatherStatus.getValue());
-            DBIdSnowyEnemy = snowyEnemy.getId();
+            snowyEnemy.setId(DBIdSnowyEnemy);
             database.enemyDao().insertAll(snowyEnemy);
 
             //Add Player
-            database.attackListDao().insertAll(new AttackList());
-            database.enemyListDao().insertAll(new EnemyList());
-            database.itemListDao().insertAll(new ItemList());
+            AttackList playerAttackList = new AttackList();
+            playerAttackList.setId(24);
+            database.attackListDao().insertAll(playerAttackList);
+            EnemyList playerEnemyList = new EnemyList();
+            playerEnemyList.setId(25);
+            database.enemyListDao().insertAll(playerEnemyList);
+            ItemList playerItemList = new ItemList();
+            playerItemList.setId(26);
+            database.itemListDao().insertAll(playerItemList);
 
             EnemyList el = database.enemyListDao().getAll().get(0);
             AttackList al = database.attackListDao().getAll().get(0);
             ItemList il = database.itemListDao().getAll().get(0);
 
+            //Add the items/attacks/enemy lines to the player object
             EnemyListLine sunnyEnemyLine = new EnemyListLine(0,sunnyEnemy.getId(),el.getId());
+            sunnyEnemyLine.setId(12);
             EnemyListLine rainyEnemyLine = new EnemyListLine(0,rainyEnemy.getId(),el.getId());
+            rainyEnemyLine.setId(13);
             EnemyListLine snowyEnemyLine = new EnemyListLine(0,snowyEnemy.getId(),el.getId());
-            database.enemyListLineDao().getByEnemyListId(el.getId()).add(sunnyEnemyLine);
-            database.enemyListLineDao().getByEnemyListId(el.getId()).add(rainyEnemyLine);
-            database.enemyListLineDao().getByEnemyListId(el.getId()).add(snowyEnemyLine);
+            snowyEnemyLine.setId(14);
+            database.enemyListLineDao().insertAll(sunnyEnemyLine, snowyEnemyLine,rainyEnemyLine);
             AttackListLine normalAttackLine = new AttackListLine(0,normalAttack.getId(),al.getId());
+            normalAttackLine.setId(1234);
             AttackListLine sunnyAttackLine = new AttackListLine(0,sunnyAttack.getId(),al.getId());
+            sunnyAttackLine.setId(2345);
             AttackListLine rainyAttackLine = new AttackListLine(0,rainyAttack.getId(),al.getId());
+            rainyAttackLine.setId(3456);
             AttackListLine snowyAttackLine = new AttackListLine(0,snowyAttack.getId(),al.getId());
-            database.attackListLineDao().getByAttackListId(al.getId()).add(normalAttackLine);
-            database.attackListLineDao().getByAttackListId(al.getId()).add(sunnyAttackLine);
-            database.attackListLineDao().getByAttackListId(al.getId()).add(rainyAttackLine);
-            database.attackListLineDao().getByAttackListId(al.getId()).add(snowyAttackLine);
+            snowyAttackLine.setId(4567);
+            //database.attackListLineDao().insertAll(normalAttackLine, sunnyAttackLine, rainyAttackLine, snowyAttackLine);
             ItemListLine normalItemLine = new ItemListLine(0,normalItem.getId(),il.getId());
+            normalItemLine.setId(19);
             ItemListLine sunnyItemLine = new ItemListLine(0,sunnyItem.getId(),il.getId());
+            sunnyItemLine.setId(20);
             ItemListLine snowyItemLine = new ItemListLine(0,snowyItem.getId(),il.getId());
+            snowyItemLine.setId(21);
             ItemListLine rainyItemLine = new ItemListLine(0,rainyItem.getId(),il.getId());
-            database.itemListLineDao().getByItemListId(il.getId()).add(normalItemLine);
-            database.itemListLineDao().getByItemListId(il.getId()).add(sunnyItemLine);
-            database.itemListLineDao().getByItemListId(il.getId()).add(rainyItemLine);
-            database.itemListLineDao().getByItemListId(il.getId()).add(snowyItemLine);
+            rainyItemLine.setId(22);
+            database.itemListLineDao().insertAll(normalItemLine, sunnyItemLine, rainyItemLine, snowyItemLine);
 
             Player p = new Player(playerX, playerY, playerHealth, "toto", 1, il.getId(), al.getId(), el.getId());
             DBIdPlayer = p.getId();
@@ -199,7 +217,7 @@ public class FileParser {
             Player player = database.playerDao().getAll().get(0);
             playerX = player.getLastCoordX();
             playerY = player.getLastCoordY();
-            playerHealth = player.getSavedHealth();
+            playerHealth = player.getSavedHealth()==-1?playerHealth:player.getSavedHealth();
 
             AttackList al = database.attackListDao().findById(player.getAttackListId());
             ItemList il = database.itemListDao().findById(player.getItemListId());
@@ -498,6 +516,10 @@ public class FileParser {
         return numTilesV;
     }
 
+    /**
+     * returns the id of the attacks object in the database depeding on the weatherstate
+     * @return the id used in the database for the special attack
+     */
     public static int getDBIdSpecialAttack(){
         switch (weatherStatus){
             case SUNNY:
@@ -510,6 +532,11 @@ public class FileParser {
                 return DBIdNormalAttack;
         }
     }
+
+    /**
+     * returns the id of the item object in the database depeding on the weatherstate
+     * @return the id used in the database for the special item
+     */
     public static int getDBIdSpecialItem(){
         switch (weatherStatus){
             case SUNNY:
@@ -522,6 +549,11 @@ public class FileParser {
                 return DBIdNormalItem;
         }
     }
+
+    /**
+     * returns the id of the enemy object in the database depeding on the weatherstate
+     * @return the id used in the database for the enemy
+     */
     public static int getDBIdEnemy(){
         switch (weatherStatus){
             case SUNNY:

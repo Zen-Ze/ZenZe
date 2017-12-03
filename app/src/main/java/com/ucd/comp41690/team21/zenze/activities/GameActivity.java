@@ -33,14 +33,14 @@ import com.ucd.comp41690.team21.zenze.game.util.InputEvent;
 public class GameActivity extends FragmentActivity implements SensorEventListener,
         InfoDialogFragment.InfoDialogListener, GameOverDialogFragment.GameOverDialogListener {
     private final static float ROTATION_ANGLE = 0.15f;
-
+    //Game variables
     private Game game;
     private int width;
     private int height;
     private WeatherStatus status;
     private boolean graphicsRenderer;
     private Type itemType;
-
+    //Sensor variables
     private SensorManager mSensorManager;
     private Sensor accelerometer;
     private Sensor magnetometer;
@@ -50,6 +50,11 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
     private final float[] mOrientationAngles = new float[3];
 
 
+    /**
+     * is called when the Activity is created
+     * initialises the sensors, reads configurations from the intent and creates a new Game
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +70,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         display.getSize(size);
         width = Math.max(size.x, size.y);
         height = Math.min(size.x, size.y);
-
+        //initialise sensors
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -77,6 +82,10 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         setContentView(game.getView());
     }
 
+    /**
+     * is called when the activity pauses
+     * unregisters the sensors and stops the game
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -86,6 +95,10 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         }
     }
 
+    /**
+     * is called before the activity becomes visible
+     * registers listensers and resumes game
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -94,11 +107,18 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         game.resume();
     }
 
+    /**
+     * Gets called when the user touches the screen
+     * @param event the Motion Event caused by the user
+     * @return true if event was processed correctly
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            //touch down
             case MotionEvent.ACTION_DOWN:
                 if (event.getY() < Game.getInstance().UIHeight) {
+                    //the UI is clicked
                     Intent statsIntent = new Intent(GameActivity.this, StatsActivity.class);
                     startActivity(statsIntent);
                 } else if (event.getX() <= Game.getInstance().getWidth() / 2) {
@@ -107,15 +127,21 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
                     game.onInputEvent(InputEvent.TOUCH_DOWN_RIGHT);
                 }
                 break;
+            //Finger lifted again
             case MotionEvent.ACTION_UP:
                 game.onInputEvent(InputEvent.TOUCH_UP);
                 break;
+            //no interesting motion event
             default:
                 game.onInputEvent(InputEvent.NULL);
         }
         return true;
     }
 
+    /**
+     * Is called if the user moves the device
+     * @param event the sensor event
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
@@ -129,6 +155,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         mSensorManager.getRotationMatrix(mRotationMatrix, null, mAccelerometerReading, mMagnetometerReading);
         mSensorManager.getOrientation(mRotationMatrix, mOrientationAngles);
 
+        //if sensor values are for a significant movement tell the game
         if (mOrientationAngles[1] > ROTATION_ANGLE) {
             game.onInputEvent(InputEvent.TILT_LEFT);
         } else if (mOrientationAngles[1] < -ROTATION_ANGLE) {
@@ -139,10 +166,12 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
-    }
-
+    /**
+     * is called when the user finds a new object to display a short info message
+     * @param type the type of object which was found
+     */
     public void onItemFound(Type type) {
         itemType = type;
 
@@ -159,6 +188,11 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         game.pause();
     }
 
+    /**
+     * is called when the user defeates a new unknown enemy
+     * shows a short info message
+     * @param type the type of enemy that was killed
+     */
     public void onEnemyDefeated(Type type){
         itemType = type;
 
@@ -175,12 +209,20 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         game.pause();
     }
 
+    /**
+     * is called when the player runs out of life or touches the ground
+     * shows a short info message giving the options to go to the main menu or retry
+     */
     public void onGameOver() {
         DialogFragment dialog = new GameOverDialogFragment();
         dialog.show(getSupportFragmentManager(), "gameOver");
         game.pause();
     }
 
+    /**
+     * is called when the user clicks more info in the info dialog
+     * @param dialog the dialog in which the button was clicked
+     */
     @Override
     public void onInfoDialogPositiveClick(DialogFragment dialog) {
         Intent infoIntent = new Intent(GameActivity.this, InfoActivity.class);
@@ -198,11 +240,19 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         startActivity(infoIntent);
     }
 
+    /**
+     * is called when the user chose to go back to the game after the short info message was displayed
+     * @param dialog the dialog in which the option was clicked
+     */
     @Override
     public void onInfoDialogNegativeClick(DialogFragment dialog) {
         game.resume();
     }
 
+    /**
+     * is called when the user wants to retry after he lost the game
+     * @param dialog the dialog in which the option was clicked
+     */
     @Override
     public void onGameOverDialogPositiveClick(DialogFragment dialog) {
         //retry
@@ -211,10 +261,13 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         game.resume();
     }
 
+    /**
+     * is called when the user wants to go back to the main menu after loosing the game
+     * @param dialog the dialog in which the option was clicked
+     */
     @Override
     public void onGameOverDialogNegativeClick(DialogFragment dialog) {
         //back to main menu
-        //game.resume();
         Intent menuIntent = new Intent(GameActivity.this, MainMenuActivity.class);
         startActivity(menuIntent);
     }

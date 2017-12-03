@@ -42,6 +42,7 @@ public class SimpleRenderer extends SurfaceView implements Renderer {
      * Initialise the canvas for the renderer
      *
      * @param context Android Activity the game is displayed in
+     * @param world the world the renderer should display used to initialise values
      */
     public SimpleRenderer(Context context, GameWorld world) {
         super(context);

@@ -27,6 +27,11 @@ public class GameWorld {
     private int numTilesH;
     private int numTilesV;
 
+    /**
+     * initialises a new game world by reading in game config files and the database
+     * @param context the games context eg. the activity
+     * @param status the weather status of the world
+     */
     public GameWorld(Context context, WeatherStatus status){
         entities = new LinkedList<>();
         tileMap = new LinkedList<>();
@@ -37,25 +42,45 @@ public class GameWorld {
         numTilesV = FileParser.getNumTilesV();
     }
 
+    /**
+     * updates all entities in the world
+     * the tile map is static and therefore not updated
+     * @param elapsedTime the time difference since the last update
+     */
     public void update(double elapsedTime){
         for(Iterator<GameObject> it = entities.iterator(); it.hasNext();){
             GameObject obj = it.next();
             obj.update(elapsedTime);
+            //if objeced died during update remove it from the list
             if(!obj.isAlive){
                 it.remove();
             }
         }
+        //to avoid concurrent modification exeptions add new objects after iterating throug the list
         for(GameObject o : newEntities){
             entities.add(0,o);
         }
         newEntities.clear();
-        Game.getInstance().log = entities.size()+"";
     }
 
+    /**
+     * adds a new object to the world at initialisation time
+     * @param obj the object to add
+     */
     public void addObject(GameObject obj){
         entities.add(obj);
     }
+
+    /**
+     * adds a new object to the world during runtime
+     * @param obj the object to add
+     */
     public void addNewObject(GameObject obj) {newEntities.add(obj);}
+
+    /**
+     * adds a new platform to the tile map
+     * @param obj the platform object to add
+     */
     public void addPlatform(GameObject obj){
         tileMap.add(obj);
     }
@@ -93,6 +118,10 @@ public class GameWorld {
         return state;
     }
 
+    /**
+     * returns the attack according to the current weather state by cloning an old one, also used for drop downs
+     * @return a new attack object
+     */
     public GameObject getAttack(){
         switch(state.getStatus()){
             case RAINY:
@@ -114,6 +143,11 @@ public class GameWorld {
         return cloneAttack(attackNormal);
     }
 
+    /**
+     * clones the predefined attack object
+     * @param attack the attack to clone
+     * @return a new object with the same values as the original one
+     */
     private GameObject cloneAttack(GameObject attack){
         float xPos = player.x_Pos+player.scale/2;
         float yPos = player.y_Pos;

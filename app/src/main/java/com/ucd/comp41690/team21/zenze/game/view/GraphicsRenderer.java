@@ -44,6 +44,7 @@ public class GraphicsRenderer extends SurfaceView implements Renderer {
      * Initialise the canvas for the renderer
      *
      * @param context Android Activity the game is displayed in
+     * @param world the world that should be displayed later on
      */
     public GraphicsRenderer(Context context, GameWorld world) {
         super(context);
@@ -71,6 +72,10 @@ public class GraphicsRenderer extends SurfaceView implements Renderer {
         UIBitmaps[6] = world.getState().getEnemyImage();
     }
 
+    /**
+     * renders the game world using bitmap images
+     * @param world the world to display
+     */
     @Override
     public void render(GameWorld world) {
         canvas = null;

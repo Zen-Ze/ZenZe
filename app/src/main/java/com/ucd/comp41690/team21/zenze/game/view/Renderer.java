@@ -8,7 +8,7 @@ import com.ucd.comp41690.team21.zenze.game.*;
  */
 
 public interface Renderer {
-    public void render(GameWorld world);
-    public SurfaceView getView();
-    public float getViewFrustum();
+    void render(GameWorld world);
+    SurfaceView getView();
+    float getViewFrustum();
 }

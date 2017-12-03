@@ -50,6 +50,14 @@ public class Game implements Runnable, Subject<InputEvent> {
     public int rainyAttackCount = 0;
     public int snowyAttackCount = 0;
 
+    /**
+     * initialises a new game
+     * @param context the games context, eg. the games activity
+     * @param width the with of the devices display
+     * @param height the height of the devices display
+     * @param status the weather status of the game
+     * @param graphicsRenderer indicates which graphics mode should be used
+     */
     public Game(Context context, int width, int height, WeatherStatus status, boolean graphicsRenderer) {
         Game.instance = this;
         this.context = context;
@@ -69,6 +77,10 @@ public class Game implements Runnable, Subject<InputEvent> {
         this.log = "";
     }
 
+    /**
+     * contains the game loop
+     * updates and renders the world as long as the game is running
+     */
     @Override
     public void run() {
         Looper.prepare();
@@ -93,6 +105,10 @@ public class Game implements Runnable, Subject<InputEvent> {
         }
     }
 
+    /**
+     * called when the activity is paused
+     * saves the important data to the database and joines the games thread
+     */
     public void pause() {
         //save data to database
         AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
@@ -124,18 +140,19 @@ public class Game implements Runnable, Subject<InputEvent> {
             }
         }
         for(ItemListLine item : items){
-            if(item.getItemId()== FileParser.DBIdNormalAttack){
+            if(item.getItemId()== FileParser.DBIdNormalItem){
                 item.setAmount(normalItemCount);
                 db.itemListLineDao().update(item);
             }
-            if(item.getItemId()== FileParser.DBIdSunnyAttack){
+            if(item.getItemId()== FileParser.DBIdSunnyItem){
                 item.setAmount(sunnyAttackCount);
                 db.itemListLineDao().update(item);
             }
-            if(item.getItemId()== FileParser.DBIdRainyAttack){
+            if(item.getItemId()== FileParser.DBIdRainyItem){
                 item.setAmount(rainyAttackCount);
+                db.itemListLineDao().update(item);
             }
-            if(item.getItemId()== FileParser.DBIdSnowyAttack){
+            if(item.getItemId()== FileParser.DBIdSnowyItem){
                 item.setAmount(snowyAttackCount);
                 db.itemListLineDao().update(item);
             }
@@ -156,6 +173,10 @@ public class Game implements Runnable, Subject<InputEvent> {
         }
     }
 
+    /**
+     * called when the game is resumed
+     * creates a new game thread and starts it
+     */
     public void resume() {
         running = true;
         gameThread = new Thread(this);
@@ -198,6 +219,10 @@ public class Game implements Runnable, Subject<InputEvent> {
         inputObserverList.remove(observer);
     }
 
+    /**
+     * notifies all the games' observers about an input event
+     * @param event the users input
+     */
     public void notify(InputEvent event) {
         for (Observer observer : inputObserverList) {
             observer.onNotify(event);
