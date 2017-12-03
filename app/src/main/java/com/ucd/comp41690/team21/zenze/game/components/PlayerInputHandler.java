@@ -17,11 +17,15 @@ public class PlayerInputHandler implements InputComponent, Observer<InputEvent> 
     private InputEvent inputEvent;
     private boolean moving;
 
+    //reusable commands
     private MoveHorizontal moveLeft;
     private MoveHorizontal moveRight;
     private Jump jumpUp;
     private Attack attack;
 
+    /**
+     * creates a new input handler, adds itself as observer to the game which receives input from the user
+     */
     public PlayerInputHandler() {
         Game.getInstance().addObserver(this);
 
@@ -34,6 +38,11 @@ public class PlayerInputHandler implements InputComponent, Observer<InputEvent> 
         moving = false;
     }
 
+    /**
+     * makes the players avatar move left/right when the device is tilted a certain amount,
+     * jump when the left half of the screen is touched and attack if the right half is touched
+     * @param object the player object that should receive the users input
+     */
     @Override
     public void handleInput(GameObject object) {
             switch (inputEvent) {
@@ -62,6 +71,10 @@ public class PlayerInputHandler implements InputComponent, Observer<InputEvent> 
             }
     }
 
+    /**
+     * is called when an input event is recorded
+     * @param event the user input
+     */
     @Override
     public void onNotify(InputEvent event) {
         if(event == InputEvent.TILT_NONE && moving){

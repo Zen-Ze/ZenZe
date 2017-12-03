@@ -53,24 +53,28 @@ public class EnemyPhysics extends PhysicsComponent {
                 AppDatabase database = Room.databaseBuilder(Game.getInstance().context, AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
                 EnemyList el = database.enemyListDao().findById(database.playerDao().getAll().get(0).getEnemyListId());
                 List<EnemyListLine> enemies = database.enemyListLineDao().getByEnemyListId(el.getId());
+                boolean display = false;
                 for (EnemyListLine enemy : enemies) {
                     if (enemy.getEnemyId() == FileParser.DBIdSunnyEnemy && object.type.getState() == WeatherStatus.SUNNY) {
+                        display = enemy.getAmount() == 0;
                         enemy.setAmount(enemy.getAmount() + 1);
-                        database = null;
-                        return;
+                        database.enemyListLineDao().update(enemy);
                     }
                     if (enemy.getEnemyId() == FileParser.DBIdRainyEnemy && object.type.getState() == WeatherStatus.RAINY) {
+                        display = enemy.getAmount() == 0;
                         enemy.setAmount(enemy.getAmount() + 1);
-                        database = null;
-                        return;
+                        database.enemyListLineDao().update(enemy);
                     }
                     if (enemy.getEnemyId() == FileParser.DBIdSnowyEnemy && object.type.getState() == WeatherStatus.SNOWY) {
+                        display = enemy.getAmount() == 0;
                         enemy.setAmount(enemy.getAmount() + 1);
-                        database = null;
-                        return;
+                        database.enemyListLineDao().update(enemy);
                     }
                 }
-                ((GameActivity) (Game.getInstance().context)).onEnemyDefeated(object.type);
+                database.close();
+                if(display) {
+                    ((GameActivity) (Game.getInstance().context)).onEnemyDefeated(object.type);
+                }
             }
         }
     }

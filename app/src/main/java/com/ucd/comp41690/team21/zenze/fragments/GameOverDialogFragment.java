@@ -15,6 +15,10 @@ import android.widget.TextView;
 
 import com.ucd.comp41690.team21.zenze.R;
 
+/**
+ * A fragment for displaying a short info message on screen
+ * after the user lost the game, giving the options to retry or to go back to the main menu
+ */
 public class GameOverDialogFragment extends DialogFragment {
     public interface GameOverDialogListener {
         public void onGameOverDialogPositiveClick(DialogFragment dialog);
@@ -22,6 +26,10 @@ public class GameOverDialogFragment extends DialogFragment {
     }
     GameOverDialogListener mListener;
 
+    /**
+     * is called when the dialog fragment is shown in an activity
+     * @param activity the activiy to which the fragment is attached
+     */
     @Override
     public void onAttach(Context activity) {
         super.onAttach(activity);
@@ -34,11 +42,15 @@ public class GameOverDialogFragment extends DialogFragment {
 
     }
 
-
-
+    /**
+     * creates a new Dialog containing an image, name and short info
+     * @param savedInstanceState
+     * @return the newly created dialog
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        //set the values of the views in the layout
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.fragment_info, null);
         ImageView imageView = view.findViewById(R.id.info_ImageView);
@@ -62,6 +74,11 @@ public class GameOverDialogFragment extends DialogFragment {
         return builder.create();
     }
 
+    /**
+     * is called when the user presses back or the area outside the dialog
+     * goes back to the game by calling the same method as the negative option
+     * @param dialog
+     */
     @Override
     public void onCancel (DialogInterface dialog){
         mListener.onGameOverDialogNegativeClick(GameOverDialogFragment.this);

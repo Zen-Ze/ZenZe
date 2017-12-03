@@ -1,11 +1,19 @@
 package com.ucd.comp41690.team21.zenze.game;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.Looper;
 import android.util.Log;
 import android.view.SurfaceView;
 
+import com.ucd.comp41690.team21.zenze.backend.database.AppDatabase;
+import com.ucd.comp41690.team21.zenze.backend.database.models.AttackList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.AttackListLine;
+import com.ucd.comp41690.team21.zenze.backend.database.models.ItemList;
+import com.ucd.comp41690.team21.zenze.backend.database.models.ItemListLine;
+import com.ucd.comp41690.team21.zenze.backend.database.models.Player;
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
+import com.ucd.comp41690.team21.zenze.game.util.FileParser;
 import com.ucd.comp41690.team21.zenze.game.util.InputEvent;
 import com.ucd.comp41690.team21.zenze.game.util.Observer;
 import com.ucd.comp41690.team21.zenze.game.util.Subject;
@@ -42,6 +50,14 @@ public class Game implements Runnable, Subject<InputEvent> {
     public int rainyAttackCount = 0;
     public int snowyAttackCount = 0;
 
+    /**
+     * initialises a new game
+     * @param context the games context, eg. the games activity
+     * @param width the with of the devices display
+     * @param height the height of the devices display
+     * @param status the weather status of the game
+     * @param graphicsRenderer indicates which graphics mode should be used
+     */
     public Game(Context context, int width, int height, WeatherStatus status, boolean graphicsRenderer) {
         Game.instance = this;
         this.context = context;
@@ -61,6 +77,10 @@ public class Game implements Runnable, Subject<InputEvent> {
         this.log = "";
     }
 
+    /**
+     * contains the game loop
+     * updates and renders the world as long as the game is running
+     */
     @Override
     public void run() {
         Looper.prepare();
@@ -85,8 +105,59 @@ public class Game implements Runnable, Subject<InputEvent> {
         }
     }
 
+    /**
+     * called when the activity is paused
+     * saves the important data to the database and joines the games thread
+     */
     public void pause() {
         //save data to database
+        AppDatabase db = Room.databaseBuilder(context, AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
+        Player player = db.playerDao().getAll().get(0);
+        player.setLastCoordX((int)gameWorld.getPlayer().x_Pos);
+        player.setLastCoordY((int)gameWorld.getPlayer().y_Pos);
+        player.setSavedHealth(gameWorld.getPlayer().health);
+        db.playerDao().update(player);
+        AttackList al = db.attackListDao().findById(db.playerDao().getAll().get(0).getAttackListId());
+        ItemList il = db.itemListDao().findById(db.playerDao().getAll().get(0).getItemListId());
+        List<AttackListLine> attacks = db.attackListLineDao().getByAttackListId(al.getId());
+        List<ItemListLine> items = db.itemListLineDao().getByItemListId(il.getId());
+        for(AttackListLine attack : attacks){
+            if(attack.getAttackId()== FileParser.DBIdNormalAttack){
+                attack.setAmount(normalItemCount);
+                db.attackListLineDao().update(attack);
+            }
+            if(attack.getAttackId()== FileParser.DBIdSunnyAttack){
+                attack.setAmount(sunnyAttackCount);
+                db.attackListLineDao().update(attack);
+            }
+            if(attack.getAttackId()== FileParser.DBIdRainyAttack){
+                attack.setAmount(rainyAttackCount);
+                db.attackListLineDao().update(attack);
+            }
+            if(attack.getAttackId()== FileParser.DBIdSnowyAttack){
+                attack.setAmount(snowyAttackCount);
+                db.attackListLineDao().update(attack);
+            }
+        }
+        for(ItemListLine item : items){
+            if(item.getItemId()== FileParser.DBIdNormalItem){
+                item.setAmount(normalItemCount);
+                db.itemListLineDao().update(item);
+            }
+            if(item.getItemId()== FileParser.DBIdSunnyItem){
+                item.setAmount(sunnyAttackCount);
+                db.itemListLineDao().update(item);
+            }
+            if(item.getItemId()== FileParser.DBIdRainyItem){
+                item.setAmount(rainyAttackCount);
+                db.itemListLineDao().update(item);
+            }
+            if(item.getItemId()== FileParser.DBIdSnowyItem){
+                item.setAmount(snowyAttackCount);
+                db.itemListLineDao().update(item);
+            }
+        }
+        db.close();
         //stop game thread
         if(gameThread!=null) {
             running = false;
@@ -102,6 +173,10 @@ public class Game implements Runnable, Subject<InputEvent> {
         }
     }
 
+    /**
+     * called when the game is resumed
+     * creates a new game thread and starts it
+     */
     public void resume() {
         running = true;
         gameThread = new Thread(this);
@@ -144,6 +219,10 @@ public class Game implements Runnable, Subject<InputEvent> {
         inputObserverList.remove(observer);
     }
 
+    /**
+     * notifies all the games' observers about an input event
+     * @param event the users input
+     */
     public void notify(InputEvent event) {
         for (Observer observer : inputObserverList) {
             observer.onNotify(event);
