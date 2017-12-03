@@ -109,10 +109,10 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
 
         // Spinner Drop down elements
         List<String> categories = new ArrayList<>();
-        categories.add( "Automatic (default)" );
-        categories.add( "rainy" );
-        categories.add( "snowy" );
-        categories.add( "sunny" );
+        categories.add( "Auto" );
+        categories.add( "Rainy" );
+        categories.add( "Snowy" );
+        categories.add( "Sunny" );
 
         // setting default selection chosen by the user, if not then the factory default
        // weatherSpinner.setSelection( defaultSelection );
