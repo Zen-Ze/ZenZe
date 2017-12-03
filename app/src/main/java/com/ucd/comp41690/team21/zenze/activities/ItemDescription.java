@@ -28,14 +28,40 @@ public class ItemDescription extends Activity {
         Bundle info = getIntent().getExtras();
         String name = info.getString("Name");
         String infoText = info.getString("Info");
+        int weatherStatus = info.getInt("Status");
+        int DBId = info.getInt("DBId");
+
 
         // Fetch title
         getTitle = name;
         // Fetch description
         getDescription = infoText;
         // Fetch image
-        //Bitmap image = BitmapFactory.decodeResource(getResources().R.drawable.enemy_rainy);
-
+        if(name!=null) {
+            switch (name) {
+                case "enemy_rainy":
+                    itemImage.setImageResource( R.drawable.enemy_rainy );
+                    break;
+                case "enemy_sunny":
+                    itemImage.setImageResource( R.drawable.enemy_sunny );
+                    break;
+                case "enemy_snowy":
+                    itemImage.setImageResource( R.drawable.enemy_snowy );
+                    break;
+                case "item_rainy":
+                    itemImage.setImageResource( R.drawable.item_rainy );
+                    break;
+                case "item_snowy":
+                    itemImage.setImageResource( R.drawable.item_snowy );
+                    break;
+                case "item_sunny":
+                    itemImage.setImageResource( R.drawable.item_sunny );
+                    break;
+                case "item_normal":
+                    itemImage.setImageResource( R.drawable.item_normal );
+                    break;
+            }
+        }else itemImage.setImageResource( R.drawable.item_normal );
         // setting item title
         itemTitle.setText(getTitle);
         // setting item description

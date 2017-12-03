@@ -40,21 +40,22 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
         weatherSpinner.setSelection(savedInstanceState.getInt(savedItemOnSpinner,0));
     }*/
 
+   // saving state of the buttons
     private void SavePreferences(){
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences( "ZenzePref", MODE_PRIVATE );
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(savedItemOnToggle, graphicButton.isEnabled());
+        editor.putBoolean(savedItemOnToggle, graphicButton.isChecked());
         editor.putInt(savedItemOnSpinner,weatherSpinner.getSelectedItemPosition());
-        editor.commit();
+        editor.apply();
     }
 
     private void LoadPreferences(){
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences( "ZenzePref", MODE_PRIVATE );
 
         Boolean  state = sharedPreferences.getBoolean(savedItemOnToggle, false);
-        int  position= sharedPreferences.getInt(savedItemOnSpinner, 0);
+        int  position= sharedPreferences.getInt(savedItemOnSpinner,3);
 
-        graphicButton.setEnabled(state);
+        graphicButton.setChecked(state);
         weatherSpinner.setSelection(position);
     }
     public void onBackPressed() {
@@ -83,7 +84,7 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
 
         graphicButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+                if (!isChecked) {
                     // The toggle is enabled
                     editor.putBoolean(graphicsOption,true);
                     editor.apply();
@@ -140,18 +141,22 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
                 switch (position) {
                     case 0:
                         editor.putString( weatherOption, "auto" );
+                        editor.apply();
                         break;
                     case 1:
                         editor.putString( weatherOption, "RAINY" );
+                        editor.apply();
                         break;
                     case 2:
                         editor.putString( weatherOption, "SNOWY" );
+                        editor.apply();
                         break;
                     case 3:
                         editor.putString( weatherOption, "SUNNY" );
+                        editor.apply();
                         break;
                 }
-                editor.apply();
+
 
 
     }
@@ -164,6 +169,6 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
         SharedPreferences.Editor editor = pref.edit();
         super.onStop();
         // Commit the edits!
-        editor.commit();
+        editor.apply();
     }
 }
