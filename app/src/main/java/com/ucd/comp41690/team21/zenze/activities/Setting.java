@@ -3,7 +3,6 @@ package com.ucd.comp41690.team21.zenze.activities;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,7 +28,7 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
         super.onSaveInstanceState(savedInstanceState);
         //Put your spinner values to restore later...
 
-        //outState.putInt("yourSpinner", weatherSpinner.getSelectedItemPosition());
+        //outState.putInt("item_selected_spinner", weatherSpinner.getSelectedItemPosition());
     }
 
     @Override

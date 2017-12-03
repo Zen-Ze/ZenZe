@@ -10,7 +10,6 @@
     <string name="gameOverDialog_Text">You lost... Better luck next time.</string>
     <string name="gameOverDialog_Return">Main Menu</string>
     <string name="gameOverDialog_Continue">Retry</string>
-<<<<<<< HEAD
 
     <!-- dummy content for item description-->
     <string name = "dummy_content_item_description">
@@ -46,6 +45,4 @@
     <string name="textview_help_item_description">== Item Description ==</string>
     <string name="title_activity_item_description">ItemDescription</string>
 
-=======
->>>>>>> master
 </resources>

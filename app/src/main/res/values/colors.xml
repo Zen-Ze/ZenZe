@@ -4,12 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ff4081</color>
     <color name="white">#ffffff</color>
-<<<<<<< HEAD
 
     <color name="black_overlay">#66000000</color>
     <color name="cyan">#00bcd4</color>
     <color name="cyan_dark">#008B9C</color>
-
-=======
->>>>>>> master
 </resources>

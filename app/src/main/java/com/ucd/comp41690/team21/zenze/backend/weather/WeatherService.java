@@ -103,7 +103,8 @@ public class WeatherService {
      * @return
      */
     public static String getUrlFromLocation(double[] location, Context context) {
-        String apiKey = context.getString(R.string.openweathermap_api_key);
+        //String apiKey = context.getString(R.string.openweathermap_api_key);
+        String apiKey= "1d11da8b7fd7895acd7d78bf97be9839";
 
 //        Log.d("WEATHER SERVICE", "getUrlFromLocation: apikey= " + apiKey);
 
