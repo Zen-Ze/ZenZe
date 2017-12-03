@@ -14,4 +14,4 @@ Clone this repository, and run the app. It's meant to run on a nexus 6, API 23, 
 
 ## Documentation
 
-(Click here)[https://zen-ze.github.io/] to find the javadocs for this project.
+[Click here](https://zen-ze.github.io/) to find the javadocs for this project.
