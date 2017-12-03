@@ -20,21 +20,42 @@ import java.util.List;
 @Dao
 public interface EnemyListDao {
 
+    /**
+     * Retrieve all enemy lists from the database
+     * @return
+     */
     @Query("SELECT * FROM enemylist")
     List<EnemyList> getAll();
 
+    /**
+     * Retrieve an enemy list from the database
+     * @param id
+     * @return
+     */
     @Query("SELECT * FROM enemylist where id LIKE :id")
     EnemyList findById(int id);
 
     @Query("SELECT COUNT(*) from enemylist")
     int countEnemyLists();
 
+    /**
+     * Insert one or more enemy lists in the database
+     * @param enemyLists
+     */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(EnemyList... enemyLists);
 
+    /**
+     * Update an enemy list in the database
+     * @param enemyList
+     */
     @Update
     void update(EnemyList enemyList);
 
+    /**
+     * Delete an enemy list in the database
+     * @param enemyList
+     */
     @Delete
     void delete(EnemyList enemyList);
 

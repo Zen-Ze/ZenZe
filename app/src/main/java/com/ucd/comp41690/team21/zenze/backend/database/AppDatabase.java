@@ -28,6 +28,8 @@ import com.ucd.comp41690.team21.zenze.backend.database.models.Player;
 
 /**
  * Created by timothee on 26/11/17.
+ *
+ * This class just defines all Daos
  */
 @Database(entities = {
         Player.class,

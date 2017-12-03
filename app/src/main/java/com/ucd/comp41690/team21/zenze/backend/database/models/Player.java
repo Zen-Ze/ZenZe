@@ -8,6 +8,20 @@ import android.arch.persistence.room.PrimaryKey;
 
 /**
  * Created by timothee on 18/10/17.
+ * Player
+ * +-----------------------------------------+------------------+-----------------+
+ * |                   Field                 |       type       |       Key       |
+ * +-----------------------------------------+------------------+-----------------+
+ * | _ID                                     |  INTEGER         |  PRI            |
+ * | LastCoordX                              |  INTEGER         |                 |
+ * | LastCoordY                              |  INTEGER         |                 |
+ * | SavedHealth                             |  INTEGER         |                 |
+ * | Username                                |  VARCHAR(64)     |                 |
+ * | CurrentLevel                            |  INTEGER         |                 |
+ * | ItemListId                              |  INTEGER         |  FGN            |
+ * | EnemyListId                             |  INTEGER         |  FGN            |
+ * | AttackListId                            |  INTEGER         |  FGN            |
+ * +-----------------------------------------+------------------+-----------------+
  */
 
 @Entity(foreignKeys = {
@@ -22,23 +36,6 @@ import android.arch.persistence.room.PrimaryKey;
             childColumns = "ItemListId")
         }, tableName = "player")
 public class Player {
-
-    /**
-     * Player
-     * +-----------------------------------------+------------------+-----------------+
-     * |                   Field                 |       type       |       Key       |
-     * +-----------------------------------------+------------------+-----------------+
-     * | _ID                                     |  INTEGER         |  PRI            |
-     * | LastCoordX                              |  INTEGER         |                 |
-     * | LastCoordY                              |  INTEGER         |                 |
-     * | SavedHealth                             |  INTEGER         |                 |
-     * | Username                                |  VARCHAR(64)     |                 |
-     * | CurrentLevel                            |  INTEGER         |                 |
-     * | ItemListId                              |  INTEGER         |  FGN            |
-     * | EnemyListId                             |  INTEGER         |  FGN            |
-     * | AttackListId                            |  INTEGER         |  FGN            |
-     * +-----------------------------------------+------------------+-----------------+
-     */
 
     @PrimaryKey(autoGenerate = true)
     private int id;

@@ -18,22 +18,43 @@ import java.util.List;
 @Dao
 public interface PlayerDao {
 
+    /**
+     * Retrieves all players in the database
+     * @return a list of players
+     */
     @Query("SELECT * FROM player")
     List<Player> getAll();
 
+    /**
+     * Retrieves a player from the database
+     * @param id the player id
+     * @return a player
+     */
     @Query("SELECT * FROM player where id LIKE :id")
     Player findById(int id);
 
     @Query("SELECT COUNT(*) from player")
     int countPlayers();
 
+    /**
+     * Insert one or more players in the database
+     * @param players
+     */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Player... players);
 
+    /**
+     * Update a player in the database
+     * @param player
+     */
     @Update
     void update(Player player);
 
+    /**
+     * Delete a player in the database
+     * @param player
+     */
     @Delete
-    void delete(Player user);
+    void delete(Player player);
 
 }
