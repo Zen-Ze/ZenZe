@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.ucd.comp41690.team21.zenze.R;
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 import com.ucd.comp41690.team21.zenze.fragments.GameOverDialogFragment;
 import com.ucd.comp41690.team21.zenze.fragments.InfoDialogFragment;
@@ -149,10 +150,27 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         info.putString("Name", type.getName());
         info.putString("Info", type.getShortInfo());
         info.putParcelable("Image", type.getImage());
+        info.putString("Title", getString(R.string.infoDialog_TitleItem));
 
         DialogFragment dialog = new InfoDialogFragment();
         dialog.setArguments(info);
-        dialog.show(getSupportFragmentManager(), "info");
+        dialog.show(getSupportFragmentManager(), "infoItem");
+
+        game.pause();
+    }
+
+    public void onEnemyDefeated(Type type){
+        itemType = type;
+
+        Bundle info = new Bundle();
+        info.putString("Name", type.getName());
+        info.putString("Info", type.getShortInfo());
+        info.putParcelable("Image", type.getImage());
+        info.putString("Title", getString(R.string.infoDialog_TitleEnemy));
+
+        DialogFragment dialog = new InfoDialogFragment();
+        dialog.setArguments(info);
+        dialog.show(getSupportFragmentManager(), "infoEnemy");
 
         game.pause();
     }
@@ -169,8 +187,9 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
         Bundle info = new Bundle();
         if(itemType!=null) {
             info.putString("Name", itemType.getName());
-            info.putString("Info", itemType.getShortInfo());
-            //info.putParcelable("Image", itemType.getImage());
+            info.putString("Info", itemType.getFullInfo());
+            info.putInt("Status", itemType.getState()==null?3:itemType.getState().getValue());
+            info.putInt("DBId", itemType.getDBId());
         } else{
             info.putString("Name", "Item Name");
             info.putString("Info", "Display short info here");

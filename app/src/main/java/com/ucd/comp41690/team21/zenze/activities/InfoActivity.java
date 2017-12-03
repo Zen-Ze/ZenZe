@@ -17,6 +17,7 @@ public class InfoActivity extends Activity {
         Bundle info = getIntent().getExtras();
         String name = info.getString("Name");
         String infoText = info.getString("Info");
-        //Bitmap image = info.getParcelable("Image");
+        int weatherStatus = info.getInt("Status");
+        int DBId = info.getInt("DBId");
     }
 }

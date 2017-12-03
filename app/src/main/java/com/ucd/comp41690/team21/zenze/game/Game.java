@@ -86,6 +86,8 @@ public class Game implements Runnable, Subject<InputEvent> {
     }
 
     public void pause() {
+        //save data to database
+        //stop game thread
         if(gameThread!=null) {
             running = false;
             while (true) {
