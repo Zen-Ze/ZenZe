@@ -28,6 +28,9 @@ import com.ucd.comp41690.team21.zenze.backend.database.models.EnemyList;
 import com.ucd.comp41690.team21.zenze.backend.database.models.ItemList;
 import com.ucd.comp41690.team21.zenze.backend.database.models.Player;
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherService;
+import com.ucd.comp41690.team21.zenze.game.view.GraphicsRenderer;
+
+import java.util.Objects;
 
 /**
  * Main Activity that launches on start
@@ -38,11 +41,8 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
     private GoogleApiClient googleApiClient;
 
-    private final String graphicsOption = "GRAPHICS_OPTION";
-    private final String weatherOption = "WEATHER_OPTION";
-    String gfx;
+    Boolean graphicsOption;
     String weather;
-    private final static String TAG = MainMenuActivity.class.getName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,14 +102,15 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
                 startSetting( v );
             }
         } );
+
         googleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
 
-
         // testing
-        gfx = pref.getString( weatherOption, "null" );
-        weather = String.valueOf( pref.getBoolean( graphicsOption, true ) );
-        Log.i( "weather_setting", gfx );
-        Log.i( "graphics_setting", weather );
+        String weatherOption = "WEATHER_OPTION";
+        String gfx = "GRAPHICS_OPTION";
+
+        weather = pref.getString( weatherOption, "null" );
+        graphicsOption =  pref.getBoolean(gfx , true );
     }
 
     /**
@@ -127,15 +128,23 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
             location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         }
 
-        gameIntent.putExtra("Game State", WeatherService.getWeatherStatus(location, getApplicationContext()));
-        gameIntent.putExtra("Graphics Renderer", true);
+        if(!weather.equals("auto")){
+            gameIntent.putExtra("Game State", weather);
+            Log.i("w",weather);
+        }
+
+        else{
+            gameIntent.putExtra("Game State", WeatherService.getWeatherStatus(location, getApplicationContext()));
+        }
+        gameIntent.putExtra("Graphics Renderer", graphicsOption);
+        Log.i("graphics_setting", String.valueOf( graphicsOption ) );
         startActivity(gameIntent);
         }
 
     // Intent to start help activity
     public void startHelp(View v) {
         Intent helpIntent = new Intent( MainMenuActivity.this, Help.class );
-        helpIntent.putExtra( "graphics_settings", gfx );
+        helpIntent.putExtra( "graphics_settings", graphicsOption );
         helpIntent.putExtra( "weather_settings", weather );
         startActivity( helpIntent );
     }

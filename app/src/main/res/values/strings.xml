@@ -44,5 +44,6 @@
     <string name="textview_help_basics">== Basics ==</string>
     <string name="textview_help_item_description">== Item Description ==</string>
     <string name="title_activity_item_description">ItemDescription</string>
+    <string name="textview_settings">Settings</string>
 
 </resources>

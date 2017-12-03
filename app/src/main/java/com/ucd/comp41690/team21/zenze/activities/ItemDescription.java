@@ -1,5 +1,7 @@
 package com.ucd.comp41690.team21.zenze.activities;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.app.Activity;
 import android.widget.ImageView;
@@ -32,6 +34,7 @@ public class ItemDescription extends Activity {
         // Fetch description
         getDescription = infoText;
         // Fetch image
+        //Bitmap image = BitmapFactory.decodeResource(getResources().R.drawable.enemy_rainy);
 
         // setting item title
         itemTitle.setText(getTitle);

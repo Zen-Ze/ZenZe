@@ -20,15 +20,46 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
 
     private final String graphicsOption = "GRAPHICS_OPTION";
     private final String weatherOption = "WEATHER_OPTION";
+    private final String savedItemOnSpinner = "savedItemOnSpinner";
+    private final String savedItemOnToggle = "savedItemOnToggle";
     Spinner weatherSpinner;
     ToggleButton graphicButton;
 
 
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
+/*    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putInt(savedItemOnSpinner, weatherSpinner.getSelectedItemPosition());
+        savedInstanceState.putBoolean(savedItemOnToggle, graphicButton.isChecked());
         super.onSaveInstanceState(savedInstanceState);
-        //Put your spinner values to restore later...
 
-        //outState.putInt("item_selected_spinner", weatherSpinner.getSelectedItemPosition());
+
+    }*/
+   /* @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        graphicButton.setChecked(savedInstanceState.getBoolean(savedItemOnToggle,false));
+        weatherSpinner.setSelection(savedInstanceState.getInt(savedItemOnSpinner,0));
+    }*/
+
+    private void SavePreferences(){
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences( "ZenzePref", MODE_PRIVATE );
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(savedItemOnToggle, graphicButton.isEnabled());
+        editor.putInt(savedItemOnSpinner,weatherSpinner.getSelectedItemPosition());
+        editor.commit();
+    }
+
+    private void LoadPreferences(){
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences( "ZenzePref", MODE_PRIVATE );
+
+        Boolean  state = sharedPreferences.getBoolean(savedItemOnToggle, false);
+        int  position= sharedPreferences.getInt(savedItemOnSpinner, 0);
+
+        graphicButton.setEnabled(state);
+        weatherSpinner.setSelection(position);
+    }
+    public void onBackPressed() {
+        SavePreferences();
+        super.onBackPressed();
     }
 
     @Override
@@ -39,17 +70,16 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
         setContentView( R.layout.activity_settings );
 
         //getActionBar().setDisplayHomeAsUpEnabled( true );
-
-        if (savedInstanceState!= null) {
-            //get your values to restore...
-            weatherSpinner.setSelection(savedInstanceState.getInt("yourSpinner", 0));
-        }
         SharedPreferences pref = getApplicationContext().getSharedPreferences( "ZenzePref", MODE_PRIVATE );
         final SharedPreferences.Editor editor = pref.edit();
+        // Loading already saved preferences else put default values
+
+
         // Spinner elements
         graphicButton = findViewById( R.id.graphic_switch );
         weatherSpinner = findViewById( R.id.weather_spinner );
 
+        LoadPreferences();
 
         graphicButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -67,12 +97,12 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
         });
 
         // set up listener for weather spinner
-        weatherSpinnerMethod( getWeatherDefault() );
+        weatherSpinnerMethod();
 
     }
 
 
-    private void weatherSpinnerMethod (int defaultSelection) {
+    private void weatherSpinnerMethod () {
 
         // Spinner click listener
         weatherSpinner.setOnItemSelectedListener( this );
@@ -85,7 +115,7 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
         categories.add( "sunny" );
 
         // setting default selection chosen by the user, if not then the factory default
-        weatherSpinner.setSelection( defaultSelection );
+       // weatherSpinner.setSelection( defaultSelection );
 
         // Creating adapter for spinner
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>( this,
@@ -102,7 +132,6 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        String item;
         SharedPreferences pref = getApplicationContext().getSharedPreferences( "ZenzePref", MODE_PRIVATE );
         SharedPreferences.Editor editor = pref.edit();
 
@@ -113,19 +142,15 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
                         editor.putString( weatherOption, "auto" );
                         break;
                     case 1:
-                        editor.putString( weatherOption, "rainy" );
+                        editor.putString( weatherOption, "RAINY" );
                         break;
                     case 2:
-                        editor.putString( weatherOption, "snowy" );
+                        editor.putString( weatherOption, "SNOWY" );
                         break;
                     case 3:
-                        editor.putString( weatherOption, "sunny" );
+                        editor.putString( weatherOption, "SUNNY" );
                         break;
                 }
-                item = parent.getItemAtPosition( position ).toString();
-                Toast.makeText( parent.getContext(), "Selected: " +
-                        item, Toast.LENGTH_SHORT ).show();
-
                 editor.apply();
 
 
@@ -133,24 +158,6 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
 
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
-    }
-
-    private int getWeatherDefault(){
-        SharedPreferences pref = getApplicationContext().getSharedPreferences( "ZenzePref", MODE_PRIVATE );
-        int bit = 0;
-
-        // checking the currently chosen value by user
-        String check = pref.getString( weatherOption,"null");
-
-        switch (check){
-            case "auto":  bit = 0; break;
-            case "rainy": bit = 1; break;
-            case "snowy": bit = 2; break;
-            case "sunny": bit = 3; break;
-            case  "null": bit = 0; break;
-        }
-
-        return  bit;
     }
     protected void onStop(){
         SharedPreferences pref = getApplicationContext().getSharedPreferences( "ZenzePref", MODE_PRIVATE );
