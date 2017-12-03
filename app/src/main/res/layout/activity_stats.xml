@@ -131,13 +131,12 @@
         android:layout_marginEnd="32dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="160dp"
-        android:text="CheckedTextView"
+        android:text= "CheckedTextView"
         app:layout_constraintBottom_toTopOf="@+id/enemy_snowy"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.776"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.017"
-        android:checkMark="@drawable/mm_button" ‌/>
+        app:layout_constraintVertical_bias="0.017" />
 
     <CheckedTextView
         android:id="@+id/enemy_snowy"
