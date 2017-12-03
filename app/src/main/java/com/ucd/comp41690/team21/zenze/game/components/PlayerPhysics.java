@@ -1,10 +1,17 @@
 package com.ucd.comp41690.team21.zenze.game.components;
 
+import android.arch.persistence.room.Room;
 import android.widget.Toast;
 
 import com.ucd.comp41690.team21.zenze.activities.GameActivity;
+import com.ucd.comp41690.team21.zenze.backend.database.AppDatabase;
+import com.ucd.comp41690.team21.zenze.backend.database.models.AttackListLine;
+import com.ucd.comp41690.team21.zenze.backend.database.models.ItemListLine;
 import com.ucd.comp41690.team21.zenze.game.Game;
 import com.ucd.comp41690.team21.zenze.game.GameObject;
+import com.ucd.comp41690.team21.zenze.game.util.FileParser;
+
+import java.util.List;
 
 public class PlayerPhysics extends PhysicsComponent {
     private final float ground;
@@ -52,34 +59,89 @@ public class PlayerPhysics extends PhysicsComponent {
                     if (o.type!=null && o.type.getTag().equals(Type.ITEM_TAG)) {
                         o.isAlive = false;
                         Game.getInstance().normalItemCount++;
+                        AppDatabase db = Room.databaseBuilder(Game.getInstance().context, AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
+                        List<ItemListLine> items = db.itemListLineDao().getByItemListId(db.itemListDao().findById(db.playerDao().getAll().get(0).getItemListId()).getId());
+                        for(ItemListLine line : items){
+                            if(line.getItemId() == FileParser.DBIdNormalItem){
+                                line.setAmount(line.getAmount()+1);
+                                db.itemListLineDao().update(line);
+                            }
+                        }
+                        db.close();
                         ((GameActivity)(Game.getInstance().context)).onItemFound(o.type);
                     } else if (o.type!=null && o.type.getTag().equals(Type.S_ITEM_TAG)) {
                         o.isAlive = false;
+                        AppDatabase db = Room.databaseBuilder(Game.getInstance().context, AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
+                        List<ItemListLine> items = db.itemListLineDao().getByItemListId(db.itemListDao().findById(db.playerDao().getAll().get(0).getItemListId()).getId());
+
                         switch (Game.getInstance().getGameWorld().getState().getStatus()) {
                             case SNOWY:
                                 Game.getInstance().snowyItemCount++;
+                                Game.getInstance().normalItemCount++;
+                                for(ItemListLine line : items){
+                                    if(line.getItemId() == FileParser.DBIdSnowyItem){
+                                        line.setAmount(line.getAmount()+1);
+                                        db.itemListLineDao().update(line);
+                                    }
+                                }
                                 break;
                             case RAINY:
+                                Game.getInstance().normalItemCount++;
+                                for(ItemListLine line : items){
+                                    if(line.getItemId() == FileParser.DBIdRainyItem){
+                                        line.setAmount(line.getAmount()+1);
+                                        db.itemListLineDao().update(line);
+                                    }
+                                }
                                 Game.getInstance().rainyItemCount++;
                                 break;
                             case SUNNY:
                                 Game.getInstance().sunnyItemCount++;
+                                for(ItemListLine line : items){
+                                    if(line.getItemId() == FileParser.DBIdSunnyItem){
+                                        line.setAmount(line.getAmount()+1);
+                                        db.itemListLineDao().update(line);
+                                    }
+                                }
                                 break;
                         }
+                        db.close();
                         ((GameActivity)(Game.getInstance().context)).onItemFound(o.type);
                     } else if (o.type!=null && o.type.getTag().equals(Type.A_ITEM_TAG)) {
                         o.isAlive = false;
+                        AppDatabase db = Room.databaseBuilder(Game.getInstance().context, AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
+                        List<AttackListLine> attacks = db.attackListLineDao().getByAttackListId(db.attackListDao().findById(db.playerDao().getAll().get(0).getAttackListId()).getId());
+
                         switch (Game.getInstance().getGameWorld().getState().getStatus()) {
                             case SNOWY:
                                 Game.getInstance().snowyAttackCount++;
+                                for(AttackListLine line : attacks){
+                                    if(line.getAttackId() == FileParser.DBIdSnowyAttack){
+                                        line.setAmount(line.getAmount()+1);
+                                        db.attackListLineDao().update(line);
+                                    }
+                                }
                                 break;
                             case RAINY:
                                 Game.getInstance().rainyAttackCount++;
+                                for(AttackListLine line : attacks){
+                                    if(line.getAttackId() == FileParser.DBIdRainyAttack){
+                                        line.setAmount(line.getAmount()+1);
+                                        db.attackListLineDao().update(line);
+                                    }
+                                }
                                 break;
                             case SUNNY:
                                 Game.getInstance().sunnyAttackCount++;
+                                for(AttackListLine line : attacks){
+                                    if(line.getAttackId() == FileParser.DBIdSunnyAttack){
+                                        line.setAmount(line.getAmount()+1);
+                                        db.attackListLineDao().update(line);
+                                    }
+                                }
                                 break;
                         }
+                        db.close();
                         ((GameActivity)(Game.getInstance().context)).onItemFound(o.type);
                     } else if (o.type!=null && o.type.getTag().equals(Type.ENEMY_TAG)) {
                         float[] newPos = getCollisionPoint(

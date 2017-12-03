@@ -56,17 +56,20 @@ public class EnemyPhysics extends PhysicsComponent {
                 for (EnemyListLine enemy : enemies) {
                     if (enemy.getEnemyId() == FileParser.DBIdSunnyEnemy && object.type.getState() == WeatherStatus.SUNNY) {
                         enemy.setAmount(enemy.getAmount() + 1);
-                        database = null;
+                        database.enemyListLineDao().update(enemy);
+                        database.close();
                         return;
                     }
                     if (enemy.getEnemyId() == FileParser.DBIdRainyEnemy && object.type.getState() == WeatherStatus.RAINY) {
                         enemy.setAmount(enemy.getAmount() + 1);
-                        database = null;
+                        database.enemyListLineDao().update(enemy);
+                        database.close();
                         return;
                     }
                     if (enemy.getEnemyId() == FileParser.DBIdSnowyEnemy && object.type.getState() == WeatherStatus.SNOWY) {
                         enemy.setAmount(enemy.getAmount() + 1);
-                        database = null;
+                        database.enemyListLineDao().update(enemy);
+                        database.close();
                         return;
                     }
                 }
