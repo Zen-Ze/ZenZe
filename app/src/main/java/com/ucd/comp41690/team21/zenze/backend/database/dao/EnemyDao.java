@@ -17,26 +17,51 @@ import java.util.List;
 
 @Dao
 public interface EnemyDao {
-
+    /**
+     * Retrieve all enemies from the database
+     * @return
+     */
     @Query("SELECT * FROM enemy")
     List<Enemy> getAll();
 
+    /**
+     * Retrieve all enemies from the database by weather status
+     * @param weatherStatus
+     * @return
+     */
     @Query("SELECT * FROM enemy WHERE WeatherStatus LIKE :weatherStatus")
     List<Enemy> getByWeatherStatus(int weatherStatus);
 
+    /**
+     * Retrieve an enemy from the database by id
+     * @param id
+     * @return
+     */
     @Query("SELECT * FROM enemy where id LIKE :id")
     Enemy findById(int id);
 
     @Query("SELECT COUNT(*) from enemy")
     int countEnemies();
 
+    /**
+     * Insert one or more ennemies in the database
+     * @param ennemies
+     */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Enemy... ennemies);
 
+    /**
+     * Update an enemy in the database
+     * @param enemy
+     */
     @Update
-    void update(Enemy item);
+    void update(Enemy enemy);
 
+    /**
+     * Delete an enemy in the database
+     * @param enemy
+     */
     @Delete
-    void delete(Enemy item);
+    void delete(Enemy enemy);
 
 }

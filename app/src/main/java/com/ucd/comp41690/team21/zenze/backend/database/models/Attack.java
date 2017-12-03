@@ -9,25 +9,21 @@ import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 
 /**
  * Created by timothee on 06/11/17.
+ * Attack
+ * +-----------------------------------------+------------------+-----------------+
+ * |                   Field                 |       type       |       Key       |
+ * +-----------------------------------------+------------------+-----------------+
+ * | _ID                                     |  INTEGER         |  PRI            |
+ * | Name                                    |  VARCHAR(64)     |                 |
+ * | Damage                                  |  INTEGER         |                 |
+ * | Scale                                   |  INTEGER         |                 |
+ * | Description                             |  TEXT            |                 |
+ * | GraphicsPath                            |  TEXT            |                 |
+ * | WeatherStatus                           |  INTEGER         |                 |
+ * +-----------------------------------------+------------------+-----------------+
  */
-
 @Entity(tableName = "attack")
 public class Attack {
-
-    /**
-     * Attack
-     * +-----------------------------------------+------------------+-----------------+
-     * |                   Field                 |       type       |       Key       |
-     * +-----------------------------------------+------------------+-----------------+
-     * | _ID                                     |  INTEGER         |  PRI            |
-     * | Name                                    |  VARCHAR(64)     |                 |
-     * | Damage                                  |  INTEGER         |                 |
-     * | Scale                                   |  INTEGER         |                 |
-     * | Description                             |  TEXT            |                 |
-     * | GraphicsPath                            |  TEXT            |                 |
-     * | WeatherStatus                           |  INTEGER         |                 |
-     * +-----------------------------------------+------------------+-----------------+
-     */
 
     @PrimaryKey(autoGenerate = true)
     private int id;

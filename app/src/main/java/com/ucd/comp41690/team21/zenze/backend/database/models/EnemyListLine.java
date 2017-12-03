@@ -8,6 +8,15 @@ import android.arch.persistence.room.PrimaryKey;
 
 /**
  * Created by timothee on 06/11/17.
+ * ItemListLine
+ * +-----------------------------------------+------------------+-----------------+
+ * |                   Field                 |       type       |       Key       |
+ * +-----------------------------------------+------------------+-----------------+
+ * | _ID                                     |  INTEGER         |  PRI            |
+ * | Amount                                  |  INTEGER         |                 |
+ * | EnemyId                                 |  INTEGER         |  FRN            |
+ * | EnemyListId                             |  INTEGER         |  FRN            |
+ * +-----------------------------------------+------------------+-----------------+
  */
 
 @Entity(tableName = "EnemyListLine", foreignKeys = {
@@ -20,18 +29,6 @@ import android.arch.persistence.room.PrimaryKey;
     }
 )
 public class EnemyListLine {
-
-    /**
-     * ItemListLine
-     * +-----------------------------------------+------------------+-----------------+
-     * |                   Field                 |       type       |       Key       |
-     * +-----------------------------------------+------------------+-----------------+
-     * | _ID                                     |  INTEGER         |  PRI            |
-     * | Amount                                  |  INTEGER         |                 |
-     * | EnemyId                                 |  INTEGER         |  FRN            |
-     * | EnemyListId                             |  INTEGER         |  FRN            |
-     * +-----------------------------------------+------------------+-----------------+
-     */
 
     @PrimaryKey(autoGenerate = true)
     private int id;
