@@ -66,4 +66,20 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <com.facebook.login.widget.LoginButton xmlns:fb="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/login_button"
+        style="@style/FacebookLoginButton"
+        android:layout_width="0dp"
+        android:layout_height="22dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        fb:layout_constraintBottom_toBottomOf="parent"
+        fb:layout_constraintEnd_toEndOf="parent"
+        fb:layout_constraintStart_toStartOf="parent"
+        fb:layout_constraintTop_toBottomOf="@+id/help_button" />
 </android.support.constraint.ConstraintLayout>
