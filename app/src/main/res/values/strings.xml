@@ -12,7 +12,7 @@
     <string name="gameOverDialog_Continue">Retry</string>
 
     <!-- dummy content for item description-->
-    <string name = "dummy_content_item_description">
+    <string name="dummy_content_item_description">
         People with anxiety disorders respond to certain objects
         or situations with fear and dread, as well as with physical
         signs of anxiety or panic, such as a rapid heartbeat and
@@ -45,5 +45,6 @@
     <string name="textview_help_item_description">== Item Description ==</string>
     <string name="title_activity_item_description">ItemDescription</string>
     <string name="textview_settings">Settings</string>
+    <string name="title_activity_stats">StatsActivity</string>
 
 </resources>
