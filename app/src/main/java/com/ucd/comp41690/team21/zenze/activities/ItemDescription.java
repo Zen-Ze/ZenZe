@@ -26,6 +26,7 @@ public class ItemDescription extends Activity {
 
         // Fetching data from the game activity
         Bundle info = getIntent().getExtras();
+        assert info != null;
         String name = info.getString("Name");
         String infoText = info.getString("Info");
         int weatherStatus = info.getInt("Status");

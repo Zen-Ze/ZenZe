@@ -11,32 +11,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="28dp"
         android:layout_marginTop="8dp"
-        android:text="Items Unlocked"
+        android:text="@string/textview_items_unlocked"
+        android:textAllCaps="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textView5"
-        app:layout_constraintHorizontal_bias="0.148"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.049" />
+        app:layout_constraintVertical_bias="0.068" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/attack_unlocked"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="140dp"
         android:layout_marginTop="8dp"
-        android:text="Enemies Encountered"
+        android:text="@string/textview_attack_unlocked"
+        android:textAllCaps="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/enemy_unlocked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/textview_enemy_unlocked"
+        android:textAllCaps="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.049" />
+        app:layout_constraintVertical_bias="0.082" />
 
     <CheckedTextView
-        android:id="@+id/item1"
+        android:id="@+id/item_normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -44,14 +55,14 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="88dp"
         android:text="CheckedTextView"
-        app:layout_constraintBottom_toTopOf="@+id/item4"
+        app:layout_constraintBottom_toTopOf="@+id/item_snowy"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.077"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <CheckedTextView
-        android:id="@+id/item2"
+        android:id="@+id/item_rainy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -67,15 +78,15 @@
         app:layout_constraintVertical_bias="0.026" />
 
     <CheckedTextView
-        android:id="@+id/item3"
+        android:id="@+id/item_sunny"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="18dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="200dp"
         android:text="CheckedTextView"
-        app:layout_constraintBottom_toTopOf="@+id/item2"
+        app:layout_constraintBottom_toTopOf="@+id/item_rainy"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.077"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,7 +94,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <CheckedTextView
-        android:id="@+id/item4"
+        android:id="@+id/item_snowy"
         android:layout_width="wrap_content"
         android:layout_height="18dp"
         android:layout_marginBottom="8dp"
@@ -91,58 +102,106 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="148dp"
         android:text="CheckedTextView"
-        app:layout_constraintBottom_toTopOf="@+id/item3"
+        app:layout_constraintBottom_toTopOf="@+id/item_sunny"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.077"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <CheckedTextView
-        android:id="@+id/enemy1"
+        android:id="@+id/enemy_sunny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="108dp"
         android:text="CheckedTextView"
-        app:layout_constraintBottom_toTopOf="@+id/enemy2"
+        app:layout_constraintBottom_toTopOf="@+id/enemy_rainy"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.776"
-        app:layout_constraintStart_toEndOf="@+id/item1"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.407" />
+        app:layout_constraintVertical_bias="0.115" />
 
     <CheckedTextView
-        android:id="@+id/enemy2"
+        android:id="@+id/enemy_rainy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="160dp"
-        android:checkMark="@drawable/ene"
         android:text="CheckedTextView"
-        app:layout_constraintBottom_toTopOf="@+id/enemy3"
+        app:layout_constraintBottom_toTopOf="@+id/enemy_snowy"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.776"
-        app:layout_constraintStart_toEndOf="@+id/item1"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.017"
+        android:checkMark="@drawable/mm_button" ‌/>
 
     <CheckedTextView
-        android:id="@+id/enemy3"
+        android:id="@+id/enemy_snowy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="204dp"
-        android:checkMark="true"
         android:text="CheckedTextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.776"
-        app:layout_constraintStart_toEndOf="@+id/item1"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.11" />
+        app:layout_constraintVertical_bias="0.0" />
+
+    <CheckedTextView
+        android:id="@+id/attack_normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="CheckedTextView"
+        app:layout_constraintBottom_toTopOf="@+id/attack_rainy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/attack_unlocked"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <CheckedTextView
+        android:id="@+id/attack_rainy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="CheckedTextView"
+        app:layout_constraintBottom_toTopOf="@+id/attack_snowy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <CheckedTextView
+        android:id="@+id/attack_snowy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="CheckedTextView"
+        app:layout_constraintBottom_toTopOf="@+id/attack_sunny"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <CheckedTextView
+        android:id="@+id/attack_sunny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="168dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="CheckedTextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

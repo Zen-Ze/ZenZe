@@ -17,6 +17,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:background="?android:attr/colorPressedHighlight"
+        android:elevation="0dp"
         android:onClick="startGame"
         android:text="@string/mm_start"
         android:textSize="24sp"
@@ -26,7 +27,8 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.859" />
+        app:layout_constraintVertical_bias="0.859"
+        tools:shadowColor="@color/colorAccent" />
 
     <Button
         android:id="@+id/help_button"

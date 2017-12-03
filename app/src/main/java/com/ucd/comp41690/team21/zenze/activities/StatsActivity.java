@@ -1,16 +1,17 @@
 package com.ucd.comp41690.team21.zenze.activities;
 
+import android.app.Activity;
 import android.arch.persistence.room.Room;
 import android.os.Bundle;
-import android.app.Activity;
 import android.widget.CheckedTextView;
 
 import com.ucd.comp41690.team21.zenze.R;
 import com.ucd.comp41690.team21.zenze.backend.database.AppDatabase;
 import com.ucd.comp41690.team21.zenze.backend.database.models.AttackList;
-import com.ucd.comp41690.team21.zenze.backend.database.models.EnemyList;
-import com.ucd.comp41690.team21.zenze.backend.database.models.ItemList;
-import com.ucd.comp41690.team21.zenze.backend.database.models.Player;
+import com.ucd.comp41690.team21.zenze.backend.database.models.AttackListLine;
+import com.ucd.comp41690.team21.zenze.game.util.FileParser;
+
+import java.util.List;
 
 public class StatsActivity extends Activity {
 
@@ -18,38 +19,68 @@ public class StatsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_stats );
+
         // Gettings resources ready
-        CheckedTextView item1 = findViewById( R.id.item1 );
-        CheckedTextView item2 = findViewById( R.id.item2 );
-        CheckedTextView item3 = findViewById( R.id.item3 );
-        CheckedTextView item4 = findViewById( R.id.item4 );
-        CheckedTextView enemy1 = findViewById( R.id.enemy1 );
-        CheckedTextView enemy2 = findViewById( R.id.enemy2 );
-        CheckedTextView enemy3 = findViewById( R.id.enemy3 );
+        CheckedTextView itemNormal = findViewById( R.id.item_normal );
+        CheckedTextView itemSnowy = findViewById( R.id.item_snowy );
+        CheckedTextView itemSunny = findViewById( R.id.item_sunny );
+        CheckedTextView itemRainy = findViewById( R.id.item_rainy );
+        CheckedTextView enemySunny = findViewById( R.id.enemy_sunny );
+        CheckedTextView enemyRainy = findViewById( R.id.enemy_rainy );
+        CheckedTextView enemySnowy = findViewById( R.id.enemy_snowy );
+        CheckedTextView attackSnowy = findViewById( R.id.attack_snowy );
+        CheckedTextView attackRainy = findViewById( R.id.attack_rainy );
+        CheckedTextView attackNormal = findViewById( R.id.attack_normal );
+        CheckedTextView attackSunny = findViewById( R.id.attack_sunny );
 
         // Database related code
-        AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "zenze-db").allowMainThreadQueries().build();
+        AppDatabase database = Room.databaseBuilder( getApplicationContext(), AppDatabase.class, "zenze-db" ).allowMainThreadQueries().build();
 
-        database.attackListDao().insertAll(new AttackList());
-        database.enemyListDao().insertAll(new EnemyList());
-        database.itemListDao().insertAll( new ItemList());
+        AttackList al = database.attackListDao().findById( database.playerDao().getAll().get( 0 ).getAttackListId() );
 
-        // YOU NEED THESE FIRST
-        EnemyList el = database.enemyListDao().getAll().get(0);
-        AttackList al = database.attackListDao().getAll().get(0);
-        ItemList il = database.itemListDao().getAll().get(0);
-       // YOU CAN THEN CREATE A PLAYER
-       Player p = new Player(5,2,8,"toto",3,il.getId(),al.getId(), el.getId());
-        database.playerDao().insertAll(p);
-
+        List<AttackListLine> attacks = database.attackListLineDao().getByAttackListId( al.getId() );
+        int check;
+        for (AttackListLine attack : attacks) {
+            check = attack.getAmount();
+            if (check > 0) {
+                if (attack.getId() == FileParser.DBIdNormalAttack) {
+                    attackNormal.setChecked( true );
+                }
+                if (attack.getId() == FileParser.DBIdRainyAttack) {
+                    attackRainy.setChecked( true );
+                }
+                if (attack.getId() == FileParser.DBIdSnowyAttack) {
+                    attackSnowy.setChecked( true );
+                }
+                if (attack.getId() == FileParser.DBIdSunnyAttack) {
+                    attackSunny.setChecked( true );
+                }
+                if (attack.getId() == FileParser.DBIdNormalItem) {
+                    itemNormal.setChecked( true );
+                }
+                if (attack.getId() == FileParser.DBIdSunnyItem) {
+                    itemSunny.setChecked( true );
+                }
+                if (attack.getId() == FileParser.DBIdSnowyItem) {
+                    itemSnowy.setChecked( true );
+                }
+                if (attack.getId() == FileParser.DBIdRainyItem) {
+                    itemRainy.setChecked( true );
+                }
+                if (attack.getId() == FileParser.DBIdRainyEnemy) {
+                    enemyRainy.setChecked( true );
+                }
+                if (attack.getId() == FileParser.DBIdSnowyEnemy) {
+                    enemySnowy.setChecked( true );
+                }
+                if (attack.getId() == FileParser.DBIdSunnyEnemy) {
+                    enemySunny.setChecked( true );
+                }
+            }
+        }
         // changing text view state
-        item1.setChecked( true );
-        item2.setChecked( true);
-        item3.setChecked( false );
-        item4.setChecked( true );
-        enemy1.setChecked( false);
-        enemy2.setChecked( true);
-        enemy3.setChecked( false);
+
+
     }
 
 }
