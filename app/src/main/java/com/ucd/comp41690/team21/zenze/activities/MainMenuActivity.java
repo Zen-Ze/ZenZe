@@ -128,16 +128,16 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
             location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         }
 
-        if(weather.equals("auto")){
+       // if(weather.equals("auto")){
             gameIntent.putExtra("Game State", WeatherService.getWeatherStatus(location, getApplicationContext()));
 
-        }
+        //}
 
-        else{
+        /*else{
             gameIntent.putExtra("Game State", weather);
             Log.i("weather",weather);
 
-        }
+        }*/
         gameIntent.putExtra("Graphics Renderer", graphicsOption);
         Log.i("graphics_setting", String.valueOf( graphicsOption ) );
         startActivity(gameIntent);
