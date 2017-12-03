@@ -94,6 +94,8 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
                     editor.putBoolean(graphicsOption,false);
                     editor.apply();
                 }
+                Toast.makeText(getApplicationContext(), "Restart game to apply changes",
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -157,6 +159,7 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
                         break;
                 }
     }
+
 
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub

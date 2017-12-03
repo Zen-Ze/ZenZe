@@ -12,15 +12,16 @@
             android:id="@+id/textview_item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/cyan_dark"
             android:text="@string/textview_help"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/white"
             android:textSize="32sp"
             android:textStyle="bold"
-            android:typeface="monospace" />
+            android:typeface="sans"
+            android:fontFamily="serif-monospace" />
 
 
         <ImageView
@@ -35,14 +36,17 @@
     <TextView
         android:id="@+id/textview_item_description"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="600dp"
         android:layout_marginTop="5dp"
         android:background="@color/cyan_dark"
+        android:fontFamily="casual"
+        android:padding="20dp"
         android:text="@string/dummy_content_item_description"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/cardview_light_background"
         android:textSize="15sp"
+        android:textStyle="bold"
         android:typeface="monospace" />
     </LinearLayout>

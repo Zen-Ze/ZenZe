@@ -39,42 +39,43 @@ public class StatsActivity extends Activity {
         AttackList al = database.attackListDao().findById( database.playerDao().getAll().get( 0 ).getAttackListId() );
 
         List<AttackListLine> attacks = database.attackListLineDao().getByAttackListId( al.getId() );
+
         int check;
         for (AttackListLine attack : attacks) {
             check = attack.getAmount();
             if (check > 0) {
                 if (attack.getId() == FileParser.DBIdNormalAttack) {
-                    attackNormal.setChecked( true );
+                    attackNormal.setTextColor(this.getResources().getColor(R.color.colorAccent));
                 }
                 if (attack.getId() == FileParser.DBIdRainyAttack) {
-                    attackRainy.setChecked( true );
+                    attackRainy.setTextColor(this.getResources().getColor(R.color.colorAccent));
                 }
                 if (attack.getId() == FileParser.DBIdSnowyAttack) {
-                    attackSnowy.setChecked( true );
+                    attackSnowy.setTextColor(this.getResources().getColor(R.color.colorAccent));
                 }
                 if (attack.getId() == FileParser.DBIdSunnyAttack) {
-                    attackSunny.setChecked( true );
+                    attackSunny.setTextColor(this.getResources().getColor(R.color.colorAccent));
                 }
                 if (attack.getId() == FileParser.DBIdNormalItem) {
-                    itemNormal.setChecked( true );
+                    itemNormal.setTextColor(this.getResources().getColor(R.color.colorAccent));
                 }
                 if (attack.getId() == FileParser.DBIdSunnyItem) {
-                    itemSunny.setChecked( true );
+                    itemSunny.setTextColor(this.getResources().getColor(R.color.colorAccent));
                 }
                 if (attack.getId() == FileParser.DBIdSnowyItem) {
-                    itemSnowy.setChecked( true );
+                    itemSnowy.setTextColor(this.getResources().getColor(R.color.colorAccent));
                 }
                 if (attack.getId() == FileParser.DBIdRainyItem) {
-                    itemRainy.setChecked( true );
+                    itemRainy.setTextColor(this.getResources().getColor(R.color.colorAccent));
                 }
                 if (attack.getId() == FileParser.DBIdRainyEnemy) {
-                    enemyRainy.setChecked( true );
+                    enemyRainy.setTextColor(this.getResources().getColor(R.color.colorAccent));
                 }
                 if (attack.getId() == FileParser.DBIdSnowyEnemy) {
-                    enemySnowy.setChecked( true );
+                    enemySnowy.setTextColor(this.getResources().getColor(R.color.colorAccent));
                 }
                 if (attack.getId() == FileParser.DBIdSunnyEnemy) {
-                    enemySunny.setChecked( true );
+                    enemySunny.setTextColor(this.getResources().getColor(R.color.colorAccent));
                 }
             }
         }
