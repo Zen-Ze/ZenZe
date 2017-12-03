@@ -165,7 +165,7 @@ public class GameActivity extends FragmentActivity implements SensorEventListene
 
     @Override
     public void onInfoDialogPositiveClick(DialogFragment dialog) {
-        Intent infoIntent = new Intent(GameActivity.this, InfoActivity.class);
+        Intent infoIntent = new Intent(GameActivity.this, ItemDescription.class);
         Bundle info = new Bundle();
         if(itemType!=null) {
             info.putString("Name", itemType.getName());

@@ -9,7 +9,7 @@
         tools:context="com.ucd.comp41690.team21.zenze.activities.Help">
 
         <TextView
-            android:id="@+id/textview_title_item"
+            android:id="@+id/textview_item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -32,17 +32,17 @@
             android:contentDescription="@string/help_description"
             android:src="@drawable/rotated" />
 
-        <TextView
-            android:id="@+id/textview_item_description"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/cyan_dark"
-            android:text="@string/dummy_content_item_description"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@color/colorAccent"
-            android:textSize="15sp"
-            android:typeface="monospace" />
+    <TextView
+        android:id="@+id/textview_item_description"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/cyan_dark"
+        android:text="@string/dummy_content_item_description"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorAccent"
+        android:textSize="15sp"
+        android:typeface="monospace" />
     </LinearLayout>

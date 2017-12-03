@@ -11,22 +11,27 @@ import org.w3c.dom.Text;
 
 public class ItemDescription extends Activity {
 
-    final TextView itemTitle = (TextView) findViewById( R.id.textview_title_item );
-    final TextView itemDescription = (TextView) findViewById( R.id.textview_item_description );
-    final ImageView itemImage = (ImageView) findViewById( R.id.item_image );
+
     String getTitle, getDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_item_description );
-        // Fetching data from the game activity
-        // Fetch title
-        getTitle = " Dummy title";
-        // Fetch description
-        getDescription = "dummy description";
-        // Fetch image
+        final TextView itemTitle = findViewById( R.id.textview_item_title );
+        final TextView itemDescription =  findViewById( R.id.textview_item_description );
+        final ImageView itemImage =  findViewById( R.id.item_image );
 
+        // Fetching data from the game activity
+        Bundle info = getIntent().getExtras();
+        String name = info.getString("Name");
+        String infoText = info.getString("Info");
+
+        // Fetch title
+        getTitle = name;
+        // Fetch description
+        getDescription = infoText;
+        // Fetch image
 
         // setting item title
         itemTitle.setText(getTitle);
