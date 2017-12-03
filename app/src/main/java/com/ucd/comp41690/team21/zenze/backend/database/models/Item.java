@@ -9,23 +9,20 @@ import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 
 /**
  * Created by timothee on 18/10/17.
+ * Item
+ * +-----------------------------------------+------------------+-----------------+
+ * |                   Field                 |       type       |       Key       |
+ * +-----------------------------------------+------------------+-----------------+
+ * | _ID                                     |  INTEGER         |  PRI            |
+ * | Name                                    |  VARCHAR(64)     |                 |
+ * | Description                             |  TEXT            |                 |
+ * | SpritePath                              |  TEXT            |                 |
+ * | WeatherStatus                           |  INTEGER         |                 |
+ * +-----------------------------------------+------------------+-----------------+
  */
 
 @Entity(tableName = "item")
 public class Item {
-
-    /**
-     * Item
-     * +-----------------------------------------+------------------+-----------------+
-     * |                   Field                 |       type       |       Key       |
-     * +-----------------------------------------+------------------+-----------------+
-     * | _ID                                     |  INTEGER         |  PRI            |
-     * | Name                                    |  VARCHAR(64)     |                 |
-     * | Description                             |  TEXT            |                 |
-     * | SpritePath                              |  TEXT            |                 |
-     * | WeatherStatus                           |  INTEGER         |                 |
-     * +-----------------------------------------+------------------+-----------------+
-     */
 
     @PrimaryKey(autoGenerate = true)
     private int id;

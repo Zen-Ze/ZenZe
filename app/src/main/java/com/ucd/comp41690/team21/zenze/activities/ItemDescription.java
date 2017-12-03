@@ -26,39 +26,49 @@ public class ItemDescription extends Activity {
 
         // Fetching data from the game activity
         Bundle info = getIntent().getExtras();
+        assert info != null;
         String name = info.getString("Name");
         String infoText = info.getString("Info");
-        int weatherStatus = info.getInt("Status");
-        int DBId = info.getInt("DBId");
-
 
         // Fetch title
         getTitle = name;
         // Fetch description
         getDescription = infoText;
-        // Fetch image
+        // Fetch and Set Image
         if(name!=null) {
             switch (name) {
-                case "enemy_rainy":
+                case "Infections":
                     itemImage.setImageResource( R.drawable.enemy_rainy );
                     break;
-                case "enemy_sunny":
+                case "Cancer":
                     itemImage.setImageResource( R.drawable.enemy_sunny );
                     break;
-                case "enemy_snowy":
+                case "Depression":
                     itemImage.setImageResource( R.drawable.enemy_snowy );
                     break;
-                case "item_rainy":
+                case "Proteins":
                     itemImage.setImageResource( R.drawable.item_rainy );
                     break;
-                case "item_snowy":
+                case "Lemon":
                     itemImage.setImageResource( R.drawable.item_snowy );
                     break;
-                case "item_sunny":
+                case "Lettuce":
                     itemImage.setImageResource( R.drawable.item_sunny );
                     break;
-                case "item_normal":
+                case "Pill":
                     itemImage.setImageResource( R.drawable.item_normal );
+                    break;
+                case "Syringe":
+                    itemImage.setImageResource( R.drawable.attack_normal );
+                    break;
+                case "Sunlight":
+                    itemImage.setImageResource( R.drawable.attack_rainy );
+                    break;
+                case "Cabbage":
+                    itemImage.setImageResource( R.drawable.attack_snowy );
+                    break;
+                case "Banana":
+                    itemImage.setImageResource( R.drawable.attack_sunny );
                     break;
             }
         }else itemImage.setImageResource( R.drawable.item_normal );
@@ -66,8 +76,7 @@ public class ItemDescription extends Activity {
         itemTitle.setText(getTitle);
         // setting item description
         itemDescription.setText(getDescription);
-        //setting item image to be displayed
-        //itemImage.setImageDrawable(findViewById( R.drawable.item_bg ));
+
     }
 
 }

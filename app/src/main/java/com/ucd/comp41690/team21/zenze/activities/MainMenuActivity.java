@@ -52,6 +52,7 @@ import com.ucd.comp41690.team21.zenze.backend.database.models.EnemyList;
 import com.ucd.comp41690.team21.zenze.backend.database.models.ItemList;
 import com.ucd.comp41690.team21.zenze.backend.database.models.Player;
 import com.ucd.comp41690.team21.zenze.backend.weather.WeatherService;
+import com.ucd.comp41690.team21.zenze.backend.weather.WeatherStatus;
 import com.ucd.comp41690.team21.zenze.game.view.GraphicsRenderer;
 
 import java.util.Objects;
@@ -70,6 +71,7 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
     private AccessTokenTracker accessTokenTracker;
     private AccessToken accessToken ;
     private final static String TAG = MainMenuActivity.class.getName().toString();
+
     Boolean graphicsOption;
     String weather;
 
@@ -138,6 +140,7 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
         googleApiClient = new GoogleApiClient.Builder(this, this, this ).
                 addApi(LocationServices.API).build();
         setContentView( R.layout.activity_main_menu );
+
         // Buttons for this activity
         final Button helpButton = findViewById( R.id.help_button );
         final Button startButton = findViewById( R.id.start_button );
@@ -194,10 +197,9 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
 
         googleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
 
-        // testing
-        String weatherOption = "WEATHER_OPTION";
-        String gfx = "GRAPHICS_OPTION";
-
+        // Checking current user settings
+        final  String weatherOption = "WEATHER_OPTION";
+        final  String gfx = "GRAPHICS_OPTION";
         weather = pref.getString( weatherOption, "null" );
         graphicsOption =  pref.getBoolean(gfx , true );
     }
@@ -216,17 +218,26 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
                 == PackageManager.PERMISSION_GRANTED) {
             location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         }
+        // Switch case for switching between which weather level to start
+        switch (weather) {
+            case "auto":
+                gameIntent.putExtra( "Game State", WeatherService.getWeatherStatus( location, getApplicationContext() ) );
+                break;
+            case "RAINY":
+                gameIntent.putExtra( "Game State", WeatherStatus.RAINY );
+                Log.i( "weather", weather );
+                break;
+            case "SNOWY":
+                gameIntent.putExtra( "Game State", WeatherStatus.SNOWY );
+                Log.i( "weather", weather );
+                break;
+            case "SUNNY":
+                gameIntent.putExtra( "Game State", WeatherStatus.SUNNY );
+                Log.i( "weather", weather );
+                break;
+        }
 
-       // if(weather.equals("auto")){
-            gameIntent.putExtra("Game State", WeatherService.getWeatherStatus(location, getApplicationContext()));
-
-        //}
-
-        /*else{
-            gameIntent.putExtra("Game State", weather);
-            Log.i("weather",weather);
-
-        }*/
+        // Switching renderer On or OFF
         gameIntent.putExtra("Graphics Renderer", graphicsOption);
         Log.i("graphics_setting", String.valueOf( graphicsOption ) );
         startActivity(gameIntent);

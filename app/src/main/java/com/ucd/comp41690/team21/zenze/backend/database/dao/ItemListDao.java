@@ -19,21 +19,42 @@ import java.util.List;
 @Dao
 public interface ItemListDao {
 
+    /**
+     * Retrieves items lists from the database
+     * @return a list of item lists
+     */
     @Query("SELECT * FROM itemlist")
     List<ItemList> getAll();
 
+    /**
+     * Retrieve an item list from the database
+     * @param id the id of the item list
+     * @return an Item List
+     */
     @Query("SELECT * FROM itemlist where id LIKE :id")
     ItemList findById(int id);
 
     @Query("SELECT COUNT(*) from itemlist")
     int countItemLists();
 
+    /**
+     * Insert one or more item list in the database
+     * @param itemLists
+     */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(ItemList... itemLists);
 
+    /**
+     * Update an item list in the database
+     * @param itemList
+     */
     @Update
     void update(ItemList itemList);
 
+    /**
+     * Delete an item list in the database
+     * @param itemList
+     */
     @Delete
     void delete(ItemList itemList);
     

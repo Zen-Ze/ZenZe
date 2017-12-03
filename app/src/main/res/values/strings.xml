@@ -12,7 +12,7 @@
     <string name="gameOverDialog_Continue">Retry</string>
 
     <!-- dummy content for item description-->
-    <string name = "dummy_content_item_description">
+    <string name="dummy_content_item_description">
         People with anxiety disorders respond to certain objects
         or situations with fear and dread, as well as with physical
         signs of anxiety or panic, such as a rapid heartbeat and
@@ -45,5 +45,20 @@
     <string name="textview_help_item_description">== Item Description ==</string>
     <string name="title_activity_item_description">ItemDescription</string>
     <string name="textview_settings">Settings</string>
+    <string name="title_activity_stats">StatsActivity</string>
+    <string name="textview_enemy_unlocked">Enemies Encountered</string>
+    <string name="textview_attack_unlocked">Attack Unlocked</string>
+    <string name="textview_items_unlocked">Items Unlocked</string>
+    <string name="item_normal">Capsule</string>
+    <string name="item_rainy">Protien</string>
+    <string name="item_sunny">CabbageS</string>
+    <string name="item_snowy">Cabbage</string>
+    <string name="enemy_sunny">Red</string>
+    <string name="enemy_rainy">Green</string>
+    <string name="enemy_snowy">Purple</string>
+    <string name="attack_norma">Syringe</string>
+    <string name="attack_rainy">Light Bulb</string>
+    <string name="attack_snowy">Cabbage</string>
+    <string name="attack_sunny">Banana</string>
 
 </resources>

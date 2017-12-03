@@ -19,21 +19,42 @@ import java.util.List;
 @Dao
 public interface AttackListDao {
 
+    /**
+     * Get all attack lists
+     * @return
+     */
     @Query("SELECT * FROM attacklist")
     List<AttackList> getAll();
 
+    /**
+     * Retrieve an attack list by its id
+     * @param id
+     * @return
+     */
     @Query("SELECT * FROM attacklist where id LIKE  :id")
     AttackList findById(int id);
 
     @Query("SELECT COUNT(*) from attacklist")
     int countAttackLists();
 
+    /**
+     * Insert one or more attack lists in the database
+     * @param attackLists
+     */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(AttackList... attackLists);
 
+    /**
+     * Update an attack list in the database
+     * @param attackList
+     */
     @Update
     void update(AttackList attackList);
 
+    /**
+     * Delete an attack list in the database
+     * @param attackList
+     */
     @Delete
     void delete(AttackList attackList);
 
