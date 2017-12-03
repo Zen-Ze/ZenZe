@@ -42,6 +42,7 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
     private GoogleApiClient googleApiClient;
 
+
     Boolean graphicsOption;
     String weather;
 
@@ -78,6 +79,7 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
         googleApiClient = new GoogleApiClient.Builder(this, this, this ).
                 addApi(LocationServices.API).build();
         setContentView( R.layout.activity_main_menu );
+
         // Buttons for this activity
         final Button helpButton = findViewById( R.id.help_button );
         final Button startButton = findViewById( R.id.start_button );
@@ -106,10 +108,9 @@ public class MainMenuActivity extends Activity implements GoogleApiClient.Connec
 
         googleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
 
-        // testing
-        String weatherOption = "WEATHER_OPTION";
-        String gfx = "GRAPHICS_OPTION";
-
+        // Checking current user settings
+        final  String weatherOption = "WEATHER_OPTION";
+        final  String gfx = "GRAPHICS_OPTION";
         weather = pref.getString( weatherOption, "null" );
         graphicsOption =  pref.getBoolean(gfx , true );
     }

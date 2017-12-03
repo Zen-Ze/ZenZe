@@ -49,5 +49,16 @@
     <string name="textview_enemy_unlocked">Enemies Encountered</string>
     <string name="textview_attack_unlocked">Attack Unlocked</string>
     <string name="textview_items_unlocked">Items Unlocked</string>
+    <string name="item_normal">Capsule</string>
+    <string name="item_rainy">Protien</string>
+    <string name="item_sunny">CabbageS</string>
+    <string name="item_snowy">Cabbage</string>
+    <string name="enemy_sunny">Red</string>
+    <string name="enemy_rainy">Green</string>
+    <string name="enemy_snowy">Purple</string>
+    <string name="attack_norma">Syringe</string>
+    <string name="attack_rainy">Light Bulb</string>
+    <string name="attack_snowy">Cabbage</string>
+    <string name="attack_sunny">Banana</string>
 
 </resources>

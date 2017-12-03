@@ -47,6 +47,7 @@
         <activity
             android:name=".activities.StatsActivity"
             android:label="@string/title_activity_stats"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
             android:parentActivityName=".activities.GameActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

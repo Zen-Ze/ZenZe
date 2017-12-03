@@ -73,13 +73,13 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
         //getActionBar().setDisplayHomeAsUpEnabled( true );
         SharedPreferences pref = getApplicationContext().getSharedPreferences( "ZenzePref", MODE_PRIVATE );
         final SharedPreferences.Editor editor = pref.edit();
-        // Loading already saved preferences else put default values
 
 
         // Spinner elements
         graphicButton = findViewById( R.id.graphic_switch );
         weatherSpinner = findViewById( R.id.weather_spinner );
 
+        // Loading any configured settings
         LoadPreferences();
 
         graphicButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -156,9 +156,6 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
                         editor.apply();
                         break;
                 }
-
-
-
     }
 
     public void onNothingSelected(AdapterView<?> arg0) {
